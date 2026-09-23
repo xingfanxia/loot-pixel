@@ -1,0 +1,112 @@
+{
+  "deck": "cl-team",
+  "title": "Compute Labs",
+  "tiers": {
+    "common": "humble starting-class version: plain cloth or leather, muted colours, no magic effects, a hint of the class to come",
+    "rare": "seasoned class hero: fitted armour or robes with teal accents, one signature item, faint teal glow",
+    "epic": "elite arcane form: ornate gear with violet/magenta accents, visible magic (runes, glowing eyes or aura), dramatic lighting",
+    "legendary": "mythic ascended form: gold and white regalia, crown/halo/wings or cosmic elements, radiant golden aura, the most awe-inspiring version"
+  },
+  "slots": [
+    {
+      "id": "albert", "short": "ALBERT", "fullName": "Albert Zhang", "role": "Chief Executive Officer",
+      "ref": "albert-zhang.png",
+      "variants": {
+        "common": { "title": "SQUIRE", "concept": "earnest young squire in a simple tabard, holding a banner pole" },
+        "rare": { "title": "KNIGHT CAPTAIN", "concept": "knight captain in polished plate with a teal cape and a commander's sword" },
+        "epic": { "title": "WARLORD", "concept": "battle-scarred warlord king in dark violet plate, glowing war banner behind him" },
+        "legendary": { "title": "SUN EMPEROR", "concept": "radiant sun emperor in gold regalia, a blazing sun-disc crown and solar halo" }
+      }
+    },
+    {
+      "id": "nikolay", "short": "NIKOLAY", "fullName": "Nikolay Filichkin", "role": "Chief Business Officer",
+      "ref": "nikolay-filichkin.png",
+      "variants": {
+        "common": { "title": "TAVERN BROKER", "concept": "tavern deal-broker in a plaid vest, arms crossed, coin pouch on belt" },
+        "rare": { "title": "CARAVAN MASTER", "concept": "caravan master in a travel coat with teal trim, map case and compass" },
+        "epic": { "title": "MERCHANT PRINCE", "concept": "merchant prince in violet brocade, floating enchanted contracts and gems" },
+        "legendary": { "title": "GOLD DRAGON LORD", "concept": "lord of a golden dragon hoard, dragon-scale gold armour, a gold dragon coiled behind" }
+      }
+    },
+    {
+      "id": "xingfan", "short": "XINGFAN", "fullName": "Xingfan Xia", "role": "Chief Technology Officer",
+      "ref": "atlas-xia.png",
+      "variants": {
+        "common": { "title": "HEDGE WIZARD", "concept": "cheerful hedge wizard in a patched robe with a crooked wand and a spellbook" },
+        "rare": { "title": "RUNE ENGINEER", "concept": "rune engineer with brass goggles, teal glowing circuit-runes on his gauntlet" },
+        "epic": { "title": "ARCHMAGE OF CODE", "concept": "archmage in violet robes, glowing code-glyphs orbiting, eyes lit with arcane light" },
+        "legendary": { "title": "VOID TECHNOMANCER", "concept": "cosmic technomancer, gold-and-white robes, a galaxy-core halo and floating crystal servers" }
+      }
+    },
+    {
+      "id": "kevin", "short": "KEVIN", "fullName": "Kevin Schubert", "role": "Chief Legal Officer",
+      "ref": "kevin-schubert.png",
+      "variants": {
+        "common": { "title": "TOWN CLERK", "concept": "tidy town clerk with a quill and a rolled scroll, simple collar" },
+        "rare": { "title": "PALADIN OF LAW", "concept": "paladin in silver plate with a teal tabard, holding a law-book shield" },
+        "epic": { "title": "HIGH INQUISITOR", "concept": "stern high inquisitor in violet mantle, glowing scales of justice" },
+        "legendary": { "title": "ARBITER OF STARS", "concept": "celestial arbiter, gold winged helm, a starry sword of judgment and radiant halo" }
+      }
+    },
+    {
+      "id": "jermaine", "short": "JERMAINE", "fullName": "Jermaine Bedlow", "role": "Dir. of Sales & Partnerships",
+      "ref": "jermaine-bedlow.png",
+      "variants": {
+        "common": { "title": "WANDERING BARD", "concept": "charismatic wandering bard with a lute and a feathered cap" },
+        "rare": { "title": "ROYAL ENVOY", "concept": "royal envoy in a fine teal-trimmed doublet, sealed treaty scroll" },
+        "epic": { "title": "WARLOCK DIPLOMAT", "concept": "silver-tongued warlock diplomat, violet flames in his palm, pact sigils" },
+        "legendary": { "title": "LORD OF ALLIANCES", "concept": "high lord of alliances, gold ceremonial armour, many kingdom banners and a golden aura" }
+      }
+    },
+    {
+      "id": "robert", "short": "ROBERT", "fullName": "Robert Ritter", "role": "Chief Product Officer",
+      "ref": "robert-ritter.png",
+      "variants": {
+        "common": { "title": "TINKERER", "concept": "friendly tinkerer in a leather apron with a wrench and gears" },
+        "rare": { "title": "ARTIFICER", "concept": "artificer with a teal-glowing mechanical owl companion on the shoulder" },
+        "epic": { "title": "GOLEM FORGER", "concept": "golem forger, a violet-rune stone golem looming behind him" },
+        "legendary": { "title": "WORLD ARCHITECT", "concept": "architect of worlds holding a glowing golden miniature planet, blueprint constellations" }
+      }
+    },
+    {
+      "id": "matt", "short": "MATT", "fullName": "Matt Weichel", "role": "Founding Engineer",
+      "ref": "matt-weichel.png",
+      "variants": {
+        "common": { "title": "MINER", "concept": "grinning miner with a pickaxe and a head lamp, dusty shirt" },
+        "rare": { "title": "FORGE SMITH", "concept": "forge smith in a heavy apron, glowing teal hammer" },
+        "epic": { "title": "RUNEFORGE MASTER", "concept": "runeforge master, violet molten runes flowing up his arms, anvil sparks" },
+        "legendary": { "title": "TITAN OF THE FORGE", "concept": "forge titan in golden armour, a burning golden hammer and a halo of molten metal" }
+      }
+    },
+    {
+      "id": "nancy", "short": "NANCY", "fullName": "Nancy Xing", "role": "Head of Design",
+      "ref": "nancy-xing.png",
+      "variants": {
+        "common": { "title": "APPRENTICE PAINTER", "concept": "apprentice painter with a palette and brush, paint smudges" },
+        "rare": { "title": "ILLUSIONIST", "concept": "illusionist in teal silk, painting glowing shapes in the air" },
+        "epic": { "title": "ENCHANTRESS", "concept": "enchantress in violet gown, butterflies of light and a crystal wand" },
+        "legendary": { "title": "MOON EMPRESS", "concept": "moon empress with a crescent-moon tiara, flowing gold-white hair ornaments and starlight aura" }
+      }
+    },
+    {
+      "id": "warren", "short": "WARREN", "fullName": "Warren Hosseinion", "role": "Head of Growth & Capital Markets",
+      "ref": "warren-hosseinion.png",
+      "variants": {
+        "common": { "title": "COIN COUNTER", "concept": "coin counter in a vest with an abacus and a stack of coins" },
+        "rare": { "title": "ALCHEMIST", "concept": "alchemist with teal bubbling potions and brass spectacles" },
+        "epic": { "title": "GRAND TRANSMUTER", "concept": "grand transmuter turning lead to gold, violet transmutation circle glowing" },
+        "legendary": { "title": "PHOENIX OF FORTUNE", "concept": "phoenix of fortune, golden flame wings rising behind him, raining gold coins" }
+      }
+    },
+    {
+      "id": "co", "short": "CO", "fullName": "Co Huo", "role": "Chief of Staff",
+      "ref": "co-huo.png",
+      "variants": {
+        "common": { "title": "SCOUT", "concept": "alert scout with a scarf and a hooded travel cloak" },
+        "rare": { "title": "RANGER", "concept": "ranger with a teal-fletched longbow and a hawk" },
+        "epic": { "title": "SHADOW WARDEN", "concept": "shadow warden in violet-trimmed dark armour, twin glowing daggers, smoke" },
+        "legendary": { "title": "NINE-TAIL SHOGUN", "concept": "shogun in golden armour with nine spectral golden fox tails fanning behind" }
+      }
+    }
+  ]
+}
