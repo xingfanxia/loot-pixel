@@ -1,112 +1,625 @@
 {
   "deck": "cl-team",
   "title": "Compute Labs",
+  "sources": "Roles and bios from the public Compute Labs about page (computelabs.ai/en/about); vibe notes from the public team photos.",
   "tiers": {
-    "common": "humble starting-class version: plain cloth or leather, muted colours, no magic effects, a hint of the class to come",
-    "rare": "seasoned class hero: fitted armour or robes with teal accents, one signature item, faint teal glow",
-    "epic": "elite arcane form: ornate gear with violet/magenta accents, visible magic (runes, glowing eyes or aura), dramatic lighting",
-    "legendary": "mythic ascended form: gold and white regalia, crown/halo/wings or cosmic elements, radiant golden aura, the most awe-inspiring version"
+    "common": {
+      "count": 5,
+      "colour": "silver/grey",
+      "look": "humble everyday-fantasy job tied to the person's traits: plain cloth or leather, muted silver/grey, no magic effects"
+    },
+    "uncommon": {
+      "count": 4,
+      "colour": "green",
+      "look": "trained adventurer: practical gear with green accents, a first hint of skill or a small familiar, no big effects"
+    },
+    "rare": {
+      "count": 3,
+      "colour": "teal",
+      "look": "seasoned class hero: fitted armour or robes with teal accents, one signature item, faint teal glow"
+    },
+    "epic": {
+      "count": 2,
+      "colour": "violet/magenta",
+      "look": "elite arcane form: ornate gear, visible violet magic (runes, glowing eyes or aura), dramatic lighting"
+    },
+    "legendary": {
+      "count": 1,
+      "colour": "gold/white",
+      "look": "the single mythic ascended form: gold and white regalia, crown/halo/wings or cosmic elements, radiant golden aura; the most awe-inspiring card of this person"
+    }
   },
   "slots": [
     {
-      "id": "albert", "short": "ALBERT", "fullName": "Albert Zhang", "role": "Chief Executive Officer",
+      "id": "albert",
+      "short": "ALBERT",
+      "fullName": "Albert Zhang",
+      "role": "Chief Executive Officer",
       "ref": "albert-zhang.png",
-      "variants": {
-        "common": { "title": "SQUIRE", "concept": "earnest young squire in a simple tabard, holding a banner pole" },
-        "rare": { "title": "KNIGHT CAPTAIN", "concept": "knight captain in polished plate with a teal cape and a commander's sword" },
-        "epic": { "title": "WARLORD", "concept": "battle-scarred warlord king in dark violet plate, glowing war banner behind him" },
-        "legendary": { "title": "SUN EMPEROR", "concept": "radiant sun emperor in gold regalia, a blazing sun-disc crown and solar halo" }
+      "bio": "Founder & CEO; launched Compute Labs in 2024 around a GPU real-world-asset vision; gaming-industry background (Delysium, rct.AI, Xsolla); UCLA and Caltech.",
+      "vibe": "composed, sharp and quietly determined; neat hair, glasses, sharp suit",
+      "seeds": {
+        "common": [
+          {
+            "title": "SQUIRE",
+            "concept": "earnest young squire in a simple tabard carrying the banner of a realm not yet founded",
+            "hook": "founder at day one"
+          },
+          {
+            "title": "CARTOGRAPHER",
+            "concept": "young cartographer unrolling a map of an unexplored continent drawn as circuit traces",
+            "hook": "the GPU RWA vision"
+          }
+        ],
+        "rare": [
+          {
+            "title": "KNIGHT CAPTAIN",
+            "concept": "knight captain in polished plate with a teal cape and a commander's sword",
+            "hook": "leads the company"
+          },
+          {
+            "title": "STAR SCHOLAR",
+            "concept": "astronomer-scholar in teal-trimmed robes with a brass telescope and star charts",
+            "hook": "Caltech"
+          }
+        ],
+        "epic": [
+          {
+            "title": "DUNGEON MASTER",
+            "concept": "game-master sorcerer conjuring a glowing violet miniature dungeon above an open tome",
+            "hook": "gaming industry roots"
+          },
+          {
+            "title": "WARLORD OF SILICON",
+            "concept": "warlord king in dark violet plate wearing a crown forged from glowing GPU chips",
+            "hook": "GPUs"
+          }
+        ],
+        "legendary": [
+          {
+            "title": "SUN EMPEROR",
+            "concept": "radiant sun emperor in gold regalia with a blazing sun-disc crown and solar halo",
+            "hook": "the CEO"
+          },
+          {
+            "title": "GPU SOVEREIGN",
+            "concept": "sovereign on a throne of GPUs transmuting into solid gold, golden light pouring from the chips",
+            "hook": "GPUs as real-world assets"
+          }
+        ]
       }
     },
     {
-      "id": "nikolay", "short": "NIKOLAY", "fullName": "Nikolay Filichkin", "role": "Chief Business Officer",
+      "id": "nikolay",
+      "short": "NICK",
+      "fullName": "Nikolay Filichkin",
+      "role": "Chief Business Officer",
       "ref": "nikolay-filichkin.png",
-      "variants": {
-        "common": { "title": "TAVERN BROKER", "concept": "tavern deal-broker in a plaid vest, arms crossed, coin pouch on belt" },
-        "rare": { "title": "CARAVAN MASTER", "concept": "caravan master in a travel coat with teal trim, map case and compass" },
-        "epic": { "title": "MERCHANT PRINCE", "concept": "merchant prince in violet brocade, floating enchanted contracts and gems" },
-        "legendary": { "title": "GOLD DRAGON LORD", "concept": "lord of a golden dragon hoard, dragon-scale gold armour, a gold dragon coiled behind" }
+      "bio": "Seasoned tech leader in strategic partnerships, M&A, sales and operations; at Xsolla led acquisitions, product launches and new departments; scales high-growth companies.",
+      "vibe": "confident, arms crossed, tough-but-warm; short hair, stubble, plaid shirt",
+      "seeds": {
+        "common": [
+          {
+            "title": "TAVERN BROKER",
+            "concept": "tavern deal-broker in a plaid vest, arms crossed, coin pouch on his belt",
+            "hook": "sales"
+          },
+          {
+            "title": "SELLSWORD",
+            "concept": "rugged sellsword in a plaid gambeson, arms crossed, sword on his back",
+            "hook": "the arms-crossed pose"
+          }
+        ],
+        "rare": [
+          {
+            "title": "CARAVAN MASTER",
+            "concept": "caravan master in a travel coat with teal trim, map case and compass",
+            "hook": "operations"
+          },
+          {
+            "title": "GUILD NEGOTIATOR",
+            "concept": "guild negotiator sealing a teal wax-sealed pact with a firm handshake gauntlet",
+            "hook": "partnerships"
+          }
+        ],
+        "epic": [
+          {
+            "title": "MERCHANT PRINCE",
+            "concept": "merchant prince in violet brocade with floating enchanted contracts and gems",
+            "hook": "revenue growth"
+          },
+          {
+            "title": "CLAN UNIFIER",
+            "concept": "conqueror in violet-runed armour merging several clan banners into one glowing standard",
+            "hook": "M&A"
+          }
+        ],
+        "legendary": [
+          {
+            "title": "GOLD DRAGON LORD",
+            "concept": "lord of a golden dragon hoard in dragon-scale gold armour, a gold dragon coiled behind him",
+            "hook": "dealmaker's hoard"
+          },
+          {
+            "title": "KINGMAKER",
+            "concept": "kingmaker in gold and white mantle holding up a radiant crown, surrounded by allied kingdoms' crests",
+            "hook": "builds companies"
+          }
+        ]
       }
     },
     {
-      "id": "xingfan", "short": "XINGFAN", "fullName": "Xingfan Xia", "role": "Chief Technology Officer",
+      "id": "xingfan",
+      "short": "XINGFAN",
+      "fullName": "Xingfan Xia",
+      "role": "Chief Technology Officer",
       "ref": "atlas-xia.png",
-      "variants": {
-        "common": { "title": "HEDGE WIZARD", "concept": "cheerful hedge wizard in a patched robe with a crooked wand and a spellbook" },
-        "rare": { "title": "RUNE ENGINEER", "concept": "rune engineer with brass goggles, teal glowing circuit-runes on his gauntlet" },
-        "epic": { "title": "ARCHMAGE OF CODE", "concept": "archmage in violet robes, glowing code-glyphs orbiting, eyes lit with arcane light" },
-        "legendary": { "title": "VOID TECHNOMANCER", "concept": "cosmic technomancer, gold-and-white robes, a galaxy-core halo and floating crystal servers" }
+      "bio": "Cofounder & CTO; engineering, AI and big data at Apple, AWS and Airbnb; passionate about AGI; professional cat entertainer.",
+      "vibe": "huge joyful laugh, warm and energetic; round face, black hair, black tee",
+      "seeds": {
+        "common": [
+          {
+            "title": "HEDGE WIZARD",
+            "concept": "cheerful hedge wizard in a patched robe with a crooked wand and a spellbook",
+            "hook": "engineer at heart"
+          },
+          {
+            "title": "CAT WHISPERER",
+            "concept": "laughing wanderer with a playful cat familiar on his shoulder batting a yarn ball",
+            "hook": "professional cat entertainer"
+          }
+        ],
+        "rare": [
+          {
+            "title": "RUNE ENGINEER",
+            "concept": "rune engineer with brass goggles and teal glowing circuit-runes on his gauntlet",
+            "hook": "Apple engineering"
+          },
+          {
+            "title": "DATA DRUID",
+            "concept": "druid channelling teal rivers of glowing data streams between his hands",
+            "hook": "big data"
+          }
+        ],
+        "epic": [
+          {
+            "title": "ARCHMAGE OF CODE",
+            "concept": "archmage in violet robes with glowing code-glyphs orbiting, eyes lit with arcane light",
+            "hook": "CTO"
+          },
+          {
+            "title": "CLOUD SHAPER",
+            "concept": "storm mage sculpting violet thunderclouds into floating server towers",
+            "hook": "AWS cloud"
+          }
+        ],
+        "legendary": [
+          {
+            "title": "VOID TECHNOMANCER",
+            "concept": "cosmic technomancer in gold-and-white robes with a galaxy-core halo and floating crystal servers",
+            "hook": "AI"
+          },
+          {
+            "title": "AGI SUMMONER",
+            "concept": "summoner calling forth a colossal benevolent golden cat-spirit made of starlight and neural light",
+            "hook": "AGI + cats"
+          }
+        ]
       }
     },
     {
-      "id": "kevin", "short": "KEVIN", "fullName": "Kevin Schubert", "role": "Chief Legal Officer",
+      "id": "kevin",
+      "short": "KEVIN",
+      "fullName": "Kevin Schubert",
+      "role": "Chief Legal Officer",
       "ref": "kevin-schubert.png",
-      "variants": {
-        "common": { "title": "TOWN CLERK", "concept": "tidy town clerk with a quill and a rolled scroll, simple collar" },
-        "rare": { "title": "PALADIN OF LAW", "concept": "paladin in silver plate with a teal tabard, holding a law-book shield" },
-        "epic": { "title": "HIGH INQUISITOR", "concept": "stern high inquisitor in violet mantle, glowing scales of justice" },
-        "legendary": { "title": "ARBITER OF STARS", "concept": "celestial arbiter, gold winged helm, a starry sword of judgment and radiant halo" }
+      "bio": "Finance, legal leadership and business transformation; led $1B+ financing, M&A and restructurings across tech, gaming and hospitality; JD/MBA UCLA, BS Arizona.",
+      "vibe": "poised, clean-cut and trustworthy; side-parted hair, clean-shaven, suit and white shirt",
+      "seeds": {
+        "common": [
+          {
+            "title": "TOWN CLERK",
+            "concept": "tidy town clerk with a quill and a rolled scroll, simple collar",
+            "hook": "legal"
+          },
+          {
+            "title": "INNKEEPER",
+            "concept": "welcoming innkeeper holding a brass key ring in front of a warm lantern-lit inn",
+            "hook": "hospitality"
+          }
+        ],
+        "rare": [
+          {
+            "title": "PALADIN OF LAW",
+            "concept": "paladin in silver plate with a teal tabard, holding a law-book shield",
+            "hook": "Chief Legal Officer"
+          },
+          {
+            "title": "ROYAL TREASURER",
+            "concept": "royal treasurer with a teal-bound ledger and a heavy vault key",
+            "hook": "finance"
+          }
+        ],
+        "epic": [
+          {
+            "title": "HIGH INQUISITOR",
+            "concept": "stern high inquisitor in a violet mantle with glowing scales of justice",
+            "hook": "judgment"
+          },
+          {
+            "title": "VAULT WARDEN",
+            "concept": "armoured warden guarding a violet-runed vault door piled with a billion gold coins",
+            "hook": "$1B+ financing"
+          }
+        ],
+        "legendary": [
+          {
+            "title": "ARBITER OF STARS",
+            "concept": "celestial arbiter in a gold winged helm with a starry sword of judgment and radiant halo",
+            "hook": "final word"
+          },
+          {
+            "title": "COVENANT KING",
+            "concept": "king in gold and white holding a glowing golden covenant that binds realms together",
+            "hook": "contracts and restructurings"
+          }
+        ]
       }
     },
     {
-      "id": "jermaine", "short": "JERMAINE", "fullName": "Jermaine Bedlow", "role": "Dir. of Sales & Partnerships",
+      "id": "jermaine",
+      "short": "JERMAINE",
+      "fullName": "Jermaine Bedlow",
+      "role": "Dir. of Sales & Partnerships",
       "ref": "jermaine-bedlow.png",
-      "variants": {
-        "common": { "title": "WANDERING BARD", "concept": "charismatic wandering bard with a lute and a feathered cap" },
-        "rare": { "title": "ROYAL ENVOY", "concept": "royal envoy in a fine teal-trimmed doublet, sealed treaty scroll" },
-        "epic": { "title": "WARLOCK DIPLOMAT", "concept": "silver-tongued warlock diplomat, violet flames in his palm, pact sigils" },
-        "legendary": { "title": "LORD OF ALLIANCES", "concept": "high lord of alliances, gold ceremonial armour, many kingdom banners and a golden aura" }
+      "bio": "Country Business Manager at Digital Realty UK (data centres), growth and partnerships; Cisco and IBM work at Accenture UK; started in stockbroking and sales.",
+      "vibe": "suave, confident and smooth; short hair, full beard, dark suit",
+      "seeds": {
+        "common": [
+          {
+            "title": "WANDERING BARD",
+            "concept": "charismatic wandering bard with a lute and a feathered cap",
+            "hook": "silver tongue"
+          },
+          {
+            "title": "MARKET CRIER",
+            "concept": "market crier in a waistcoat calling trades from a crate, tally sheets in hand",
+            "hook": "stockbroking start"
+          }
+        ],
+        "rare": [
+          {
+            "title": "ROYAL ENVOY",
+            "concept": "royal envoy in a fine teal-trimmed doublet holding a sealed treaty scroll",
+            "hook": "partnerships"
+          },
+          {
+            "title": "CITADEL KEEPER",
+            "concept": "keeper of a fortress whose towers glow teal like server racks, great key on his belt",
+            "hook": "data centres"
+          }
+        ],
+        "epic": [
+          {
+            "title": "WARLOCK DIPLOMAT",
+            "concept": "silver-tongued warlock diplomat with violet flames in his palm and pact sigils",
+            "hook": "deal closer"
+          },
+          {
+            "title": "IRON CITADEL LORD",
+            "concept": "lord in violet-runed iron armour before a humming citadel of glowing server towers",
+            "hook": "Digital Realty"
+          }
+        ],
+        "legendary": [
+          {
+            "title": "LORD OF ALLIANCES",
+            "concept": "high lord of alliances in gold ceremonial armour, many kingdom banners and a golden aura",
+            "hook": "partnerships"
+          },
+          {
+            "title": "DATAFORT EMPEROR",
+            "concept": "emperor in gold regalia enthroned atop a radiant golden data fortress lit by lightning",
+            "hook": "data-centre empire"
+          }
+        ]
       }
     },
     {
-      "id": "robert", "short": "ROBERT", "fullName": "Robert Ritter", "role": "Chief Product Officer",
+      "id": "robert",
+      "short": "ROBERT",
+      "fullName": "Robert Ritter",
+      "role": "Chief Product Officer",
       "ref": "robert-ritter.png",
-      "variants": {
-        "common": { "title": "TINKERER", "concept": "friendly tinkerer in a leather apron with a wrench and gears" },
-        "rare": { "title": "ARTIFICER", "concept": "artificer with a teal-glowing mechanical owl companion on the shoulder" },
-        "epic": { "title": "GOLEM FORGER", "concept": "golem forger, a violet-rune stone golem looming behind him" },
-        "legendary": { "title": "WORLD ARCHITECT", "concept": "architect of worlds holding a glowing golden miniature planet, blueprint constellations" }
+      "bio": "Engineering and product management plus technical and administrative leadership; formerly at Mastercard and CFO of a non-profit.",
+      "vibe": "warm, friendly grin, approachable; short hair, beard, casual shirt",
+      "seeds": {
+        "common": [
+          {
+            "title": "TINKERER",
+            "concept": "friendly tinkerer in a leather apron with a wrench and gears",
+            "hook": "engineering"
+          },
+          {
+            "title": "LEDGER KEEPER",
+            "concept": "cheerful ledger keeper with an abacus and a thick bound ledger",
+            "hook": "non-profit CFO"
+          }
+        ],
+        "rare": [
+          {
+            "title": "ARTIFICER",
+            "concept": "artificer with a teal-glowing mechanical owl companion on his shoulder",
+            "hook": "product builder"
+          },
+          {
+            "title": "CARD MAGE",
+            "concept": "card mage fanning glowing teal playing cards between his fingers",
+            "hook": "Mastercard"
+          }
+        ],
+        "epic": [
+          {
+            "title": "GOLEM FORGER",
+            "concept": "golem forger with a violet-rune stone golem looming behind him",
+            "hook": "builds products"
+          },
+          {
+            "title": "SEER OF ROADMAPS",
+            "concept": "seer reading a glowing violet roadmap of paths and milestones unfurling in the air",
+            "hook": "product roadmap"
+          }
+        ],
+        "legendary": [
+          {
+            "title": "WORLD ARCHITECT",
+            "concept": "architect of worlds holding a glowing golden miniature planet among blueprint constellations",
+            "hook": "Chief Product Officer"
+          },
+          {
+            "title": "GRANDMASTER OF CARDS",
+            "concept": "grandmaster magus with a whirlwind of golden cards orbiting him, one master card blazing",
+            "hook": "Mastercard"
+          }
+        ]
       }
     },
     {
-      "id": "matt", "short": "MATT", "fullName": "Matt Weichel", "role": "Founding Engineer",
+      "id": "matt",
+      "short": "MATT",
+      "fullName": "Matt Weichel",
+      "role": "Founding Engineer",
       "ref": "matt-weichel.png",
-      "variants": {
-        "common": { "title": "MINER", "concept": "grinning miner with a pickaxe and a head lamp, dusty shirt" },
-        "rare": { "title": "FORGE SMITH", "concept": "forge smith in a heavy apron, glowing teal hammer" },
-        "epic": { "title": "RUNEFORGE MASTER", "concept": "runeforge master, violet molten runes flowing up his arms, anvil sparks" },
-        "legendary": { "title": "TITAN OF THE FORGE", "concept": "forge titan in golden armour, a burning golden hammer and a halo of molten metal" }
+      "bio": "Full-stack developer specialising in blockchain integration for applications at scale; passion for building with blockchain.",
+      "vibe": "big enthusiastic grin, upbeat builder energy; short hair, clean-shaven, dark polo",
+      "seeds": {
+        "common": [
+          {
+            "title": "MINER",
+            "concept": "grinning miner with a pickaxe and a head lamp, gleaming ore in his cart",
+            "hook": "crypto mining pun"
+          },
+          {
+            "title": "CHAIN APPRENTICE",
+            "concept": "apprentice smith carrying a coil of freshly forged chain links",
+            "hook": "blockchain"
+          }
+        ],
+        "rare": [
+          {
+            "title": "FORGE SMITH",
+            "concept": "forge smith in a heavy apron with a glowing teal hammer",
+            "hook": "founding engineer"
+          },
+          {
+            "title": "CHAINSMITH",
+            "concept": "chainsmith linking glowing teal cube-shaped chain links over an anvil",
+            "hook": "blocks and chains"
+          }
+        ],
+        "epic": [
+          {
+            "title": "RUNEFORGE MASTER",
+            "concept": "runeforge master with violet molten runes flowing up his arms and anvil sparks",
+            "hook": "full-stack craft"
+          },
+          {
+            "title": "CHAIN LIGHTNING",
+            "concept": "battle mage hurling violet chain lightning that arcs through linked glowing blocks",
+            "hook": "blockchain"
+          }
+        ],
+        "legendary": [
+          {
+            "title": "TITAN OF THE FORGE",
+            "concept": "forge titan in golden armour with a burning golden hammer and a halo of molten metal",
+            "hook": "builder"
+          },
+          {
+            "title": "GENESIS BLOCK TITAN",
+            "concept": "titan holding aloft a radiant golden genesis cube from which golden chains spread across the sky",
+            "hook": "genesis block"
+          }
+        ]
       }
     },
     {
-      "id": "nancy", "short": "NANCY", "fullName": "Nancy Xing", "role": "Head of Design",
+      "id": "nancy",
+      "short": "NANCY",
+      "fullName": "Nancy Xing",
+      "role": "Head of Design",
       "ref": "nancy-xing.png",
-      "variants": {
-        "common": { "title": "APPRENTICE PAINTER", "concept": "apprentice painter with a palette and brush, paint smudges" },
-        "rare": { "title": "ILLUSIONIST", "concept": "illusionist in teal silk, painting glowing shapes in the air" },
-        "epic": { "title": "ENCHANTRESS", "concept": "enchantress in violet gown, butterflies of light and a crystal wand" },
-        "legendary": { "title": "MOON EMPRESS", "concept": "moon empress with a crescent-moon tiara, flowing gold-white hair ornaments and starlight aura" }
+      "bio": "Head of Design; product designer for VMware, the United Nations and startups; Entertainment Technology at Carnegie Mellon, Digital Media at Pitzer.",
+      "vibe": "gentle, graceful smile, creative calm; long straight dark hair, light top",
+      "seeds": {
+        "common": [
+          {
+            "title": "APPRENTICE PAINTER",
+            "concept": "apprentice painter with a palette and brush and a smudge of paint on her cheek",
+            "hook": "design"
+          },
+          {
+            "title": "LANTERN PUPPETEER",
+            "concept": "puppeteer making a paper-lantern shadow play with a small marionette",
+            "hook": "entertainment technology"
+          }
+        ],
+        "rare": [
+          {
+            "title": "ILLUSIONIST",
+            "concept": "illusionist in teal silk painting glowing shapes in the air with her fingertips",
+            "hook": "product design"
+          },
+          {
+            "title": "PEACE ENVOY",
+            "concept": "envoy in teal robes with a white dove and a banner of many nations' colours",
+            "hook": "United Nations"
+          }
+        ],
+        "epic": [
+          {
+            "title": "ENCHANTRESS",
+            "concept": "enchantress in a violet gown with butterflies of light and a crystal wand",
+            "hook": "craft"
+          },
+          {
+            "title": "DREAMWEAVER",
+            "concept": "dreamweaver spinning violet threads of light into a floating tapestry of worlds",
+            "hook": "digital media"
+          }
+        ],
+        "legendary": [
+          {
+            "title": "MOON EMPRESS",
+            "concept": "moon empress with a crescent-moon tiara, gold-white hair ornaments and a starlight aura",
+            "hook": "grace"
+          },
+          {
+            "title": "MUSE OF WORLDS",
+            "concept": "muse of creation painting a golden world into being with a brush of starlight, radiant halo",
+            "hook": "Head of Design"
+          }
+        ]
       }
     },
     {
-      "id": "warren", "short": "WARREN", "fullName": "Warren Hosseinion", "role": "Head of Growth & Capital Markets",
+      "id": "warren",
+      "short": "WARREN",
+      "fullName": "Warren Hosseinion",
+      "role": "Head of Growth & Capital Markets",
       "ref": "warren-hosseinion.png",
-      "variants": {
-        "common": { "title": "COIN COUNTER", "concept": "coin counter in a vest with an abacus and a stack of coins" },
-        "rare": { "title": "ALCHEMIST", "concept": "alchemist with teal bubbling potions and brass spectacles" },
-        "epic": { "title": "GRAND TRANSMUTER", "concept": "grand transmuter turning lead to gold, violet transmutation circle glowing" },
-        "legendary": { "title": "PHOENIX OF FORTUNE", "concept": "phoenix of fortune, golden flame wings rising behind him, raining gold coins" }
+      "bio": "Public-market M&A, investor relations, marketing and biotech; VP of M&A at Voyager Acquisition Corp, COO at Vesicor Therapeutics; biology degree from Pitzer.",
+      "vibe": "bright smile, polished and upbeat; short hair, glasses, suit and tie",
+      "seeds": {
+        "common": [
+          {
+            "title": "COIN COUNTER",
+            "concept": "coin counter in a vest with an abacus and neat stacks of coins",
+            "hook": "capital markets"
+          },
+          {
+            "title": "HERBALIST",
+            "concept": "herbalist with a satchel of glowing leaves and a magnifying glass",
+            "hook": "biology"
+          }
+        ],
+        "rare": [
+          {
+            "title": "ALCHEMIST",
+            "concept": "alchemist with teal bubbling potions and brass spectacles",
+            "hook": "biotech"
+          },
+          {
+            "title": "TOWN HERALD",
+            "concept": "herald with a teal banner and a brass horn proclaiming news to the realm",
+            "hook": "marketing and investor relations"
+          }
+        ],
+        "epic": [
+          {
+            "title": "GRAND TRANSMUTER",
+            "concept": "grand transmuter turning lead to gold inside a glowing violet transmutation circle",
+            "hook": "growth"
+          },
+          {
+            "title": "ELIXIR SAGE",
+            "concept": "sage raising a violet elixir of life with a glowing DNA-helix vine curling around him",
+            "hook": "biotech COO"
+          }
+        ],
+        "legendary": [
+          {
+            "title": "PHOENIX OF FORTUNE",
+            "concept": "phoenix of fortune with golden flame wings rising behind him and gold coins raining",
+            "hook": "capital"
+          },
+          {
+            "title": "GOLDEN BULL WARLORD",
+            "concept": "warlord in gold armour astride a charging radiant golden bull",
+            "hook": "public markets"
+          }
+        ]
       }
     },
     {
-      "id": "co", "short": "CO", "fullName": "Co Huo", "role": "Chief of Staff",
+      "id": "co",
+      "short": "CO",
+      "fullName": "Co Huo",
+      "role": "Chief of Staff",
       "ref": "co-huo.png",
-      "variants": {
-        "common": { "title": "SCOUT", "concept": "alert scout with a scarf and a hooded travel cloak" },
-        "rare": { "title": "RANGER", "concept": "ranger with a teal-fletched longbow and a hawk" },
-        "epic": { "title": "SHADOW WARDEN", "concept": "shadow warden in violet-trimmed dark armour, twin glowing daggers, smoke" },
-        "legendary": { "title": "NINE-TAIL SHOGUN", "concept": "shogun in golden armour with nine spectral golden fox tails fanning behind" }
+      "bio": "Chief of Staff running internal operations; project management and operations experience from a Fortune 500 international company; UC Berkeley graduate.",
+      "vibe": "calm, steady, quiet confidence; short dark hair, scarf over shoulders",
+      "seeds": {
+        "common": [
+          {
+            "title": "SCOUT",
+            "concept": "alert scout with a scarf and a hooded travel cloak",
+            "hook": "eyes on everything"
+          },
+          {
+            "title": "STEWARD",
+            "concept": "castle steward with a ring of keys and a to-do scroll, scarf around his neck",
+            "hook": "internal operations"
+          }
+        ],
+        "rare": [
+          {
+            "title": "RANGER",
+            "concept": "ranger with a teal-fletched longbow and a hawk",
+            "hook": "precision"
+          },
+          {
+            "title": "CASTELLAN",
+            "concept": "castellan in teal-trimmed livery on the battlements with a spyglass and orders",
+            "hook": "keeps the castle running"
+          }
+        ],
+        "epic": [
+          {
+            "title": "SHADOW WARDEN",
+            "concept": "shadow warden in violet-trimmed dark armour with twin glowing daggers and smoke",
+            "hook": "gets it done"
+          },
+          {
+            "title": "CLOCKWORK TACTICIAN",
+            "concept": "tactician commanding a violet-glowing clockwork war table of moving pieces",
+            "hook": "project management"
+          }
+        ],
+        "legendary": [
+          {
+            "title": "NINE-TAIL SHOGUN",
+            "concept": "shogun in golden armour with nine spectral golden fox tails fanning behind him",
+            "hook": "command"
+          },
+          {
+            "title": "GOLDEN BEAR REGENT",
+            "concept": "regent in gold and white robes with a colossal radiant golden bear guardian at his back",
+            "hook": "UC Berkeley golden bear"
+          }
+        ]
       }
     }
-  ]
+  ],
+  "seedsNote": "seeds are the coordinator's first-pass concepts (2 per old 4-tier rarity); each slot's final 5/4/3/2/1 ladder lives in art/cl-team/slots/<id>.json"
 }
