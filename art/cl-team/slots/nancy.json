@@ -1,0 +1,24 @@
+{
+  "id": "nancy",
+  "cards": [
+    { "tier": "common", "n": 1, "title": "APPRENTICE PAINTER", "concept": "apprentice painter in a plain grey smock holding a wooden palette and brush at her chest, a small smudge of paint on one cheek, long straight dark hair tucked behind one ear", "hook": "Head of Design: where every designer starts, with a brush and a gentle, focused smile" },
+    { "tier": "common", "n": 2, "title": "LANTERN PUPPETEER", "concept": "village puppeteer in a simple linen tunic holding a small wooden marionette in front of a glowing paper lantern, its shadow play cast behind her head", "hook": "Entertainment Technology at Carnegie Mellon: storytelling through play and staging" },
+    { "tier": "common", "n": 3, "title": "PRINTSHOP TYPESETTER", "concept": "printer's apprentice in an ink-stained canvas apron holding a wooden composing stick of metal letter blocks at her chest, sleeves rolled up", "hook": "typography and layout, the quiet craft under every screen she designs" },
+    { "tier": "common", "n": 4, "title": "PIXEL-PERFECT TAILOR", "concept": "tailor in a grey waistcoat with a measuring tape draped around her neck, pins in the lapel and a pair of shears held near her shoulder", "hook": "product designer: measuring twice, fitting the experience to the user" },
+    { "tier": "common", "n": 5, "title": "JOURNEY MAPMAKER", "concept": "cartographer in a plain leather vest holding up a parchment map with a winding dotted path, a quill tucked behind her ear", "hook": "user journey maps: charting the route a user takes through a product" },
+
+    { "tier": "uncommon", "n": 1, "title": "CLOUD SHEPHERD", "concept": "shepherdess in a green-trimmed wool cloak holding a shepherd's crook behind her shoulder while three tiny puffy clouds float beside her head like sheep", "hook": "VMware: herding clouds, a pun on cloud and virtualization software" },
+    { "tier": "uncommon", "n": 2, "title": "PEACE COURIER", "concept": "travelling courier in a green-trimmed riding jacket holding a sealed scroll at her chest, a small white dove perched on her shoulder", "hook": "designing for the United Nations: carrying messages that bring people together" },
+    { "tier": "uncommon", "n": 3, "title": "PROTOTYPE TINKERER", "concept": "artificer in a green leather apron with brass goggles pushed up on her head, cradling a small clockwork bird prototype mid-flutter", "hook": "startups: build, test and iterate a prototype until it flies" },
+    { "tier": "uncommon", "n": 4, "title": "FIELD SKETCH RANGER", "concept": "ranger in a green hooded-back tunic with the hood down, holding an open leather sketchbook at her chest, a charcoal pencil behind her ear and a small fox familiar on her shoulder", "hook": "user research: observing people in the field and sketching what they need" },
+
+    { "tier": "rare", "n": 1, "title": "ILLUSIONIST", "concept": "illusionist in flowing teal silk raising one hand to paint glowing teal interface shapes, circles, cards and buttons, in the air beside her face", "hook": "product design: conjuring interfaces out of thin air" },
+    { "tier": "rare", "n": 2, "title": "CAROUSEL MAGE", "concept": "stage mage in a teal velvet coat with a high collar holding a small spinning carousel that glows faintly teal, tiny lights orbiting it", "hook": "Entertainment Technology at CMU: engineering wonder for theme parks, stages and games" },
+    { "tier": "rare", "n": 3, "title": "PALETTE ALCHEMIST", "concept": "alchemist in teal-lined robes holding a round glass flask at her chest in which a swirling colour wheel glows, faint teal vapour curling up", "hook": "colour systems: distilling a brand's palette into its purest form" },
+
+    { "tier": "epic", "n": 1, "title": "LUMEN ENCHANTRESS", "concept": "enchantress in an ornate violet gown holding a crystal wand at her chest, glowing magenta butterflies of light circling her long dark hair, softly glowing violet eyes", "hook": "her graceful, gentle calm, and the craft of adding delight to a design" },
+    { "tier": "epic", "n": 2, "title": "DREAMWEAVER", "concept": "dreamweaver in violet rune-embroidered robes spinning glowing violet threads between her hands into a floating tapestry of tiny worlds behind her head", "hook": "Digital Media at Pitzer and Head of Design: weaving many screens into one experience" },
+
+    { "tier": "legendary", "n": 1, "title": "MUSE OF WORLDS", "concept": "radiant muse of creation in gold and white regalia with a crescent-moon tiara and gold hair ornaments in her long dark hair, holding a starlight brush that paints a small golden world into being beside her, a blazing golden halo and orbiting stars behind her head", "hook": "Head of Design at her ultimate: the calm, serene creator who designs whole worlds" }
+  ]
+}

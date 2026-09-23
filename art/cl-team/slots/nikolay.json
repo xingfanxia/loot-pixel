@@ -1,0 +1,110 @@
+{
+  "id": "nikolay",
+  "cards": [
+    {
+      "tier": "common",
+      "n": 1,
+      "title": "TAVERN BROKER",
+      "concept": "tavern deal-broker in a grey leather vest over a rolled-sleeve linen shirt, arms crossed with a knowing half-smile, a fat coin pouch and a folded contract tucked at his chest.",
+      "hook": "Chief Business Officer and sales leader: the guy in the corner booth who closes every deal in the room."
+    },
+    {
+      "tier": "common",
+      "n": 2,
+      "title": "SELLSWORD",
+      "concept": "rugged sellsword in a padded grey gambeson with a leather shoulder strap, arms crossed, a plain longsword hilt rising behind one shoulder.",
+      "hook": "His signature arms-crossed, tough-but-warm stance from the team photo: hired steel you are glad is on your side."
+    },
+    {
+      "tier": "common",
+      "n": 3,
+      "title": "PLAID LUMBERJACK",
+      "concept": "cheerful woodcutter in a grey-checked flannel shirt with rolled sleeves and suspenders, a woodsman's axe resting over his shoulder behind his head.",
+      "hook": "The plaid shirt he wears in his photo, plus a pun: he cuts deals the way a lumberjack cuts timber."
+    },
+    {
+      "tier": "common",
+      "n": 4,
+      "title": "QUARTERMASTER",
+      "concept": "fort quartermaster in a plain grey tunic and leather apron, a quill behind his ear, a thick supply ledger and an iron ring of storeroom keys held at his chest.",
+      "hook": "His operations background: the one who keeps the whole company stocked, counted and running."
+    },
+    {
+      "tier": "common",
+      "n": 5,
+      "title": "DICE MERCHANT",
+      "concept": "market-stall game seller in a grey cloth smock with a knotted neck scarf, proudly holding up a wooden tray of carved dice and game tokens at chest height.",
+      "hook": "Xsolla, where he led acquisitions and launches for a video-game commerce company: he has always been in the business of selling games."
+    },
+    {
+      "tier": "uncommon",
+      "n": 1,
+      "title": "MARKET SCOUT",
+      "concept": "pathfinder in a green hooded travelling cloak thrown back off his head, a brass spyglass raised near his chest and a rolled trade map slung behind his shoulder.",
+      "hook": "Strategic business development: always first to spot the next market worth expanding into."
+    },
+    {
+      "tier": "uncommon",
+      "n": 2,
+      "title": "FALCON ENVOY",
+      "concept": "envoy in a green-trimmed leather jerkin with a heavy gauntlet, a small hooded messenger falcon perched on his shoulder clutching a sealed letter.",
+      "hook": "Strategic partnerships: his familiar carries the first message that opens every alliance."
+    },
+    {
+      "tier": "uncommon",
+      "n": 3,
+      "title": "GUILD RECRUITER",
+      "concept": "guild recruiter in a green tabard with a new guild's crest, holding an unrolled recruitment charter at his chest with a confident, welcoming grin.",
+      "hook": "At Xsolla he stood up new departments from scratch: he builds the team before he builds the empire."
+    },
+    {
+      "tier": "uncommon",
+      "n": 4,
+      "title": "WOLF TAMER",
+      "concept": "beast tamer in green-stitched fur-lined leathers, arms crossed, a bright-eyed young wolf pup peeking over his shoulder from behind his head.",
+      "hook": "He scales high-growth companies: raise the pup right and it grows into the pack leader; tough-but-warm, exactly like him."
+    },
+    {
+      "tier": "rare",
+      "n": 1,
+      "title": "CARAVAN MASTER",
+      "concept": "caravan master in a long travel coat with teal trim and a high collar, a teal-glowing brass compass in one hand and a leather map case strapped across his chest.",
+      "hook": "Operations at scale: he gets the whole caravan, goods and people, across the desert on time."
+    },
+    {
+      "tier": "rare",
+      "n": 2,
+      "title": "GUILD NEGOTIATOR",
+      "concept": "master negotiator in a tailored teal-accented doublet, extending a steel gauntlet for a firm handshake while holding a pact sealed with softly glowing teal wax.",
+      "hook": "Strategic partnerships and deal-making: his handshake is a binding contract."
+    },
+    {
+      "tier": "rare",
+      "n": 3,
+      "title": "LOOT KNIGHT",
+      "concept": "knight in fitted silver plate with teal enamel trim, a kite shield emblazoned with a glowing teal treasure-chest crest held at his chest, visor raised to show his confident face.",
+      "hook": "At Xsolla he helped game studios sell their in-game loot: in a loot-box game, he is the knight who guards the treasure."
+    },
+    {
+      "tier": "epic",
+      "n": 1,
+      "title": "MERCHANT PRINCE",
+      "concept": "merchant prince in violet-and-magenta brocade with a jewelled collar, enchanted contracts and cut gems orbiting him on violet runic light, eyes glinting with magic.",
+      "hook": "Sales and revenue growth: a prince whose treaties literally float into place."
+    },
+    {
+      "tier": "epic",
+      "n": 2,
+      "title": "CLAN UNIFIER",
+      "concept": "warlord in ornate violet-runed plate, arms crossed, as several clan banners behind his shoulders twist together into one blazing magenta standard.",
+      "hook": "M&A: he led acquisitions at Xsolla, turning many houses into a single stronger realm."
+    },
+    {
+      "tier": "legendary",
+      "n": 1,
+      "title": "DRAGON KINGMAKER",
+      "concept": "ascended kingmaker in gold-and-white dragon-scale regalia, arms crossed in his signature stance, a colossal golden dragon coiled behind his shoulders with wings spread like a radiant halo, a ring of glowing allied-kingdom crests orbiting him.",
+      "hook": "His ultimate form as the builder and scaler of companies: the dealmaker who does not wear the crown but decides who does, guarding a hoard of every deal he ever closed."
+    }
+  ]
+}

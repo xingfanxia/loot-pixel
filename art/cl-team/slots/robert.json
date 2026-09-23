@@ -1,0 +1,24 @@
+{
+  "id": "robert",
+  "cards": [
+    { "tier": "common", "n": 1, "title": "TINKERER", "concept": "friendly tinkerer in a grey work shirt and worn leather apron, holding a big wrench against his chest with a couple of brass gears tucked in the apron pocket.", "hook": "Engineering background: he started out building and fixing things with his own hands." },
+    { "tier": "common", "n": 2, "title": "LEDGER KEEPER", "concept": "cheerful ledger keeper in a plain waistcoat and rolled sleeves, a thick bound ledger hugged to his chest, a small wooden abacus beside it and a quill tucked behind his ear.", "hook": "Former CFO of a non-profit: every coin counted, every column balanced." },
+    { "tier": "common", "n": 3, "title": "TAVERN DEALER", "concept": "grinning tavern card dealer in a grey vest over a collared shirt, fanning a plain deck of playing cards in front of his chest.", "hook": "Mastercard alumnus: the original master of the card table." },
+    { "tier": "common", "n": 4, "title": "MAP SKETCHER", "concept": "village map sketcher in a simple linen tunic, a half-drawn parchment road map held up at chest height and a charcoal pencil behind his ear.", "hook": "Product management: sketching the roadmap before anyone walks the road." },
+    { "tier": "common", "n": 5, "title": "INNKEEPER", "concept": "welcoming innkeeper in a rolled-sleeve shirt and grey apron, raising a wooden tankard at chest height with a big warm grin.", "hook": "His warm, approachable grin: the host everyone is glad to see." },
+
+    { "tier": "uncommon", "n": 1, "title": "GEARWRIGHT", "concept": "guild gearwright in a utility vest with green trim, brass goggles pushed up on his forehead, and a little clockwork sparrow with green glass eyes perched on his shoulder.", "hook": "Engineering: the trained builder, now with a mechanical companion of his own making." },
+    { "tier": "uncommon", "n": 2, "title": "QUEST GIVER", "concept": "smiling quest giver in a green-lined traveller's coat, holding out a rolled scroll sealed with a green wax seal at chest height.", "hook": "Product management: PMs write the quests (user stories) the whole party sets out on." },
+    { "tier": "uncommon", "n": 3, "title": "COIN COURIER", "concept": "swift coin courier in a green hooded cloak with a leather satchel strap across his chest, a sealed payment letter in hand and a carrier pigeon on his shoulder.", "hook": "Mastercard: moving payments safely from one hand to another across the network." },
+    { "tier": "uncommon", "n": 4, "title": "PARTY LEADER", "concept": "adventuring party leader in practical leather armour with green accents, a green pennant banner rising over his shoulder behind his head, grinning with a rallying look.", "hook": "Technical and administrative leadership: the approachable leader who keeps the party moving together." },
+
+    { "tier": "rare", "n": 1, "title": "ARTIFICER", "concept": "seasoned artificer in fitted leather and brass with teal inlays, a mechanical owl with faintly teal-glowing eyes perched on his shoulder, a small teal-lit gadget held at his chest.", "hook": "Product builder: engineering turned into living, useful creations." },
+    { "tier": "rare", "n": 2, "title": "CARD MAGE", "concept": "card mage in a teal-trimmed long coat, fanning a hand of softly teal-glowing playing cards between his fingers in front of his chest.", "hook": "Mastercard: here the cards are the magic." },
+    { "tier": "rare", "n": 3, "title": "TREASURY PALADIN", "concept": "treasury paladin in fitted silver plate with teal enamel trim, a round shield embossed with a glowing teal coin sigil raised beside his chest.", "hook": "Non-profit CFO: sworn guardian of the funds that serve a good cause." },
+
+    { "tier": "epic", "n": 1, "title": "GOLEM FORGER", "concept": "master golem forger in an ornate dark forge-apron with violet rune stitching, glowing violet eyes, a hulking stone golem etched with violet runes looming behind his shoulders.", "hook": "Builds products: engineering at a scale where the creation stands taller than its maker." },
+    { "tier": "epic", "n": 2, "title": "SEER OF ROADMAPS", "concept": "arcane seer in ornate violet robes with a magenta-lined high collar, glowing eyes, a luminous violet roadmap of branching paths and milestone stars unfurling in the air behind his head.", "hook": "Chief Product Officer: he sees every path the product can take before it is walked." },
+
+    { "tier": "legendary", "n": 1, "title": "WORLD ARCHITECT", "concept": "ascended architect of worlds in gold and white regalia with a radiant crown of golden gears, cradling a glowing golden miniature planet at his chest while blueprint constellations and a golden halo blaze behind his head.", "hook": "Chief Product Officer and engineer: the ultimate product builder, designing entire worlds from the blueprint up." }
+  ]
+}

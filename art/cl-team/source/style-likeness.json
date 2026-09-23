@@ -1,0 +1,75 @@
+{
+  "note": "Per-person likeness inputs for scripts/art/prompt.py and scripts/art/draft.py. headBox = left,top,right of the head including hair, in the reference photo's own pixels (scratch/media/team/refs/<ref>). verified=true means the box and wording were checked against a quantized result during the style lock; the others are first estimates from the posterized photo: build the draft and look at it before generating. faceTones = the subject's lit and shadow skin keys for quantize.py --face-tones (cB fair and East Asian skin, Bb dark skin).",
+  "slots": {
+    "xingfan": {
+      "headBox": "92,25,208",
+      "verified": true,
+      "likeness": "a warm, energetic Chinese man with a round full face, short thick black hair, and a huge joyful open-mouthed laugh with his eyes squeezed into happy crescents",
+      "skin": "cream #f4efe0 lit areas, tan #c98f5a shadows, a small pink #ff9aa8 patch on each cheek",
+      "faceTones": "cB"
+    },
+    "nancy": {
+      "headBox": "92,10,215",
+      "verified": true,
+      "likeness": "a gentle, graceful Chinese woman with long straight black hair parted near the centre and falling past her shoulders, a soft oval face and a soft closed-mouth smile",
+      "skin": "cream #f4efe0 lit areas, tan #c98f5a shadows, a small pink #ff9aa8 patch on the cheeks and lips",
+      "faceTones": "cB"
+    },
+    "kevin": {
+      "headBox": "90,12,218",
+      "verified": true,
+      "likeness": "a poised, clean-cut, trustworthy white man with short brown hair swept back and side-parted, a high forehead, a long oval face, clean-shaven, a calm confident closed-mouth look",
+      "skin": "cream #f4efe0 lit areas, tan #c98f5a shadows, only a hint of pink #ff9aa8 on the cheeks",
+      "faceTones": "cB"
+    },
+    "albert": {
+      "headBox": "165,20,385",
+      "verified": false,
+      "likeness": "a young East Asian man with neat short black hair swept up at the front, black rectangular glasses, a slim oval face and a composed, quietly determined slight smile",
+      "skin": "cream #f4efe0 lit areas, tan #c98f5a shadows, a small pink #ff9aa8 patch on the cheeks",
+      "faceTones": "cB"
+    },
+    "nikolay": {
+      "headBox": "88,5,200",
+      "verified": false,
+      "likeness": "a white man with short dark-blond hair and faded sides, a short full stubble beard, a strong square jaw, head slightly tilted, a confident tough-but-warm half smile",
+      "skin": "cream #f4efe0 lit areas, tan #c98f5a shadows, brown #8a5a3c stubble",
+      "faceTones": "cB"
+    },
+    "jermaine": {
+      "headBox": "80,12,178",
+      "verified": false,
+      "likeness": "a Black man with a very short cropped haircut, a full well-groomed dark beard, a strong brow and a suave, confident, smooth expression",
+      "skin": "tan #c98f5a lit areas, brown #8a5a3c midtones, dark brown #4f2f22 shadows",
+      "faceTones": "Bb"
+    },
+    "robert": {
+      "headBox": "90,18,205",
+      "verified": false,
+      "likeness": "a white man with short dark brown hair, thin-framed glasses, a full dark beard and a warm, friendly, approachable grin",
+      "skin": "cream #f4efe0 lit areas, tan #c98f5a shadows, dark brown #4f2f22 beard",
+      "faceTones": "cB"
+    },
+    "matt": {
+      "headBox": "88,18,198",
+      "verified": false,
+      "likeness": "a white man with short light-brown hair, clean-shaven, and a big open enthusiastic grin showing his teeth",
+      "skin": "cream #f4efe0 lit areas, tan #c98f5a shadows, a small pink #ff9aa8 patch on the cheeks",
+      "faceTones": "cB"
+    },
+    "warren": {
+      "headBox": "80,14,185",
+      "verified": false,
+      "likeness": "a man with short neat black hair, dark-rimmed glasses, a round face, any facial hair exactly as in the photo, and a bright, polished, upbeat wide smile",
+      "skin": "cream #f4efe0 lit areas, tan #c98f5a shadows",
+      "faceTones": "cB"
+    },
+    "co": {
+      "headBox": "88,15,182",
+      "verified": false,
+      "likeness": "an East Asian man with short dark hair, a calm oval face and a steady, quietly confident closed-mouth expression",
+      "skin": "cream #f4efe0 lit areas, tan #c98f5a shadows",
+      "faceTones": "cB"
+    }
+  }
+}

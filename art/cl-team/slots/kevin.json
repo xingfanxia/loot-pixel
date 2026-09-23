@@ -1,0 +1,24 @@
+{
+  "id": "kevin",
+  "cards": [
+    { "tier": "common", "n": 1, "title": "TOWN SCRIBE", "concept": "neat town scribe in a plain grey linen shirt and dark waistcoat, holding a quill and a half-unrolled parchment scroll at his chest, calm assured smile.", "hook": "Chief Legal Officer: every great deal starts as a carefully drafted document." },
+    { "tier": "common", "n": 2, "title": "INNKEEPER", "concept": "welcoming innkeeper in a grey apron over a crisp white shirt, a brass key ring raised beside his face and a warm lantern glowing behind his shoulder.", "hook": "Hospitality is one of the industries where he led financings and restructurings." },
+    { "tier": "common", "n": 3, "title": "MONEYCHANGER", "concept": "market moneychanger in a grey wool coat with a small brass balance scale of stacked coins held at his chest and a pencil tucked behind his ear.", "hook": "Finance leadership: the man who knows exactly what every coin is worth." },
+    { "tier": "common", "n": 4, "title": "CARD DEALER", "concept": "poised gaming-hall dealer in a silver-grey vest, white shirt and black bow tie, fanning a hand of playing cards at his chest with a steady poker smile.", "hook": "Gaming is one of his industries, and a trustworthy dealer keeps every table fair." },
+    { "tier": "common", "n": 5, "title": "LAW APPRENTICE", "concept": "bright-eyed law apprentice in a simple grey scholar's robe, hugging a tall stack of leather-bound law books to his chest, side-parted hair neat.", "hook": "JD/MBA from UCLA: the long nights of study behind the counsel." },
+
+    { "tier": "uncommon", "n": 1, "title": "DEAL BROKER", "concept": "guild deal broker in a tailored leather doublet with green trim, holding up a contract sealed with green wax and a clinking coin purse, confident half-smile.", "hook": "Led M&A across tech, gaming and hospitality: two parties, one signature." },
+    { "tier": "uncommon", "n": 2, "title": "WILDCAT RANGER", "concept": "desert ranger in a sand-coloured cloak and green scarf, a short bow slung behind his back and a bronze wildcat-paw clasp pinning the cloak at his chest.", "hook": "BS from Arizona: a proud Arizona Wildcat." },
+    { "tier": "uncommon", "n": 3, "title": "ROYAL HERALD", "concept": "royal herald in a green-and-grey tabard, a brass horn with a small green banner over one shoulder and an official decree scroll held at his chest.", "hook": "General counsel speaks for the company: every official word goes through him." },
+    { "tier": "uncommon", "n": 4, "title": "BRUIN SQUIRE", "concept": "young squire in a quilted gambeson with green trim and a round wooden shield on his back, a friendly bear cub familiar clinging to his shoulder.", "hook": "UCLA Bruins: JD and MBA, the bear cub that grew into a knight." },
+
+    { "tier": "rare", "n": 1, "title": "PALADIN OF LAW", "concept": "bareheaded paladin in polished silver plate with a teal tabard, holding a shield shaped like an open law book whose pages glow faint teal.", "hook": "Chief Legal Officer: the company's shield." },
+    { "tier": "rare", "n": 2, "title": "ROYAL TREASURER", "concept": "royal treasurer in a high-collared dark robe with teal embroidery, holding a teal-bound ledger to his chest and a heavy ornate vault key over his shoulder, faint teal glow on the key.", "hook": "Finance leadership and $1B+ in financings: keeper of the crown's treasury." },
+    { "tier": "rare", "n": 3, "title": "GRANDMASTER", "concept": "calm strategist in a sleek teal-lined tactician's coat, holding a glowing teal chess king at his chest while faint chessboard lines shimmer behind his head.", "hook": "Restructurings and business transformation: always thinking ten moves ahead." },
+
+    { "tier": "epic", "n": 1, "title": "HIGH JUSTICAR", "concept": "noble high justicar in an ornate violet mantle and silver gorget, raising glowing violet scales of justice beside his face, a faint violet glint in his eyes with pupils still visible, swirling magenta runes behind him.", "hook": "Legal leadership: the fair and final judgement in every dispute." },
+    { "tier": "epic", "n": 2, "title": "VAULT WARDEN", "concept": "bareheaded vault warden in dark ornate plate with violet filigree, neat side-parted hair visible, head-and-shoulders framing with a colossal round vault door blazing with violet runes behind him and a few violet-lit coins glinting at his shoulder.", "hook": "Led $1B+ in financing: guardian of a billion-coin vault." },
+
+    { "tier": "legendary", "n": 1, "title": "ARBITER OF STARS", "concept": "celestial arbiter in radiant gold-and-white regalia with a slim gold circlet that leaves his side-parted hair visible, holding a glowing golden covenant scroll at his chest, calm smile, a blazing halo behind his head with a faint star-sword shape inside it.", "hook": "The final word on every deal: the covenant-maker whose contracts bind whole realms." }
+  ]
+}

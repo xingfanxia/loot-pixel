@@ -10,7 +10,7 @@ const pixel = Silkscreen({
 
 export const metadata: Metadata = {
   title: "Loot Pixel: the vault",
-  description: "Hold to crack open a pixel-art loot card in a torch-lit vault. Collect all nine.",
+  description: "Hold to crack open a pixel-art loot card in a torch-lit vault. Collect the full set.",
 };
 
 export const viewport: Viewport = {

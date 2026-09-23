@@ -1,3 +1,4 @@
+import type { TierAudio } from './tiers';
 import { rnd } from './util';
 
 interface ChargeVoice { o: OscillatorNode; o2: OscillatorNode; g: GainNode; g2: GainNode; ns: AudioBufferSourceNode; nf: BiquadFilterNode; ng: GainNode }
@@ -57,14 +58,15 @@ export class ChipAudio {
   heart(v: number){ if(!this.ctx) return; const t=this.now(); this.osc(t,'triangle',150,.1,.55+.3*v,40); this.osc(t+.1,'triangle',115,.12,.45+.3*v,35); }
   crack(i: number){ if(!this.ctx) return; const t=this.now(); this.nz(t,.1,.4); this.osc(t,'square',this.midi(84+i*3),.05,.07); this.osc(t,'triangle',90,.1,.4,45); }
   zap(){ if(!this.ctx) return; const t=this.now(); this.nz(t,.05,.12,false,9000,3000); this.osc(t,'square',rnd(200,900),.03,.03); }
-  tease(l: number){ if(!this.ctx) return; const t=this.now(), b=[0,72,76,79][l]; this.seq(t,[b,b+4,b+7,b+12,b+16,b+19],.035,'square',.08); this.nz(t,.3,.15,false,9000,2000); }
-  boom(r: number){ if(!this.ctx) return; const t=this.now();
+  /** Rising arpeggio from base note b when the charge teases up a tier. */
+  tease(b: number){ if(!this.ctx) return; const t=this.now(); this.seq(t,[b,b+4,b+7,b+12,b+16,b+19],.035,'square',.08); this.nz(t,.3,.15,false,9000,2000); }
+  /** The reveal boom: noise hit, crunches, then the tier's jingle, bass line and twinkle. */
+  boom(a: TierAudio){ if(!this.ctx) return; const t=this.now();
     this.nz(t,1.4,.8,true,7000,120); this.nz(t,.3,.5,false); this.osc(t,'triangle',200,.8,.9,28); this.osc(t,'square',100,.35,.12,30);
-    for(let i=0;i<8+r*4;i++) this.nz(t+Math.random()*.35,.05,.15,false,rnd(4000,11000),2000);
-    const J=[[72,76,79,84],[67,72,76,79,84,88],[69,73,76,81,null,83,85,88,null,93],[76,79,84,null,86,88,null,91,null,null,88,91,96,null,100]];
-    const s=r===3?.08:.065, d=r===3?.3:.14; this.seq(t+d,J[r],s,'p25',.11,s*1.3); this.seq(t+d,J[r].map(m=>m==null?null:m-12),s,'square',.05,s*1.3);
-    if (r>=1){ const bass=r===3?[48,null,55,null,60,null,55,null,48,null,43,null,48]:r===2?[45,null,52,null,57,null,52]:[48,null,55]; this.seq(t+d,bass,s,'triangle',.24,s*2); }
-    if (r===3) for(let i=0;i<20;i++) this.osc(t+1.4+i*.04,'square',this.midi(96+[0,4,7,12][i%4]),.035,.035); }
+    for(let i=0;i<a.crunch;i++) this.nz(t+Math.random()*.35,.05,.15,false,rnd(4000,11000),2000);
+    const s=a.step, d=a.delay; this.seq(t+d,a.mel,s,'p25',.11,s*1.3); this.seq(t+d,a.mel.map(m=>m==null?null:m-12),s,'square',.05,s*1.3);
+    if (a.bass) this.seq(t+d,a.bass,s,'triangle',.24,s*2);
+    if (a.twinkle) for(let i=0;i<a.twinkle.n;i++) this.osc(t+a.twinkle.at+i*.04,'square',this.midi(96+[0,4,7,12][i%4]),.035,.035); }
   roar(){ if(!this.ctx) return; const t=this.now(); this.nz(t,.7,.35,true,600,3000); }
   after(){ if(!this.ctx) return; const t=this.now(); this.nz(t,.6,.45,true,4000,150); this.osc(t,'triangle',130,.4,.7,32); }
   letter(i: number,n: number){ if(!this.ctx) return; const t=this.now(); this.osc(t,'square',this.midi(72+i*2),.04,.06); this.osc(t,'triangle',110,.06,.35,55); if(i===n-1){ this.nz(t,.25,.35,true,3000,250); this.osc(t,'triangle',90,.3,.7,32); } }
@@ -90,7 +92,7 @@ export class ChipAudio {
     if (c.createStereoPanner){ const pn=c.createStereoPanner(); pn.pan.value=pan; g.connect(pn); pn.connect(this.out); } else g.connect(this.out); s2.start(t, Math.random()*.8); s2.stop(t+.06); }
   snap(){ if(!this.ctx) return; const t=this.now(); this.osc(t,'square',2300,.07,.08,700); this.nz(t,.1,.35,false,12000,3000); this.osc(t,'triangle',170,.14,.45,55); this.osc(t+.02,'square',3100,.04,.04); }
   clunk(){ if(!this.ctx) return; const t=this.now(); this.osc(t,'triangle',120,.16,.6,48); this.nz(t,.1,.3,true,2400,300); this.osc(t,'square',900,.03,.03); }
-  rumble(r: number){ if(!this.ctx) return; const t=this.now(), d=1.6+r*.5; this.nz(t,d,.55,true,420,90); this.osc(t,'triangle',48,d,.35,32); this.nz(t+.1,.5,.25,true,1600,200); }
+  rumble(d: number){ if(!this.ctx) return; const t=this.now(); this.nz(t,d,.55,true,420,90); this.osc(t,'triangle',48,d,.35,32); this.nz(t+.1,.5,.25,true,1600,200); }
   thud(){ if(!this.ctx) return; const n=this.now(); if (n-this.lastThud<.045) return; this.lastThud=n; this.osc(n,'triangle',rnd(80,120),.12,.4,40); this.nz(n,.08,.22,true,rnd(900,1800),200); }
   rebuild(){ if(!this.ctx) return; const t=this.now(); this.nz(t,.7,.2,true,300,2500); this.seq(t+.1,[48,52,55,60,64,67],.07,'triangle',.18,.09); }
   summon(){ if(!this.ctx) return; const t=this.now(); this.seq(t,[60,67,72,76,79,84,88,91],.05,'p25',.055,.07); this.nz(t,.7,.14,false,500,7000); this.osc(t,'triangle',55,.8,.25,110); }
