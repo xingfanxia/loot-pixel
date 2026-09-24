@@ -33,15 +33,18 @@
   box-shadow:0 -3px 0 0 var(--ink), 0 3px 0 0 var(--ink), -3px 0 0 0 var(--ink), 3px 0 0 0 var(--ink), inset 0 -3px 0 0 var(--hot-dim), inset 0 3px 0 0 #ffb0cf, 0 0 22px rgba(255,61,139,.55)}
 
 /* draw record + luck: a neon LED bar in terminal type, the lit run shading cyan to pink */
-:root[data-vault-theme="cyber"] .luck{--vc:#2ee6ff; --vd:#12689e}
-:root[data-vault-theme="cyber"] .luck[data-verdict="blessed"]{--vc:#ff3d8b; --vd:#8e1f63}
-:root[data-vault-theme="cyber"] .luck[data-verdict="lucky"]{--vc:#b86bff; --vd:#6a2fbf}
+:root[data-vault-theme="cyber"] .luck{--vc:#c9fbff; --vd:#12689e}
+:root[data-vault-theme="cyber"] .luck[data-verdict="blessed"]{--vc:#ffe45e; --vd:#8e1f63}
+:root[data-vault-theme="cyber"] .luck[data-verdict="fortunate"]{--vc:#ff3d8b; --vd:#8e1f63}
+:root[data-vault-theme="cyber"] .luck[data-verdict="lucky"]{--vc:#2ee6ff; --vd:#12689e}
 :root[data-vault-theme="cyber"] .luck[data-verdict="unlucky"]{--vc:#7f93cc; --vd:#241a52}
-:root[data-vault-theme="cyber"] .luck[data-verdict="cursed"]{--vc:#8e1f63; --vd:#04030b}
-:root[data-vault-theme="cyber"] .luck .verdict{font-size:40px; font-weight:400; letter-spacing:.04em; text-transform:uppercase; color:#fff; text-shadow:-2px 0 0 var(--neon), 2px 0 0 var(--vc), 0 0 16px var(--vc)}
+:root[data-vault-theme="cyber"] .luck[data-verdict="jinxed"]{--vc:#ff8a5c; --vd:#6b2a1a}
+:root[data-vault-theme="cyber"] .luck[data-verdict="cursed"]{--vc:#ff2d3d; --vd:#5c0a14}
+:root[data-vault-theme="cyber"] .luck .verdict{font-size:40px; font-weight:400; letter-spacing:.04em; text-transform:uppercase; color:var(--vc); text-shadow:-2px 0 0 var(--vd), 2px 0 0 rgba(255,255,255,.35), 0 0 16px var(--vc)}
 :root[data-vault-theme="cyber"] .luck .meter{gap:3px; padding:4px; background:#04030b; box-shadow:0 0 0 2px var(--neon-dim)}
 :root[data-vault-theme="cyber"] .luck .meter i{height:16px; background:#140d34; box-shadow:none; transform:skewX(-12deg)}
-:root[data-vault-theme="cyber"] .luck .meter i.on{background:color-mix(in srgb, var(--vc) calc(var(--i) * 5%), var(--neon)); box-shadow:0 0 6px var(--vc)}
+/* lit segments brighten along the bar in the verdict's own colour */
+:root[data-vault-theme="cyber"] .luck .meter i.on{background:color-mix(in srgb, var(--vc) calc(55% + var(--i) * 2.25%), var(--vd)); box-shadow:0 0 6px var(--vc)}
 :root[data-vault-theme="cyber"] .luck .luck-note, :root[data-vault-theme="cyber"] .luck-none{font-size:18px; color:var(--neon)}
 :root[data-vault-theme="cyber"] .record{border-bottom:2px dashed var(--indigo)}
 :root[data-vault-theme="cyber"] .record-stats div{background:rgba(15,10,38,.9); box-shadow:0 0 0 2px var(--neon-dim); clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}
@@ -59,7 +62,7 @@
 :root[data-vault-theme="cyber"] .luck-pill{color:var(--vc); text-shadow:0 0 8px var(--vc)}
 :root[data-vault-theme="cyber"] .luck-pill .mini{gap:2px; padding:2px 3px; background:#04030b; box-shadow:0 0 0 1px var(--neon-dim)}
 :root[data-vault-theme="cyber"] .luck-pill .mini i{width:4px; height:10px; background:#140d34; box-shadow:none; transform:skewX(-12deg)}
-:root[data-vault-theme="cyber"] .luck-pill .mini i.on{background:color-mix(in srgb, var(--vc) calc(var(--i) * 5%), var(--neon)); box-shadow:0 0 4px var(--vc)}
+:root[data-vault-theme="cyber"] .luck-pill .mini i.on{background:color-mix(in srgb, var(--vc) calc(55% + var(--i) * 2.25%), var(--vd)); box-shadow:0 0 4px var(--vc)}
 
 /* collection */
 :root[data-vault-theme="cyber"] #album{font-family:var(--font-term),"Courier New",monospace; background:linear-gradient(180deg, #0c0720, #07041a);

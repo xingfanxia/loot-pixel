@@ -70,5 +70,9 @@ export function luck(deck: Deck, draws: number, k: number) {
   return fewer + same / 2;
 }
 
-/** A word for a luck share (0..1). */
-export const verdict = (x: number) => x >= .9 ? 'Blessed' : x >= .65 ? 'Lucky' : x >= .35 ? 'Average' : x >= .1 ? 'Unlucky' : 'Cursed';
+/**
+ * Seven words for a luck share (0..1), luckiest first: Blessed top 5%, Fortunate next 15%, Lucky next 20%,
+ * Average the middle 20%, Unlucky, Jinxed and Cursed mirrored below. Without a LEGENDARY the share stays
+ * at or under 0.5 (ties count half), so a dry run slides from Average down.
+ */
+export const verdict = (x: number) => x >= .95 ? 'Blessed' : x >= .8 ? 'Fortunate' : x >= .6 ? 'Lucky' : x >= .4 ? 'Average' : x >= .2 ? 'Unlucky' : x >= .05 ? 'Jinxed' : 'Cursed';

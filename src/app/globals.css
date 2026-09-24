@@ -127,11 +127,13 @@ button.thumb:focus-visible{outline:3px dashed var(--cream); outline-offset:6px}
 @media (prefers-reduced-motion: reduce){ .pull-grid li{animation:none} }
 
 /* ---------- draw record (collection top) + luck meter (also on 10-pull results) ---------- */
-/* verdict colours follow the rarity ladder: Blessed gold, Lucky violet, Average teal, Unlucky silver, Cursed red */
-.luck{--vc:#47d6c1; --vd:#1f8f8a}
+/* verdict colours: the lucky half climbs the rarity ladder (teal, violet, gold), the unlucky half cools to grey then burns to red */
+.luck{--vc:#f4efe0; --vd:#6a6394}
 .luck[data-verdict="blessed"]{--vc:#ffcf4a; --vd:#e0781f}
-.luck[data-verdict="lucky"]{--vc:#b86bff; --vd:#6a2fbf}
-.luck[data-verdict="unlucky"]{--vc:#c4ccd9; --vd:#4b5268}
+.luck[data-verdict="fortunate"]{--vc:#b86bff; --vd:#6a2fbf}
+.luck[data-verdict="lucky"]{--vc:#47d6c1; --vd:#1f8f8a}
+.luck[data-verdict="unlucky"]{--vc:#8791a6; --vd:#4b5268}
+.luck[data-verdict="jinxed"]{--vc:#ff9aa8; --vd:#8c1f3a}
 .luck[data-verdict="cursed"]{--vc:#e8434f; --vd:#8c1f3a}
 .record{display:grid; grid-template-columns:minmax(0,300px) 1fr; gap:14px 36px; align-items:start; padding:18px 0; border-bottom:3px solid var(--navy)}
 .luck .verdict{margin:0; font-size:28px; font-weight:700; line-height:1; color:var(--vc); text-shadow:3px 3px 0 var(--ink), 3px 0 0 var(--vd)}
