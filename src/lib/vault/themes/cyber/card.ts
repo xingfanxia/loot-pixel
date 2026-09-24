@@ -118,8 +118,9 @@ export function cyberChrome(V: Vault, t: number) {
   const { S, geo: G } = V, x = V.B.frontG, a = G.art, R = TIERS[S.vr];
   x.fillStyle = PAL[R.l]; for (const [cx, cy, sx, sy] of [[a.x - 1, a.y - 1, 1, 1], [a.x + a.w, a.y - 1, -1, 1], [a.x - 1, a.y + a.h, 1, -1], [a.x + a.w, a.y + a.h, -1, -1]]) {
     x.fillRect(Math.min(cx, cx + sx * 4), cy, 5, 1); x.fillRect(cx, Math.min(cy, cy + sy * 4), 1, 5); }
-  if (G.titleH) { drawTitleBar(V, R.l); x.fillStyle = PAL[R.d]; x.fillRect(a.x, G.titleY, 2, G.titleH); x.fillRect(a.x + a.w - 2, G.titleY, 2, G.titleH);
-    if (Math.floor(t * 2) % 2) { x.fillStyle = PAL[R.l]; x.fillRect(a.x + a.w - 5, G.titleY + G.titleH - 4, 2, 2); } }
+  // title bar accents sit on its border rows only: a 16-char line fills the full width
+  if (G.titleH) { drawTitleBar(V, R.l); const yb = G.titleY + G.titleH - 1; x.fillStyle = PAL[R.l]; x.fillRect(a.x, G.titleY, 6, 1); x.fillRect(a.x + a.w - 6, G.titleY, 6, 1);
+    x.fillStyle = PAL[R.d]; x.fillRect(a.x, yb, 6, 1); x.fillRect(a.x + a.w - 6, yb, 6, 1); if (Math.floor(t * 2) % 2) { x.fillStyle = PAL.w; x.fillRect(a.x + a.w / 2 - 1, G.titleY, 3, 1); } }
   const py = G.plateY; x.fillStyle = PAL[0]; x.fillRect(a.x, py, a.w, 10); x.fillStyle = PAL[R.d]; x.fillRect(a.x, py + 9, a.w, 1); x.fillStyle = PAL[R.l]; x.fillRect(a.x, py, 2, 10);
   const nm = S.spec!.name; drawText(x, nm, Math.round(G.hw - textW(nm, 1) / 2), py + 2, 1, 'i', 'k');
   G.bars.forEach((lb, k) => { const y = G.barY0 + k * 6; drawText(x, lb, a.x + 1, y, 1, 'S'); const bw = G.barW, bx = G.barX; x.fillStyle = PAL.k; x.fillRect(bx - 1, y, bw + 2, 5);
