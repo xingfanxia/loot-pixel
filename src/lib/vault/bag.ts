@@ -1,8 +1,8 @@
 import type { Deck } from './decks/types';
-import type { Pity } from './odds';
+import type { DrawStats, Pity } from './odds';
 
-/** The collection bag, persisted per browser and per deck: copies owned by card id, and the pity counters (odds.ts). */
-export interface Bag { owned: Record<string, number>; complete: boolean; pity?: Pity }
+/** The collection bag, persisted per browser and per deck: copies owned by card id, the pity counters and the draw record (odds.ts). */
+export interface Bag { owned: Record<string, number>; complete: boolean; pity?: Pity; stats?: DrawStats }
 
 export function loadBag(key: string): Bag {
   try { const v = JSON.parse(localStorage.getItem(key) || 'null'); if (v && v.owned) return v; } catch {}

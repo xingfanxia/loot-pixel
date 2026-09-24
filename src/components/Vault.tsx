@@ -6,7 +6,7 @@ import { THEME_KEY, THEMES, themeById } from "@/lib/vault/themes";
 import Collection from "./Collection";
 import PackResults from "./PackResults";
 import type { VaultController } from "@/lib/vault/engine";
-import type { PackResult } from "@/lib/vault/context";
+import type { DrawRecord, PackResult } from "@/lib/vault/context";
 
 /**
  * DOM shell for the canvas engine. React owns the HUD controls; the engine owns the
@@ -38,11 +38,11 @@ export default function Vault({ sources }: { sources: DeckSources }) {
   const [error, setError] = useState<string | null>(null);
   // the deck depends on the theme (a theme can bring its own card pack), so both change together
   const [run, setRun] = useState<{ deck: Deck; theme: string } | null>(null);
-  const [album, setAlbum] = useState<Record<string, number> | null>(null);
+  const [album, setAlbum] = useState<{ owned: Record<string, number>; record: DrawRecord } | null>(null);
   const [packMode, setPackMode] = useState(false);
   // the pack being dealt (card on the altar of total) and the finished pack's results
   const [packAt, setPackAt] = useState<{ at: number; total: number } | null>(null);
-  const [pull, setPull] = useState<{ cards: PackResult[]; legendIn: number | null } | null>(null);
+  const [pull, setPull] = useState<{ cards: PackResult[]; record: DrawRecord } | null>(null);
   // read by a rebuilt engine (theme switch) so the rarity pick, sound setting and draw mode carry over
   const prefs = useRef({ force: -1, sound: true, pack: false });
 
@@ -80,7 +80,7 @@ export default function Vault({ sources }: { sources: DeckSources }) {
           },
           deck,
           themeById(theme),
-          { onBagComplete: setBagComplete, onError: setError, onPack: setPackAt, onPackDone: (cards, { legendIn }) => setPull({ cards, legendIn }) },
+          { onBagComplete: setBagComplete, onError: setError, onPack: setPackAt, onPackDone: (cards, record) => setPull({ cards, record }) },
         );
         if (prefs.current.pack) v.setPack(true);
         if (prefs.current.force >= 0) v.setForce(prefs.current.force);
@@ -163,9 +163,9 @@ export default function Vault({ sources }: { sources: DeckSources }) {
         </button>
       </div>
       <button id="bag" ref={bag} type="button" aria-label="Open the collection"
-        onClick={() => setAlbum(vault.current?.owned() ?? {})} />
-      <PackResults cards={pull?.cards ?? null} legendIn={pull?.legendIn ?? null} onClose={(again) => { setPull(null); vault.current?.closePack(again); }} />
-      {deck && <Collection deck={deck} owned={album ?? {}} open={album !== null} onClose={() => setAlbum(null)} />}
+        onClick={() => { const v = vault.current; if (v) setAlbum({ owned: v.owned(), record: v.record() }); }} />
+      <PackResults cards={pull?.cards ?? null} record={pull?.record ?? null} onClose={(again) => { setPull(null); vault.current?.closePack(again); }} />
+      {deck && <Collection deck={deck} owned={album?.owned ?? {}} record={album?.record ?? null} open={album !== null} onClose={() => setAlbum(null)} />}
       <div id="live" ref={live} className="sr" aria-live="polite" />
       <div id="err" style={error ? { display: "block" } : undefined}>{error && `Something broke: ${error}`}</div>
     </>

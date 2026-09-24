@@ -1,12 +1,12 @@
 import { saveBag, showCard, shownSlots } from './bag';
 import { drawFront } from './card-front';
-import { rankOf, type PackCard, type Spec, type Vault } from './context';
+import { rankOf, type DrawRecord, type PackCard, type Spec, type Vault } from './context';
 import type { DeckCard } from './decks/types';
 import { genCracks } from './cracks';
 import { slotRect } from './layout';
 import { bolt, coins, confetti, gy, Q, ring, shatter, sparks } from './particles';
 import { TIERS, type TierId } from './tiers';
-import { advance, noPity, pityTier, type Pity } from './odds';
+import { luck, meanGap, noPity, noStats, pityTier, tally, type Pity } from './odds';
 import { ri, rnd, TAU } from './util';
 import { startWallBreak, wallRebuild } from './wall';
 import { deal, dealing, newPack, openPack, packDone, rollPack } from './pack';
@@ -38,10 +38,15 @@ export function setCard(V: Vault, p: PackCard){ const S=V.S; S.r=p.r; S.spec=p.s
 /** Rolls tier + card for the next reveal (a whole pack when the altar holds one). */
 export function assignCard(V: Vault){
   if (V.S.pack){ rollPack(V); return; }
-  const p=bagPity(V), { spec, r } = rollCard(V, pickRarity(V, p)); setCard(V, withFake(V, spec, r)); if (p) V.S.pityNext=advance(p, r);
+  const { spec, r } = rollCard(V, pickRarity(V, bagPity(V))); setCard(V, withFake(V, spec, r)); V.S.rolled=r;
 }
-/** The bag's pity counters when the deck has a pity rule. */
-export const bagPity=(V: Vault): Pity|undefined => V.deck.pity ? (V.bag.bag.pity ?? noPity()) : undefined;
+/** The bag's pity counters (kept for every deck; only a deck with a pity rule draws by them). */
+export const bagPity=(V: Vault): Pity => V.bag.bag.pity ?? noPity();
+/** Counts rolled tiers (in roll order) into the bag's pity counters and draw record; the caller saves the bag. */
+export function countDraws(V: Vault, rs: number[]){ const b=V.bag.bag, t=tally(bagPity(V), b.stats ?? noStats(), rs); b.pity=t.pity; b.stats=t.stats; }
+/** The draw record with its luck rating (see DrawRecord). */
+export function drawRecord(V: Vault): DrawRecord { const st=V.bag.bag.stats ?? noStats(), p=bagPity(V), rule=V.deck.pity;
+  return { draws: st.draws, gaps: st.gaps, epics: st.epics, streak: p.legend, legendIn: rule ? rule.hard-p.legend : null, mean: meanGap(V.deck), luck: st.draws ? luck(V.deck, st.draws, st.gaps.length) : null }; }
 export function paint(V: Vault, vr: number){ const S=V.S; V.theme.face.artBg(V, vr); const [a,b]=TIERS[vr].bars; S.barTarget=V.geo.bars.map(()=>rnd(a,b)); S.bars=S.bars.map(()=>0); S.barFlash=S.barFlash.map(()=>0); }
 
 /** The charge reached the next ladder step: the back heats to that tier's colour. */
@@ -94,7 +99,7 @@ export function release(V: Vault){
 }
 
 /** Records the card in the bag and stamps NEW! / xN on the card corner. */
-function commit(V: Vault, gen: number, quick=false){ const { S, env, bag, geo: G } = V, id=S.spec!.id, owned=bag.bag.owned, isNew=!owned[id]; owned[id]=(owned[id]||0)+1; if (S.pityNext){ bag.bag.pity=S.pityNext; S.pityNext=null; } saveBag(bag.key, bag.bag); const cnt=owned[id]; S.pending={i:S.spec!.idx, isNew};
+function commit(V: Vault, gen: number, quick=false){ const { S, env, bag, geo: G } = V, id=S.spec!.id, owned=bag.bag.owned, isNew=!owned[id]; owned[id]=(owned[id]||0)+1; if (S.rolled!==null){ countDraws(V,[S.rolled]); S.rolled=null; } saveBag(bag.key, bag.bag); const cnt=owned[id]; S.pending={i:S.spec!.idx, isNew};
   if (S.pack) S.pack.results[S.pack.i]={ id, tier: S.r as TierId, title: S.spec!.title ?? S.spec!.name, isNew, count: cnt };
   env.later(quick?420:1900, ()=>{ if (S.phase!=='revealed'||S.seed!==gen) return; S.stamp={text:isNew?'NEW!':'x'+cnt, key:isNew?'y':'4', t0:S.rt}; V.A.stamp(isNew); S.trauma=Math.min(1,S.trauma+.25); S.pulse=.08*env.MOTION; env.buzz(25); sparks(V, 26, isNew?'o':'4', 30, 130, .5, S.cx+G.hw-2, S.cy-G.hh+1, true); }); }
 
@@ -134,7 +139,7 @@ export function startEnter(V: Vault){ V.S.pack=V.S.packMode?newPack():null; rese
 export function resetCard(V: Vault){ const { S, K, geo: G, FX } = V, base=TIERS[V.ladder[0]];
   S.phase='entering'; S.landed=false; S.auto=false; S.holding=false; V.A.chargeStop(); S.pos.x=0; S.pos.y=0; S.pos.vy=0; S.summon=0; S.summonChime=false; S.chains=[true,true,true,true]; S.lockOn=true; S.charge=0; S.reached=[0,0,0,0];
   S.tease=base.id; S.teaseStep=0; S.teaseKey=base.l; S.lightKey=base.ramp;
-  S.r=-1; S.vr=-1; S.spec=null; S.face=null; S.pityNext=null; S.fake=false; S.upgrading=false; S.up=0; S.hidden=false; S.after=-1; S.title=null; S.stamp=null; S.caption=null; S.glitch=0; S.backOn=true; S.cardIT=.5; S.beam=0;
+  S.r=-1; S.vr=-1; S.spec=null; S.face=null; S.rolled=null; S.fake=false; S.upgrading=false; S.up=0; S.hidden=false; S.after=-1; S.title=null; S.stamp=null; S.caption=null; S.glitch=0; S.backOn=true; S.cardIT=.5; S.beam=0;
   S.spin={a:0,from:0,to:0,t:1,dur:1}; S.seed++; K.backCracks=genCracks(S.seed*31,G.backCx,G.backCy,G.w,G.h); K.frontCracks=genCracks(S.seed*31+7,G.artCx,G.artCy,G.w,G.h);
   wallRebuild(V);
   FX.coins.forEach(c=>{ c.life=Math.min(c.life,c.age+rnd(.2,.8)); }); FX.links.forEach(c=>{ c.life=Math.min(c.life,c.age+rnd(.2,.8)); });

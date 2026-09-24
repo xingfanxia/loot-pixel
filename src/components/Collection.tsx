@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import type { Deck } from "@/lib/vault/decks";
 import type { DeckCard } from "@/lib/vault/decks/types";
+import type { DrawRecord as DrawRecordData } from "@/lib/vault/context";
+import DrawRecord from "./DrawRecord";
 import { PAL } from "@/lib/vault/palette";
 import { TIERS } from "@/lib/vault/tiers";
 
@@ -11,10 +13,10 @@ const tierStyle = (tier: number) => ({ "--tl": PAL[TIERS[tier].l], "--td": PAL[T
 
 /**
  * The collection: every card of the deck grouped by slot (a person), found cards shown in full,
- * missing ones as the card's own silhouette. Only image decks have per-card art worth browsing.
+ * missing ones as the card's own silhouette, under the draw record (luck, counts, pity). Only image decks have per-card art worth browsing.
  */
-export default function Collection({ deck, owned, open, onClose }: {
-  deck: Deck; owned: Record<string, number>; open: boolean; onClose: () => void;
+export default function Collection({ deck, owned, record, open, onClose }: {
+  deck: Deck; owned: Record<string, number>; record: DrawRecordData | null; open: boolean; onClose: () => void;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [detail, setDetail] = useState<DeckCard | null>(null);
@@ -48,6 +50,7 @@ export default function Collection({ deck, owned, open, onClose }: {
       </header>
 
       <div className="album-body">
+        {record && <DrawRecord record={record} />}
         {found === 0 && <p className="album-empty">Nothing here yet. Hold the card on the altar to draw your first one.</p>}
         {bySlot.map(({ slot, cards }) => {
           const have = cards.filter(c => owned[c.id]).length;

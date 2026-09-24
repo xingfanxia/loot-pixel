@@ -2,10 +2,10 @@ import { loadDeckArt } from './art';
 import { ChipAudio } from './audio';
 import { emptyBag, openBag } from './bag';
 import { chainLinks } from './chains';
-import { createState, type Buffers, type DebugHandles, type Env, type Vault, type VaultElements, type VaultHooks } from './context';
+import { createState, type Buffers, type DrawRecord, type DebugHandles, type Env, type Vault, type VaultElements, type VaultHooks } from './context';
 import { genCracks } from './cracks';
 import type { Deck } from './decks/types';
-import { leave, startEnter } from './flow';
+import { drawRecord, leave, startEnter } from './flow';
 import { closePack } from './pack';
 import { cardGeo } from './geometry';
 import { beginHold, bindInput, endHold } from './input';
@@ -31,6 +31,8 @@ export interface VaultController {
   resetBag(): void;
   /** copies owned per card id (recorded at each reveal) */
   owned(): Record<string, number>;
+  /** the bag's draw record and luck rating */
+  record(): DrawRecord;
   destroy(): void;
 }
 
@@ -74,6 +76,7 @@ export function createVault(els: VaultElements, deck: Deck, theme: Theme, hooks:
     closePack(again: boolean){ A.init(); closePack(V, again); },
     resetBag(){ A.init(); emptyBag(V.bag); hooks.onBagComplete?.(false); A.blip(); },
     owned(){ return { ...V.bag.bag.owned }; },
+    record(){ return drawRecord(V); },
     destroy(){ abort.abort(); stopLoop(); timers.forEach(clearTimeout); timers.clear(); A.close(); els.stage.style.transform='';
       if (window.APP===APP){ delete window.APP; delete window.__ready; } },
   };

@@ -1,17 +1,18 @@
 "use client";
 
 import { useEffect, useRef, type CSSProperties } from "react";
-import type { PackResult } from "@/lib/vault/context";
+import type { DrawRecord, PackResult } from "@/lib/vault/context";
+import { Luck } from "./DrawRecord";
 import { PAL } from "@/lib/vault/palette";
 import { TIERS } from "@/lib/vault/tiers";
 
 /**
  * The 10-pull results: every card of the pack as the engine drew its face, best first, with
- * NEW or the copy count, and how soon pity (odds.ts) guarantees a Legendary. "Open another pack"
+ * NEW or the copy count, how soon pity (odds.ts) guarantees a Legendary and the luck so far. "Open another pack"
  * charges the next pack; "Done" leaves it waiting.
  */
-export default function PackResults({ cards, legendIn, onClose }: {
-  cards: PackResult[] | null; legendIn: number | null; onClose: (again: boolean) => void;
+export default function PackResults({ cards, record, onClose }: {
+  cards: PackResult[] | null; record: DrawRecord | null; onClose: (again: boolean) => void;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
 
@@ -29,7 +30,8 @@ export default function PackResults({ cards, legendIn, onClose }: {
         <header className="pull-head">
           <h2 id="pull-title">Pack opened</h2>
           <p>{fresh ? `${fresh} new ${fresh === 1 ? "card" : "cards"} for your collection` : "No new cards this time"}</p>
-          {legendIn !== null && <p className="pity">Legendary guaranteed within {legendIn} {legendIn === 1 ? "draw" : "draws"}</p>}
+          {record?.legendIn != null && <p className="pity">Legendary guaranteed within {record.legendIn} {record.legendIn === 1 ? "draw" : "draws"}</p>}
+          {record && <Luck record={record} compact />}
         </header>
         <ol className="pull-grid">
           {cards.map((c, k) => (

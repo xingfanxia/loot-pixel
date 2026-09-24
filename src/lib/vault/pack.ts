@@ -1,7 +1,7 @@
 import { saveBag, showCard } from './bag';
 import { drawFront } from './card-front';
 import type { Pack, PackCard, PackResult, Vault } from './context';
-import { afterCollect, bagPity, leave, paint, pickRarity, resetCard, rollCard, setCard, withFake } from './flow';
+import { afterCollect, bagPity, countDraws, drawRecord, leave, paint, pickRarity, resetCard, rollCard, setCard, withFake } from './flow';
 import { advance } from './odds';
 import { ring, shatter, sparks } from './particles';
 import { TIERS } from './tiers';
@@ -20,7 +20,7 @@ export const PACK_SIZE = 10;
 /** the tier a pack always contains at least one card of (or better), when the deck has it */
 const FLOOR = 2;
 
-export const newPack = (): Pack => ({ cards: [], i: -1, skip: false, results: [] });
+export const newPack = (): Pack => ({ cards: [], i: -1, skip: false, results: [], rolls: [] });
 
 /** A pack is dealing one of its lower cards (not the sealed pack, not the best card, not done). */
 export const dealing = (V: Vault) => { const P = V.S.pack; return !!P && P.i >= 0 && P.i < P.cards.length - 1; };
@@ -38,10 +38,9 @@ function pickAtLeast(V: Vault, min: number) {
  */
 export function rollPack(V: Vault) {
   const { S, env: { APP } } = V, P = S.pack!; let pity = bagPity(V);
-  const rolls = Array.from({ length: PACK_SIZE }, () => { const x = rollCard(V, pickRarity(V, pity)); if (pity) pity = advance(pity, x.r); return x; });
-  P.pity = pity;
-  if (!pity && S.force < 0 && !APP.forceCard && V.ladder.some(t => t >= FLOOR) && rolls.every(x => x.r < FLOOR)) rolls[PACK_SIZE - 1] = rollCard(V, pickAtLeast(V, FLOOR));
-  rolls.sort((a, b) => a.r - b.r);
+  const rolls = Array.from({ length: PACK_SIZE }, () => { const x = rollCard(V, pickRarity(V, pity)); pity = advance(pity, x.r); return x; });
+  if (!V.deck.pity && S.force < 0 && !APP.forceCard && V.ladder.some(t => t >= FLOOR) && rolls.every(x => x.r < FLOOR)) rolls[PACK_SIZE - 1] = rollCard(V, pickAtLeast(V, FLOOR));
+  P.rolls = rolls.map(x => x.r); rolls.sort((a, b) => a.r - b.r);
   P.cards = rolls.map((x, k) => withFake(V, x.spec, x.r, k === PACK_SIZE - 1));
   setCard(V, P.cards[PACK_SIZE - 1]);
 }
@@ -49,8 +48,8 @@ export function rollPack(V: Vault) {
 /** The charged pack bursts (instead of a card's reveal): its back shatters in the best card's colour and the first card is dealt. */
 export function openPack(V: Vault) {
   const { S, B, A, bag, env } = V, R = TIERS[S.vr];
-  // the pack's pulls count toward pity once it is open (its cards are all filed from here on)
-  if (S.pack!.pity) { bag.bag.pity = S.pack!.pity; saveBag(bag.key, bag.bag); }
+  // the pack's draws count toward pity and the draw record once it is open (its cards are all filed from here on)
+  countDraws(V, S.pack!.rolls); saveBag(bag.key, bag.bag);
   S.backOn = false; S.auto = false; shatter(V, B.backC);
   S.flash = .7; S.flashKey = 'w'; S.trauma = Math.min(1, S.trauma + .5); S.zoom.v = -1.1 * env.MOTION; S.torchBoost = 1;
   sparks(V, 110, R.l, 60, 260, 1.1); sparks(V, 50, 'w', 90, 320, .5); ring(V, R.l, 340, 3, 0); ring(V, 'w', 250, 1, .06); A.roar();
@@ -91,8 +90,7 @@ export function packDone(V: Vault) {
     S.spec = pc.spec; S.face = pc.spec; S.r = S.vr = pc.r; S.glitch = 0; S.popT0 = -9; paint(V, pc.r); S.bars = S.barTarget.slice();
     drawFront(V, S.rt); return { ...P.results[k], face: B.frontC.toDataURL(), w: V.geo.w, h: V.geo.h }; });
   env.els.live.textContent = `Pack opened: ${cards.filter(c => c.isNew).length} new cards.`;
-  const pity = bagPity(V), legendIn = pity ? V.deck.pity!.hard - pity.legend : null;
-  if (env.hooks.onPackDone) env.hooks.onPackDone(cards, { legendIn }); else closePack(V, false);
+  if (env.hooks.onPackDone) env.hooks.onPackDone(cards, drawRecord(V)); else closePack(V, false);
 }
 
 /** Leaves the results: the next card or pack comes up (auto-charged when `again`), after the full-set celebration if the pack completed the bag. */

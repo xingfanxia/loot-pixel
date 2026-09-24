@@ -32,6 +32,30 @@
 :root[data-vault-theme="cyber"] .pull-again{background:var(--hot); color:var(--ink); font-size:21px;
   box-shadow:0 -3px 0 0 var(--ink), 0 3px 0 0 var(--ink), -3px 0 0 0 var(--ink), 3px 0 0 0 var(--ink), inset 0 -3px 0 0 var(--hot-dim), inset 0 3px 0 0 #ffb0cf, 0 0 22px rgba(255,61,139,.55)}
 
+/* draw record + luck: a neon LED bar in terminal type, the lit run shading cyan to pink */
+:root[data-vault-theme="cyber"] .luck{--vc:#2ee6ff; --vd:#12689e}
+:root[data-vault-theme="cyber"] .luck[data-verdict="blessed"]{--vc:#ff3d8b; --vd:#8e1f63}
+:root[data-vault-theme="cyber"] .luck[data-verdict="lucky"]{--vc:#b86bff; --vd:#6a2fbf}
+:root[data-vault-theme="cyber"] .luck[data-verdict="unlucky"]{--vc:#7f93cc; --vd:#241a52}
+:root[data-vault-theme="cyber"] .luck[data-verdict="cursed"]{--vc:#8e1f63; --vd:#04030b}
+:root[data-vault-theme="cyber"] .luck .verdict{font-size:40px; font-weight:400; letter-spacing:.04em; text-transform:uppercase; color:#fff; text-shadow:-2px 0 0 var(--neon), 2px 0 0 var(--vc), 0 0 16px var(--vc)}
+:root[data-vault-theme="cyber"] .luck .meter{gap:3px; padding:4px; background:#04030b; box-shadow:0 0 0 2px var(--neon-dim)}
+:root[data-vault-theme="cyber"] .luck .meter i{height:16px; background:#140d34; box-shadow:none; transform:skewX(-12deg)}
+:root[data-vault-theme="cyber"] .luck .meter i.on{background:color-mix(in srgb, var(--vc) calc(var(--i) * 5%), var(--neon)); box-shadow:0 0 6px var(--vc)}
+:root[data-vault-theme="cyber"] .luck .luck-note, :root[data-vault-theme="cyber"] .luck-none{font-size:18px; color:var(--neon)}
+:root[data-vault-theme="cyber"] .record{border-bottom:2px dashed var(--indigo)}
+:root[data-vault-theme="cyber"] .record-stats div{background:rgba(15,10,38,.9); box-shadow:0 0 0 2px var(--neon-dim); clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px)}
+:root[data-vault-theme="cyber"] .record-stats dt{font-size:17px; color:var(--lav)}
+:root[data-vault-theme="cyber"] .record-stats dd{font-size:34px; font-weight:400; color:#fff; text-shadow:0 0 10px rgba(46,230,255,.6)}
+:root[data-vault-theme="cyber"] .record-stats p{font-size:16px; color:var(--neon)}
+:root[data-vault-theme="cyber"] .record-gaps h3{font-size:18px; color:var(--lav)}
+:root[data-vault-theme="cyber"] .record-gaps li{font-size:18px; background:#04030b; color:var(--neon); box-shadow:0 0 0 2px var(--neon-dim)}
+:root[data-vault-theme="cyber"] .record-gaps li.fast{background:var(--hot); color:var(--ink); box-shadow:0 0 10px rgba(255,61,139,.7)}
+:root[data-vault-theme="cyber"] .record-gaps li.slow{color:#7f93cc; background:#0f0a26; box-shadow:0 0 0 2px #241a52}
+:root[data-vault-theme="cyber"] .luck.compact .verdict{font-size:24px}
+:root[data-vault-theme="cyber"] .luck.compact .meter i{height:11px}
+:root[data-vault-theme="cyber"] .luck.compact .luck-note{font-size:16px}
+
 /* collection */
 :root[data-vault-theme="cyber"] #album{font-family:var(--font-term),"Courier New",monospace; background:linear-gradient(180deg, #0c0720, #07041a);
   box-shadow:0 -3px 0 0 var(--neon), 0 3px 0 0 var(--neon), -3px 0 0 0 var(--neon), 3px 0 0 0 var(--neon), 0 0 0 6px var(--ink), 0 0 40px rgba(46,230,255,.25)}

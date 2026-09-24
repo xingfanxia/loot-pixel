@@ -80,6 +80,7 @@ const pack = {
     await snap('results', true);
     await ev(`document.querySelector('.pull-again').click(); ${settle}`, true);
     await ev(`__h.frames(100)`); await snap('next-pack-charging', true);
+    await ev(`document.getElementById('bag').click(); ${settle}`, true); await snap('record', true);
   },
 };
 
