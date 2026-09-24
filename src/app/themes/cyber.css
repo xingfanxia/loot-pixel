@@ -1,0 +1,48 @@
+/* Cyber theme DOM: neon-on-glass controls in a CRT terminal face. The canvas look is src/lib/vault/themes/cyber/. */
+:root[data-vault-theme="cyber"]{ --deep:#0a0618; --navy:#0f0a26; --indigo:#241a52; --cream:#c9fbff; --lav:#7f93cc; --ink:#04030b; --gold:#ff3d8b;
+  --neon:#2ee6ff; --neon-dim:#12689e; --hot:#ff3d8b; --hot-dim:#8e1f63; }
+:root[data-vault-theme="cyber"] body{background:#04030b}
+:root[data-vault-theme="cyber"] .px{font:400 19px/1 var(--font-term),"Courier New",monospace; letter-spacing:.06em; color:var(--cream); background:rgba(15,10,38,.86); padding:6px 11px 7px;
+  box-shadow:0 -2px 0 0 var(--neon-dim), 0 2px 0 0 var(--neon-dim), -2px 0 0 0 var(--neon-dim), 2px 0 0 0 var(--neon-dim), 0 0 12px rgba(46,230,255,.18)}
+:root[data-vault-theme="cyber"] .px:hover{color:#fff; box-shadow:0 -2px 0 0 var(--neon), 0 2px 0 0 var(--neon), -2px 0 0 0 var(--neon), 2px 0 0 0 var(--neon), 0 0 14px rgba(46,230,255,.45)}
+:root[data-vault-theme="cyber"] .px:focus-visible{outline:2px solid var(--neon); outline-offset:5px}
+:root[data-vault-theme="cyber"] .pill{font-size:17px; padding:5px 8px 6px}
+:root[data-vault-theme="cyber"] .pill[aria-pressed="true"]{background:var(--neon); color:var(--ink);
+  box-shadow:0 -2px 0 0 var(--neon), 0 2px 0 0 var(--neon), -2px 0 0 0 var(--neon), 2px 0 0 0 var(--neon), 0 0 16px rgba(46,230,255,.6)}
+:root[data-vault-theme="cyber"] .row .lbl{font:400 17px/1 var(--font-term),monospace; color:var(--lav)}
+:root[data-vault-theme="cyber"] #again{background:var(--hot); color:var(--ink); font-size:22px; padding:9px 18px 10px;
+  box-shadow:0 -3px 0 0 var(--ink), 0 3px 0 0 var(--ink), -3px 0 0 0 var(--ink), 3px 0 0 0 var(--ink), inset 0 -3px 0 0 var(--hot-dim), inset 0 3px 0 0 #ffb0cf, 0 0 22px rgba(255,61,139,.55)}
+:root[data-vault-theme="cyber"] #hit:focus-visible, :root[data-vault-theme="cyber"] #bag:focus-visible{outline-color:var(--neon)}
+/* lamp spill at the screen edges, over the CRT scanlines the engine sets */
+:root[data-vault-theme="cyber"] #crt::after{content:""; position:absolute; inset:0;
+  background:linear-gradient(90deg, rgba(46,230,255,.07), transparent 28%, transparent 72%, rgba(255,61,139,.07)), radial-gradient(ellipse 80% 60% at 50% 100%, rgba(18,104,158,.12), transparent 70%)}
+
+/* collection */
+:root[data-vault-theme="cyber"] #album{font-family:var(--font-term),"Courier New",monospace; background:linear-gradient(180deg, #0c0720, #07041a);
+  box-shadow:0 -3px 0 0 var(--neon), 0 3px 0 0 var(--neon), -3px 0 0 0 var(--neon), 3px 0 0 0 var(--neon), 0 0 0 6px var(--ink), 0 0 40px rgba(46,230,255,.25)}
+:root[data-vault-theme="cyber"] #album::backdrop{background:rgba(4,3,11,.84)}
+:root[data-vault-theme="cyber"] .album-head{border-bottom:2px solid var(--neon-dim)}
+:root[data-vault-theme="cyber"] .album-head h2{font-size:34px; font-weight:400; letter-spacing:.04em; color:#fff; text-shadow:-2px 0 0 var(--neon), 2px 0 0 var(--hot)}
+:root[data-vault-theme="cyber"] .album-count, :root[data-vault-theme="cyber"] .album-tiers{font-size:18px}
+:root[data-vault-theme="cyber"] .album-empty{font-size:19px; color:var(--hot)}
+:root[data-vault-theme="cyber"] .album-person{border-top:2px dashed var(--indigo)}
+:root[data-vault-theme="cyber"] .album-who h3{font-size:24px; font-weight:400; color:var(--neon)}
+:root[data-vault-theme="cyber"] .album-who .role, :root[data-vault-theme="cyber"] .album-who .progress{font-size:17px}
+:root[data-vault-theme="cyber"] .album-who .bar{box-shadow:0 0 0 2px var(--neon-dim)}
+:root[data-vault-theme="cyber"] .album-who .bar span{background:var(--neon); box-shadow:0 0 8px var(--neon)}
+:root[data-vault-theme="cyber"] button.thumb:hover{box-shadow:0 0 0 3px var(--neon), 0 0 0 5px var(--ink), 0 0 16px rgba(46,230,255,.5)}
+:root[data-vault-theme="cyber"] .thumb .q{font-size:30px}
+:root[data-vault-theme="cyber"] .copies{font-size:15px; color:var(--neon)}
+:root[data-vault-theme="cyber"] .thumb-name{font-size:16px}
+:root[data-vault-theme="cyber"] .album-detail{background:rgba(4,3,11,.95)}
+:root[data-vault-theme="cyber"] .detail-card img{box-shadow:0 0 0 4px var(--tl), 0 0 0 7px var(--ink), 0 0 30px var(--tl)}
+:root[data-vault-theme="cyber"] .detail-tier{font-size:19px; letter-spacing:.12em}
+:root[data-vault-theme="cyber"] .detail-text h3{font-size:38px; font-weight:400; color:#fff; text-shadow:-2px 0 0 var(--neon), 2px 0 0 var(--hot)}
+:root[data-vault-theme="cyber"] .detail-who{font-size:19px}
+:root[data-vault-theme="cyber"] .detail-note{font-size:20px; line-height:1.35}
+:root[data-vault-theme="cyber"] .detail-copies{font-size:17px}
+@media (max-width:720px){
+  :root[data-vault-theme="cyber"] .album-head h2{font-size:28px}
+  :root[data-vault-theme="cyber"] .detail-text h3{font-size:30px}
+}
+@media (max-width:460px){ :root[data-vault-theme="cyber"] .pill{padding:5px 5px 6px; font-size:16px} }

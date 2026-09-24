@@ -5,26 +5,31 @@ rarity (Common → Uncommon → Rare → Epic → Legendary) escalates light, so
 and a wall breakdown. Collect one card of every slot to fill the bag.
 
 Next.js (App Router) port of a single-file canvas toy. Every in-canvas pixel comes
-from a fixed 32-colour palette with Bayer-dithered lighting; audio is synthesized
-chip voices via Web Audio.
+from a fixed palette with Bayer-dithered lighting; audio is synthesized chip voices via Web Audio.
 
 Card content comes from **decks** (`?deck=<id>`, default `cl-team`: the Compute Labs team,
 10 people x 15 cards (5/4/3/2/1 from Common to Legendary) = 150 cards; `?deck=classic` is the
 original nine items). The deck contract, how to add a deck and how to verify one are in
 [`docs/decks.md`](docs/decks.md); the cl-team art pipeline is [`art/cl-team/style.md`](art/cl-team/style.md).
 
+The look around the cards comes from **themes** (`?theme=<id>` or the switch in the top-right corner:
+`vault`, the original torch-lit dungeon, and `cyber`, a neon server hall with a GPU altar). Any deck
+plays in any theme; the contract and how to add one are in [`docs/themes.md`](docs/themes.md).
+
 ## Layout
 
 | Path | Role |
 |---|---|
-| `src/components/Vault.tsx` | Client component: DOM shell + HUD (rarity picker per deck, sound, empty bag) |
+| `src/components/Vault.tsx` | Client component: DOM shell + HUD (theme switch, sound, rarity picker per deck, empty bag) |
 | `src/components/Collection.tsx` | Collection dialog opened from the bag row: every card by slot and tier, found ones in full, missing ones as silhouettes |
 | `src/app/page.tsx` | Reads deck sources at build time (`decks/sources.server.ts`) and renders the vault |
-| `src/lib/vault/engine.ts` | `createVault(els, deck, hooks)`: builds the `Vault` context, preloads art, boots; returns a controller with `destroy()` |
+| `src/lib/vault/engine.ts` | `createVault(els, deck, theme, hooks)`: builds the `Vault` context, preloads art, boots; returns a controller with `destroy()` |
 | `src/lib/vault/context.ts` | Typed state shared by every module: `Layout`, `GameState`, `Buffers`, `CardState`, `Env`, `Vault` |
 | `src/lib/vault/tiers.ts` | The five-tier table every effect reads its strength from |
 | `src/lib/vault/geometry.ts` | Card geometry derived from a deck layout (`cardGeo`, `fitLayout`) |
 | `src/lib/vault/decks/` | Deck types, `classic`, `cl-team`, the Compute Labs mark, registry, server loader |
+| `src/lib/vault/themes/` | Theme contract, registry, `vault` (the original look, implemented in the engine modules below) and `cyber/` (scene, void, card) |
+| `src/app/themes/<id>.css` | A theme's DOM styles, keyed on `data-vault-theme` on `<html>` |
 | `src/lib/vault/{layout,scene,lighting}.ts` | Viewport layout, lit brick/flagstone units, lighting pass |
 | `src/lib/vault/{card-back,chains,cracks,card-front,card3d}.ts` | Card back + emblem, chains/padlock, cracks, card face, pseudo-3D projector |
 | `src/lib/vault/{flow,sim,wall,particles}.ts` | Draw state machine, per-frame simulation, wall breakdown, particles |
@@ -38,7 +43,7 @@ original nine items). The deck contract, how to add a deck and how to verify one
 
 The engine is imported dynamically inside `useEffect`, so it never runs during SSR.
 `window.APP` exposes debug handles (`force(tierId)`, `beginHold()`, `endHold()`, `leave()`,
-`step(dt)`, `paused`, `forceCard` (card id), `forceFake`, `S`, `FX`, `L`, `geo`, `deck`).
+`step(dt)`, `paused`, `forceCard` (card id), `forceFake`, `S`, `FX`, `L`, `geo`, `deck`, `theme`).
 
 ## Develop
 
@@ -69,7 +74,7 @@ node scripts/verify/characterise.mjs --url http://localhost:3100 --deck cl-team 
   --out scratch/data/characterise/cl-team
 ```
 
-With `--baseline` every canvas hash and metric must match (diff PNGs are written for
+`--theme <id>` runs a theme other than the default. With `--baseline` every canvas hash and metric must match (diff PNGs are written for
 mismatches). The classic deck is pixel-identical to the pre-split engine. `--audio` keeps
 Web Audio on to catch runtime errors (not deterministic, so no pixel compare).
 

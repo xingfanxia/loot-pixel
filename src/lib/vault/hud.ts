@@ -14,7 +14,7 @@ export function drawHud(V: Vault, ox: number, oy: number){
     for(let i=0;i<str.length;i++){ const e=S.rt-T.t0-.06-i*.055; if (e<0) continue; let dy; if (e<.18){ const p=e/.18; dy=-Math.round((1-p*p)*34); } else if (e<.32){ dy=Math.round(Math.sin((e-.18)/.14*Math.PI)*-4); } else dy=Math.round(Math.sin(S.rt*4+i*.7)*1.3);
       const qx=T.quake?ri(-2,2):0, qy=T.quake?ri(-1,1):0; const lit=Math.abs(i-shine)<1.2;
       const tr=T.ramp, rf=tr ? (row: number)=> lit&&row<3 ? (row===0?'w':'o') : tr[row] : (row: number)=> row===0 ? CYCLE[(Math.floor(S.rt*10)+i)%CYCLE.length] : ['o','y','Y','R'][row-1];
-      const split=V.theme.hud.splitTitle; if (split){ const o=Math.max(1,TS>>1); drawText(g,str[i],x0+i*4*TS+qx+ox-o,yBase+dy+qy+oy,TS,split[0]); drawText(g,str[i],x0+i*4*TS+qx+ox+o,yBase+dy+qy+oy,TS,split[1]); }
+      const split=V.theme.hud.splitTitle; if (split){ const o=Math.max(1,TS>>1)+1; drawText(g,str[i],x0+i*4*TS+qx+ox-o,yBase+dy+qy+oy,TS,split[0]); drawText(g,str[i],x0+i*4*TS+qx+ox+o,yBase+dy+qy+oy,TS,split[1]); }
       drawRampText(g,str[i],x0+i*4*TS+qx+ox,yBase+dy+qy+oy,TS,rf); } }
   // stamp
   if (S.stamp){ const e=S.rt-S.stamp.t0, fin=W>=300?2:1, s=e<.05?fin+3:e<.1?fin+2:e<.16?fin+1:fin, str=S.stamp.text, tw=textW(str,s), bx=Math.round(S.cx+G.w/2-tw/2-4)+ox, by=Math.round(S.cy-G.h/2-6)+oy;

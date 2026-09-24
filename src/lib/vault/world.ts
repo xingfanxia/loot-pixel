@@ -30,7 +30,7 @@ export function drawWorld(V: Vault, ox: number, oy: number, c: number){
   const { brC, brG } = V.B;
   for(const p of FX.bricks){ const t=p.age/p.life; if (t>.88&&(Math.floor(p.age*20)&1)) continue; const X=Math.round(p.x)+ox, Y=Math.round(p.y)+oy, a=Math.round(p.rot*4)/4;
     if (p.rest || a===0){ g.drawImage(U.snapC,p.sx,p.sy,p.w,p.h,X-Math.floor(p.w/2),Y-Math.floor(p.h/2),p.w,p.h); if (p.rest){ g.fillStyle=PAL.k; g.fillRect(X-Math.floor(p.w/2),Y+Math.ceil(p.h/2),p.w,1); } }
-    else { brG.setTransform(1,0,0,1,0,0); brG.clearRect(0,0,20,20); brG.translate(10,10); brG.rotate(a); brG.drawImage(U.snapC,p.sx,p.sy,p.w,p.h,-p.w/2,-p.h/2,p.w,p.h); g.drawImage(brC,X-10,Y-10); } }
+    else { brG.setTransform(1,0,0,1,0,0); brG.clearRect(0,0,32,32); brG.translate(16,16); brG.rotate(a); brG.drawImage(U.snapC,p.sx,p.sy,p.w,p.h,-p.w/2,-p.h/2,p.w,p.h); g.drawImage(brC,X-16,Y-16); } }
   for(const p of FX.dustp){ const t=p.age/p.life; if (t>.6 && (Math.floor(p.age*24)&1)) continue; g.fillStyle=PAL[t<.4?'4':'5']; g.fillRect(Math.round(p.x)+ox,Math.round(p.y)+oy,t<.3?2:1,t<.3?2:1); }
   // broken chain links + padlock
   { const hotC=RAMPS[TIERS[S.tease].ramp][4];

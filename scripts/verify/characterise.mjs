@@ -9,7 +9,7 @@
  * state metrics. With --baseline it compares against an earlier run: metrics must match exactly
  * and every canvas hash must match; mismatches get a pixel-diff count and a diff PNG.
  *
- *   node scripts/verify/characterise.mjs --url http://localhost:3000 --deck classic \
+ *   node scripts/verify/characterise.mjs --url http://localhost:3000 --deck classic [--theme cyber] \
  *        --out scratch/data/characterise/after [--baseline scratch/data/characterise/before]
  *        [--viewports desktop,wide,phone,small,tiny] [--only reveal-RARE,fullset] [--audio] [--chrome PATH]
  *
@@ -29,6 +29,7 @@ const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) =>
 }, []));
 const URL0 = args.url || 'http://localhost:3000';
 const DECK = args.deck || 'classic';
+const THEME = args.theme || null;
 const OUT = resolve(args.out || `scratch/data/characterise/${DECK}-${Date.now()}`);
 const BASE = args.baseline ? resolve(args.baseline) : null;
 const AUDIO = !!args.audio;
@@ -126,7 +127,7 @@ async function main() {
   const ev = async (expr, awaitPromise = false) => { const r = await cdp.send('Runtime.evaluate', { expression: expr, returnByValue: true, awaitPromise });
     if (r.exceptionDetails) throw new Error(r.exceptionDetails.exception?.description || r.exceptionDetails.text); return r.result.value; };
 
-  const manifest = { url: URL0, deck: DECK, seed: SEED, audio: AUDIO, when: new Date().toISOString(), snaps: {} };
+  const manifest = { url: URL0, deck: DECK, theme: THEME, seed: SEED, audio: AUDIO, when: new Date().toISOString(), snaps: {} };
   mkdirSync(OUT, { recursive: true });
   for (const vp of vps) {
     const size = VIEWPORTS[vp];
@@ -135,7 +136,7 @@ async function main() {
       if (only && !only.includes(sc.name)) continue;
       const dir = join(OUT, vp, sc.name); mkdirSync(dir, { recursive: true });
       const sep = URL0.includes('?') ? '&' : '?';
-      await cdp.send('Page.navigate', { url: `${URL0}${sep}deck=${DECK}` });
+      await cdp.send('Page.navigate', { url: `${URL0}${sep}deck=${DECK}${THEME ? `&theme=${THEME}` : ''}` });
       for (let i = 0; i < 200; i++) { await new Promise(r => setTimeout(r, 50)); if (await ev('!!window.__ready && !!window.APP && !!window.APP.step').catch(() => false)) break; }
       await ev('document.fonts.ready.then(() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))))', true);
       await ev(HELPERS);

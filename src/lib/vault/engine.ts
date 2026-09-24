@@ -71,7 +71,7 @@ export function createVault(els: VaultElements, deck: Deck, theme: Theme, hooks:
 
 function buffers(els: VaultElements, cw: number, ch: number, aw: number, ah: number, t1w: number, t1h: number): Buffers {
   const cv=els.screen, g=cv.getContext('2d',{willReadFrequently:true})!, bloomC=els.bloom, bg=bloomC.getContext('2d')!;
-  const [brC,brG]=mk(20,20), [dissC,dissG]=mk(cw,ch), [backC,backG]=mk(cw,ch), [frontC,frontG]=mk(cw,ch), [tmpC,tmpG]=mk(cw,ch), [artC,artG]=mk(aw,ah), [t1C,t1G]=mk(t1w,t1h), [tileSrcC,tileSrcG]=mk(cw,ch), [rotC,rotG]=mk(16,16);
+  const [brC,brG]=mk(32,32), [dissC,dissG]=mk(cw,ch), [backC,backG]=mk(cw,ch), [frontC,frontG]=mk(cw,ch), [tmpC,tmpG]=mk(cw,ch), [artC,artG]=mk(aw,ah), [t1C,t1G]=mk(t1w,t1h), [tileSrcC,tileSrcG]=mk(cw,ch), [rotC,rotG]=mk(16,16);
   const [layerC,layerG]=mk(1,1), [silC,silG]=mk(1,1);
   return { cv, g, bloomC, bg, brC, brG, dissC, dissG, backC, backG, frontC, frontG, tmpC, tmpG, artC, artG, t1C, t1G, tileSrcC, tileSrcG, rotC, rotG, layerC, layerG, silC, silG, patCache: new Map() };
 }
