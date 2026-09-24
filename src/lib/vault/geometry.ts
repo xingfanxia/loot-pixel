@@ -21,8 +21,8 @@ export interface CardGeo {
   plateY: number; barY0: number; barX: number; barW: number; gemY: number; bars: string[];
   /** back: emblem centre (32, 44), diamond radius (19), twinkle points */
   backCx: number; backCy: number; emblemR: number; glints: [number, number][];
-  /** chain segments corner -> hub, padlock top-left (27, 38) */
-  chains: [[number, number], [number, number]][]; lockX: number; lockY: number;
+  /** chain paths (polylines) between each corner and the hub, the hub (32, 45), padlock top-left (27, 38) */
+  chains: [number, number][][]; hubX: number; hubY: number; lockX: number; lockY: number;
   /** 3D scratch buffer (132x160), altar shadow width (46), radius scale for card-sized effects (1) */
   t1w: number; t1h: number; shadowW: number; k: number;
   icon: number; minIcon: number;
@@ -36,6 +36,13 @@ export function cardGeo(l: CardLayout, emblem?: Emblem): CardGeo {
   const spriteSz = Math.max(16, 32 * Math.floor(Math.min(a.w, floorY - 4) / 32));
   // side twinkles sit just outside an emblem, or on the diamond's rim for the "?" back
   const side = emblem ? Math.ceil(emblem.rows[0].length / 2) + 3 : emblemR - 1;
+  // an emblem stays uncovered: the padlock hangs below it and the top chains run down its sides;
+  // the "?" back keeps the original X with the padlock in the middle
+  const er = emblem ? Math.ceil(Math.max(emblem.rows.length, emblem.rows[0].length) / 2) : 0, hubX = hw, hubY = emblem ? backCy + er + 9 : hh;
+  const sx = hw - er - 3, sy = backCy + Math.round(er * .55);
+  const chains: [number, number][][] = emblem
+    ? [[[6, 9], [sx, sy], [hubX, hubY]], [[w - 6, 9], [w - sx, sy], [hubX, hubY]], [[hubX, hubY], [w - 6, h - 9]], [[hubX, hubY], [6, h - 9]]]
+    : [[[6, 9], [hw, hh]], [[w - 6, 9], [hw, hh]], [[hw, hh], [w - 6, h - 9]], [[hw, hh], [6, h - 9]]];
   return {
     w, h, hw, hh, art: a,
     artCx: a.x + a.w / 2, artCy: a.y + Math.floor(a.h / 2),
@@ -45,8 +52,7 @@ export function cardGeo(l: CardLayout, emblem?: Emblem): CardGeo {
     plateY, barY0: plateY + 12, barX, barW: a.x + a.w - barX - 1, gemY: h - 7, bars: l.bars,
     backCx, backCy, emblemR,
     glints: [[backCx, backCy - (emblemR + 11)], [backCx, backCy + (emblemR + 11)], [backCx - side, backCy], [backCx + side, backCy]],
-    chains: [[[6, 9], [hw, hh]], [[w - 6, 9], [hw, hh]], [[hw, hh], [w - 6, h - 9]], [[hw, hh], [6, h - 9]]],
-    lockX: hw - 5, lockY: hh - 7,
+    chains, hubX, hubY, lockX: hubX - 5, lockY: hubY - 7,
     t1w: w * 2 + 4, t1h: Math.round(h * 16 / 9), shadowW: Math.round(w * .72), k: Math.hypot(w, h) / Math.hypot(64, 90),
     icon: l.icon, minIcon: l.minIcon ?? l.icon >> 1,
   };

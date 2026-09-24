@@ -37,7 +37,7 @@ export function teaseUp(V: Vault, l: number){ const { S, env } = V, T=TIERS[l];
 export function burst(V: Vault){ const { S, env } = V;
   if (S.vr<0 || !S.spec){ assignCard(V); }
   S.phase='hitstop'; S.hitstopDur=S.hitstop=TIERS[S.vr].hitstop*(env.reduce?.5:1); S.sq.x=.2; S.sq.v=0; S.zoom.x=1+.07*env.MOTION; S.zoom.v=0;
-  if (!S.upgrading){ S.charge=1; if (S.lockOn){ S.lockOn=false; S.chains=[false,false,false,false]; V.FX.links.push({lock:true, x:S.cx, y:S.cy+7, vx:rnd(-70,70), vy:-rnd(170,230), g:gy(V), age:0, life:6, rest:false}); } }
+  if (!S.upgrading){ S.charge=1; if (S.lockOn){ S.lockOn=false; S.chains=[false,false,false,false]; V.FX.links.push({lock:true, x:S.cx+V.geo.hubX-V.geo.hw, y:S.cy+V.geo.hubY-V.geo.hh+7, vx:rnd(-70,70), vy:-rnd(170,230), g:gy(V), age:0, life:6, rest:false}); } }
   V.A.chargeStop(); V.A.boom(TIERS[S.vr].audio); env.buzz([45,25,110]);
 }
 

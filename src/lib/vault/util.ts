@@ -16,9 +16,9 @@ export function mulberry(a: number) {
 
 export type Ctx2D = CanvasRenderingContext2D;
 
-/** Offscreen canvas with smoothing off. */
-export function mk(w: number, h: number): [HTMLCanvasElement, Ctx2D] {
+/** Offscreen canvas with smoothing off; `read` keeps it in CPU memory for per-frame getImageData (no GPU readback stall). */
+export function mk(w: number, h: number, read = false): [HTMLCanvasElement, Ctx2D] {
   const c = document.createElement('canvas'); c.width = w; c.height = h;
-  const x = c.getContext('2d')!; x.imageSmoothingEnabled = false;
+  const x = c.getContext('2d', read ? { willReadFrequently: true } : undefined)!; x.imageSmoothingEnabled = false;
   return [c, x];
 }
