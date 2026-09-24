@@ -6,6 +6,7 @@ import { createState, type Buffers, type DebugHandles, type Env, type Vault, typ
 import { genCracks } from './cracks';
 import type { Deck } from './decks/types';
 import { leave, startEnter } from './flow';
+import { closePack } from './pack';
 import { cardGeo } from './geometry';
 import { beginHold, bindInput, endHold } from './input';
 import { applyLayout, initialLayout } from './layout';
@@ -23,6 +24,10 @@ export type { VaultElements, VaultHooks } from './context';
 export interface VaultController {
   setForce(r: number): void;
   setSound(on: boolean): void;
+  /** 10-pull mode: the altar holds a sealed pack of ten. Swaps the waiting card at once, otherwise from the next one. */
+  setPack(on: boolean): void;
+  /** Leaves the 10-pull results; `again` charges the next pack by itself. */
+  closePack(again: boolean): void;
   resetBag(): void;
   /** copies owned per card id (recorded at each reveal) */
   owned(): Record<string, number>;
@@ -45,28 +50,34 @@ export function createVault(els: VaultElements, deck: Deck, theme: Theme, hooks:
     K: { backBase: null, backCracks: genCracks(1,geo.backCx,geo.backCy,w,h), frontCracks: genCracks(2,geo.artCx,geo.artCy,w,h), chainLinks: chainLinks(geo) },
     A, spr: buildSprites(theme.lock), deck, geo, theme, ladder: deck.tiers.map(t=>t.tier), art: new Map(), bag: openBag(deck) };
   hooks.onBagComplete?.(V.bag.bag.complete);
-  let stopLoop=()=>{};
+  let stopLoop=()=>{}, started=false;
 
   loadDeckArt(deck, V.spr, geo).then(art=>{
     if (abort.signal.aborted) return;
     V.art=art; bindInput(V);
-    theme.buildBack(V); applyLayout(V); startEnter(V);
+    theme.buildBack(V); applyLayout(V); startEnter(V); started=true;
     document.fonts?.ready.then(()=>{ if (!abort.signal.aborted) applyLayout(V); });
     stopLoop=startLoop(V);
     Object.assign(APP,{ S: V.S, FX: V.FX, L: V.L, geo, force:(r: number)=>{V.S.force=r;}, step:(d: number)=>tick(V,d), render:()=>render(V),
-      beginHold:()=>beginHold(V), endHold:()=>endHold(V), leave:()=>leave(V),
+      beginHold:()=>beginHold(V), endHold:()=>endHold(V), leave:()=>leave(V), pack:(on: boolean)=>ctl.setPack(on), closePack:(again: boolean)=>closePack(V,again),
       theme: theme.id, deck: { id: deck.id, tiers: V.ladder.map(t=>({ id: t, name: TIERS[t].name })), cards: deck.cards.map(c=>({ id: c.id, slot: c.slot, tier: c.tier, tierName: TIERS[c.tier].name, name: c.name })) } });
     window.APP=APP; window.__ready=true;
   }).catch(e=>hooks.onError?.(e instanceof Error?e.message:String(e)));
 
-  return {
+  const ctl: VaultController = {
     setForce(r: number){ A.init(); V.S.force=r<0||(V.ladder as number[]).includes(r)?r:-1; A.blip(); if (V.S.phase==='idle' && V.S.charge===0 && !V.S.holding) V.S.r=-1; },
     setSound(v: boolean){ A.init(); A.setOn(v); },
+    setPack(on: boolean){ const S=V.S; if (S.packMode===on) return; S.packMode=on; if (!started) return; A.init(); A.blip();
+      // only a card nobody is holding and no pack in progress is swapped; anything else finishes first
+      const waiting=(S.phase==='idle'&&S.charge===0&&!S.holding&&!S.auto)||S.phase==='entering';
+      if (waiting && (!S.pack || S.pack.i<0)) startEnter(V); },
+    closePack(again: boolean){ A.init(); closePack(V, again); },
     resetBag(){ A.init(); emptyBag(V.bag); hooks.onBagComplete?.(false); A.blip(); },
     owned(){ return { ...V.bag.bag.owned }; },
     destroy(){ abort.abort(); stopLoop(); timers.forEach(clearTimeout); timers.clear(); A.close(); els.stage.style.transform='';
       if (window.APP===APP){ delete window.APP; delete window.__ready; } },
   };
+  return ctl;
 }
 
 function buffers(els: VaultElements, cw: number, ch: number, aw: number, ah: number, t1w: number, t1h: number): Buffers {

@@ -17,6 +17,20 @@
 :root[data-vault-theme="cyber"] #crt::after{content:""; position:absolute; inset:0;
   background:linear-gradient(90deg, rgba(46,230,255,.07), transparent 28%, transparent 72%, rgba(255,61,139,.07)), radial-gradient(ellipse 80% 60% at 50% 100%, rgba(18,104,158,.12), transparent 70%)}
 
+:root[data-vault-theme="cyber"] #again.skip{background:rgba(15,10,38,.9); color:var(--cream); font-size:19px; padding:7px 13px 8px;
+  box-shadow:0 -2px 0 0 var(--neon-dim), 0 2px 0 0 var(--neon-dim), -2px 0 0 0 var(--neon-dim), 2px 0 0 0 var(--neon-dim), 0 0 12px rgba(46,230,255,.2)}
+
+/* 10-pull results */
+:root[data-vault-theme="cyber"] #pull{font-family:var(--font-term),"Courier New",monospace; background:linear-gradient(180deg, #0c0720, #07041a);
+  box-shadow:0 -3px 0 0 var(--neon), 0 3px 0 0 var(--neon), -3px 0 0 0 var(--neon), 3px 0 0 0 var(--neon), 0 0 0 6px var(--ink), 0 0 40px rgba(46,230,255,.25)}
+:root[data-vault-theme="cyber"] #pull::backdrop{background:rgba(4,3,11,.84)}
+:root[data-vault-theme="cyber"] .pull-head h2{font-size:34px; font-weight:400; color:#fff; text-shadow:-2px 0 0 var(--neon), 2px 0 0 var(--hot)}
+:root[data-vault-theme="cyber"] .pull-head p{font-size:19px; color:var(--neon)}
+:root[data-vault-theme="cyber"] .pull-grid .tag{font-size:16px; padding:2px 6px}
+:root[data-vault-theme="cyber"] .pull-grid .tag.new{background:var(--hot); color:var(--ink)}
+:root[data-vault-theme="cyber"] .pull-again{background:var(--hot); color:var(--ink); font-size:21px;
+  box-shadow:0 -3px 0 0 var(--ink), 0 3px 0 0 var(--ink), -3px 0 0 0 var(--ink), 3px 0 0 0 var(--ink), inset 0 -3px 0 0 var(--hot-dim), inset 0 3px 0 0 #ffb0cf, 0 0 22px rgba(255,61,139,.55)}
+
 /* collection */
 :root[data-vault-theme="cyber"] #album{font-family:var(--font-term),"Courier New",monospace; background:linear-gradient(180deg, #0c0720, #07041a);
   box-shadow:0 -3px 0 0 var(--neon), 0 3px 0 0 var(--neon), -3px 0 0 0 var(--neon), 3px 0 0 0 var(--neon), 0 0 0 6px var(--ink), 0 0 40px rgba(46,230,255,.25)}

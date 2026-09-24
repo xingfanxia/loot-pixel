@@ -27,7 +27,9 @@ plays in every theme.
 - A deck has **slots**, one per collectible identity (a person, an item). The bag
   shows one square per slot.
 - Each slot has any number of **cards per tier**. A draw picks a tier by odds, then
-  a random card of that tier. `cl-team` gives every person 5/4/3/2/1 cards from
+  a random card of that tier. A 10-pull (`src/lib/vault/pack.ts`) rolls ten draws the same
+  way; when none is RARE or better (and no rarity is forced), the last is re-rolled among the
+  deck's RARE-and-up tiers by their odds. Only the pack's best card can be a fake. `cl-team` gives every person 5/4/3/2/1 cards from
   COMMON to LEGENDARY (15 per person, 150 total).
 - The bag records ownership per **card id** (`<slot>-<tier>-<n>`). A slot counts
   as collected once any of its cards is owned; the slot shows the icon of its best

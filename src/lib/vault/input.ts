@@ -1,11 +1,12 @@
 import type { Vault } from './context';
 import { assignCard, fidget, leave } from './flow';
+import { dealing, skipPack } from './pack';
 import { applyLayout, refitToHud } from './layout';
 import { render } from './render';
 import { clamp } from './util';
 
 /** Press on the card: start charging (or spin a revealed card). */
-export function beginHold(V: Vault){ const { S, A, env } = V; A.init(); if (S.phase==='revealed'){ fidget(V); return; } if (S.phase!=='idle'||S.auto) return; if (S.r<0) assignCard(V); S.holding=true; S.downAt=performance.now(); S.sq.v=-2.8*env.MOTION; A.press(); env.buzz(6); }
+export function beginHold(V: Vault){ const { S, A, env } = V; A.init(); if (S.phase==='revealed'){ if (dealing(V)) leave(V); else fidget(V); return; } if (S.phase!=='idle'||S.auto) return; if (S.r<0) assignCard(V); S.holding=true; S.downAt=performance.now(); S.sq.v=-2.8*env.MOTION; A.press(); env.buzz(6); }
 /** Release: a quick tap auto-completes the charge; a let-go mid-charge springs back. */
 export function endHold(V: Vault){ const { S, env } = V; if(!S.holding) return; S.holding=false; if (S.phase!=='idle') return; if (performance.now()-S.downAt<240 && S.charge<.35) S.auto=true; else if (S.charge<1) S.sq.v+=2.8*env.MOTION; }
 
@@ -18,7 +19,8 @@ export function bindInput(V: Vault){
   hit.addEventListener('contextmenu', e=>e.preventDefault(), on);
   window.addEventListener('keydown', e=>{ const tg=e.target as Element|null; if (tg?.closest?.('button') && tg!==hit) return; if (e.code==='Space'||e.code==='Enter'){ e.preventDefault(); if(e.repeat) return; if (V.S.phase==='revealed'){ V.A.init(); leave(V); } else beginHold(V); } }, on);
   window.addEventListener('keyup', e=>{ if (e.code==='Space'||e.code==='Enter') endHold(V); }, on);
-  again.addEventListener('click', ()=>{ V.A.init(); leave(V); hit.focus({preventScroll:true}); }, on);
+  // under the altar: "Draw another" after a reveal, "Skip to best" while a pack deals its lower cards
+  again.addEventListener('click', ()=>{ V.A.init(); if (dealing(V)) skipPack(V); else leave(V); hit.focus({preventScroll:true}); }, on);
   window.addEventListener('resize', ()=>applyLayout(V), on);
   // the HUD can wrap onto a second row (e.g. when "Empty bag" appears on a phone): re-fit the scene above it,
   // deferred while a reveal / wall break is running (a mid-celebration rebuild would pop the broken wall away),

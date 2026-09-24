@@ -43,12 +43,14 @@ export function step(V: Vault, dt: number, rdt: number){
     if (R.sparkle>0){ S.sparkAcc+=dt*R.sparkle*(reduce?.4:1); while(S.sparkAcc>1){ S.sparkAcc--; const a=rnd(0,TAU); FX.motes.push({x:S.cx+Math.cos(a)*rnd(G.hw+4,G.hw+22), y:S.cy+Math.sin(a)*rnd(G.hh+3,G.hh+17), vy:-rnd(4,12), age:0, life:rnd(.8,1.6), k:Math.random()<.5?'w':R.l}); } }
     S.cardIT = R.glow*(1+.12*Math.sin(S.rt*2.4));
   }
-  if (S.phase==='entering'){ S.summon=Math.min(1,S.summon+rdt/(reduce?.4:.95)); const sp=S.summon;
+  if (S.phase==='entering'){ const deal=!!S.pack&&S.pack.i>=0; S.summon=Math.min(1,S.summon+rdt/(deal?.3:reduce?.4:.95)); const sp=S.summon;
     S.cardIT=.5+.9*Math.sin(sp*Math.PI); S.beam=Math.max(S.beam,.75*Math.sin(Math.min(1,sp*1.3)*Math.PI));
     if (Math.random()<rdt*70*(1-sp)){ const a=rnd(0,TAU); FX.motes.push({x:L.CX+Math.cos(a)*rnd(10,28), y:L.PTOP-1+Math.sin(a)*4, vy:-rnd(25,70), age:0, life:rnd(.4,.9), k:Math.random()<.5?'w':'4'}); }
     if (!S.summonChime && sp>.2){ S.summonChime=true; A.summon(); }
-    if (sp>=1){ S.phase='idle'; S.sq.v=5; S.trauma=Math.min(1,S.trauma+.22); ring(V,'4',220,1,0); sparks(V,22,'c',20,100,.4,L.CX,L.CY,true); A.land(); env.buzz(12); } }
-  if (S.phase==='collecting'){ const C=S.col!; C.t=Math.min(1,C.t+rdt/.7); const t=C.t, e=t<.2?-.08*Math.sin(t/.2*Math.PI):Math.pow((t-.2)/.8,2), u=Math.max(0,e);
+    // a pack's card flips as soon as it is in; a fresh card or pack lands and waits for a hold (or charges itself after "Open another pack")
+    if (sp>=1 && deal) burst(V);
+    else if (sp>=1){ S.phase='idle'; if (S.autoNext){ S.autoNext=false; S.auto=true; } S.sq.v=5; S.trauma=Math.min(1,S.trauma+.22); ring(V,'4',220,1,0); sparks(V,22,'c',20,100,.4,L.CX,L.CY,true); A.land(); env.buzz(12); } }
+  if (S.phase==='collecting'){ const C=S.col!; C.t=Math.min(1,C.t+rdt/C.dur); const t=C.t, e=t<.2?-.08*Math.sin(t/.2*Math.PI):Math.pow((t-.2)/.8,2), u=Math.max(0,e);
     S.pos.x=2*(1-u)*u*C.dir*50 + u*u*C.tx; S.pos.y=2*(1-u)*u*(-60) + u*u*C.ty + (e<0?-e*50:0); S.colScale=Math.max(.08,lerp(1,C.s1,u)*(e<0?1+e:1)); S.colSpin=C.dir*u*TAU*1.5;
     if (t>=1 && !C.done){ C.done=true; arrive(V); } }
   // springs & timers

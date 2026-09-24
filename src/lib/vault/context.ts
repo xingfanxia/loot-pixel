@@ -20,7 +20,21 @@ export interface VaultElements {
 export interface VaultHooks {
   onBagComplete?: (complete: boolean) => void;
   onError?: (message: string) => void;
+  /** a 10-pull is dealing: the card on the altar (1-based) of `total`, or null when no pack is open */
+  onPack?: (p: { at: number; total: number } | null) => void;
+  /** the last card of a 10-pull landed: every card of the pull, best first. Call closePack() to go on. */
+  onPackDone?: (cards: PackResult[]) => void;
 }
+
+/** One card of a 10-pull as the results screen shows it: `face` is the rendered card front (PNG data URL). */
+export interface PackResult { id: string; tier: TierId; title: string; isNew: boolean; count: number; face: string; w: number; h: number }
+/** A rolled card waiting in a pack: its spec, the face it shows first (differs for a fake) and the tiers. */
+export interface PackCard { spec: Spec; face: DeckCard; r: number; vr: number; fake: boolean }
+/**
+ * An open 10-pull. `i` is the card on the altar (-1 while the sealed pack is charged); cards are
+ * dealt low tier first, so the best one comes last and gets the full reveal.
+ */
+export interface Pack { cards: PackCard[]; i: number; skip: boolean; results: Omit<PackResult, 'face' | 'w' | 'h'>[] }
 
 /** Debug / test handles, exposed as window.APP like the original single-file build. */
 export interface DebugHandles { paused?: boolean; noR?: boolean; forceCard?: string; forceFake?: boolean; [k: string]: unknown }
@@ -45,7 +59,7 @@ interface Title { text: string; t0: number; ramp: string[] | null; quake: number
 interface Stamp { text: string; key: string; t0: number }
 interface Caption { text: string; key: string; t0: number }
 /** Fly-to-bag animation: target offset + scale, slot index `i`, deck card index `card`. */
-interface Collect { t: number; tx: number; ty: number; s1: number; dir: number; done: boolean; i: number; card: number }
+interface Collect { t: number; dur: number; tx: number; ty: number; s1: number; dir: number; done: boolean; i: number; card: number }
 interface Spring { x: number; v: number }
 
 export function createState(nBars: number) {
@@ -60,7 +74,9 @@ export function createState(nBars: number) {
     hitstop: 0, hitstopDur: 1, after: -1, bars: bars(), barT: bars(), barFlash: bars(), barDone: bars().map(() => 1), barTarget: bars(),
     title: null as Title | null, stamp: null as Stamp | null, caption: null as Caption | null, glitch: 0, hidden: false, col: null as Collect | null, pending: null as { i: number; isNew: boolean } | null,
     zapAcc: 0, suckAcc: 0, sparkAcc: 0, flameAcc: 0, ca: 0, chains: [true, true, true, true], lockOn: true, wall: { active: false, rebuild: false, t: 0, rt: 0, r: 0 },
-    summon: 0, summonChime: false, popT0: -9, crk: 0, artStars: [] as [number, number, number][], colSpin: 0, cx: 0, cy: 0, colScale: 1 };
+    summon: 0, summonChime: false,
+    /** 10-pull mode (the next card summoned is a sealed pack) and the open pack */
+    packMode: false, pack: null as Pack | null, autoNext: false, popT0: -9, crk: 0, artStars: [] as [number, number, number][], colSpin: 0, cx: 0, cy: 0, colScale: 1 };
 }
 export type GameState = ReturnType<typeof createState>;
 

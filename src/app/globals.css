@@ -24,8 +24,11 @@ body{margin:0; height:100%; overflow:hidden; background:#07060f; color:var(--cre
 #again.show{opacity:1; pointer-events:auto; transform:translate(-50%,0); animation:hop .4s steps(5)}
 @keyframes hop{0%{transform:translate(-50%,12px)} 45%{transform:translate(-50%,-8px)} 100%{transform:translate(-50%,0)}}
 #again:active{transform:translate(-50%,3px)}
+/* while a 10-pull deals its lower cards the same button skips to the best card: a quieter look than "Draw another" */
+#again.skip{background:var(--navy); color:var(--cream); font-weight:400; font-size:13px; padding:10px 14px;
+  box-shadow:0 -3px 0 0 var(--ink), 0 3px 0 0 var(--ink), -3px 0 0 0 var(--ink), 3px 0 0 0 var(--ink), inset 0 -3px 0 0 var(--indigo)}
 #top{position:fixed; z-index:6; top:calc(env(safe-area-inset-top,0px) + 10px); right:10px; display:flex; gap:10px; align-items:center}
-#hud{position:fixed; z-index:6; left:0; right:0; bottom:calc(env(safe-area-inset-bottom,0px) + 12px); display:flex; justify-content:center; padding:0 10px; pointer-events:none}
+#hud{position:fixed; z-index:6; left:0; right:0; bottom:calc(env(safe-area-inset-bottom,0px) + 12px); display:flex; flex-wrap:wrap; gap:10px 22px; justify-content:center; padding:0 10px; pointer-events:none}
 #hud > *{pointer-events:auto}
 .row{display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:center}
 .row .lbl{font-size:11px; color:var(--lav)}
@@ -97,3 +100,27 @@ button.thumb:focus-visible{outline:3px dashed var(--cream); outline-offset:6px}
   .detail-card img{width:192px; height:216px}
   .detail-note{margin-inline:auto}
 }
+
+/* ---------- 10-pull results ---------- */
+/* card faces are the engine's own pixels: whole-number scale only (--s), 2x where two rows of five fit */
+#pull{--s:2; border:0; padding:0; color:var(--cream); background:var(--deep); font-family:var(--font-pixel),"Courier New",monospace;
+  width:min(900px, calc(100vw - 24px)); max-height:calc(100dvh - 24px); display:none; flex-direction:column; overflow:hidden;
+  box-shadow:0 -4px 0 0 var(--ink), 0 4px 0 0 var(--ink), -4px 0 0 0 var(--ink), 4px 0 0 0 var(--ink), inset 0 0 0 3px var(--indigo)}
+#pull[open]{display:flex}
+#pull::backdrop{background:rgba(7,6,15,.82)}
+.pull-head{padding:18px 22px 12px; text-align:center}
+.pull-head h2{margin:0; font-size:22px; font-weight:700; line-height:1.1; color:var(--gold)}
+.pull-head p{margin:8px 0 0; font-size:12px; color:var(--lav)}
+.pull-grid{display:grid; grid-template-columns:repeat(5, max-content); justify-content:center; gap:18px 16px; margin:0; padding:10px 22px 18px; list-style:none; overflow-y:auto; overscroll-behavior:contain}
+.pull-grid li{position:relative; animation:deal .32s steps(4) both; animation-delay:calc(var(--k) * 90ms)}
+.pull-grid img{display:block; width:calc(var(--w) * var(--s) * 1px); height:calc(var(--h) * var(--s) * 1px); image-rendering:pixelated; image-rendering:crisp-edges}
+.pull-grid .best img{box-shadow:0 0 0 3px var(--ink), 0 0 26px 4px var(--tl)}
+.pull-grid .tag{position:absolute; left:50%; bottom:-9px; transform:translateX(-50%); padding:3px 6px; font-size:10px; line-height:1; white-space:nowrap; background:var(--ink); color:var(--lav); box-shadow:0 0 0 2px var(--td)}
+.pull-grid .tag.new{background:var(--gold); color:var(--ink); box-shadow:0 0 0 2px var(--ink)}
+@keyframes deal{0%{opacity:0; transform:translateY(-14px)} 60%{opacity:1; transform:translateY(3px)} 100%{opacity:1; transform:none}}
+.pull-foot{display:flex; gap:16px; justify-content:center; flex-wrap:wrap; padding:14px 22px 22px}
+.pull-again{background:var(--gold); color:var(--ink); font-weight:700; box-shadow:0 -3px 0 0 var(--ink), 0 3px 0 0 var(--ink), -3px 0 0 0 var(--ink), 3px 0 0 0 var(--ink), inset 0 -4px 0 0 #e0781f, inset 0 3px 0 0 #fff3b0}
+@media (max-width:900px), (max-height:720px){ #pull{--s:1} .pull-grid{gap:16px 12px} }
+@media (max-width:560px){ .pull-grid{grid-template-columns:repeat(4, max-content); gap:16px 8px; padding:8px 12px 16px} .pull-head{padding:16px 14px 8px} }
+@media (max-width:370px){ .pull-grid{grid-template-columns:repeat(3, max-content)} }
+@media (prefers-reduced-motion: reduce){ .pull-grid li{animation:none} }

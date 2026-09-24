@@ -49,6 +49,9 @@ function drawCardLayer(V: Vault, ox: number, oy: number, jx: number, jy: number)
   if (S.glow>.05){ const w=Math.round(CWd*sc*Math.max(.15,Math.abs(Math.cos(ry)))), h=Math.round(CHd*sc); const x=S.cx-Math.round(w/2)+ox+jx, y=S.cy-Math.round(h/2)+oy+jy;
     const ring=(o: number,col: string)=>{ layerG.fillStyle=PAL[col]; layerG.fillRect(x-o,y-o,w+2*o,1); layerG.fillRect(x-o,y+h+o-1,w+2*o,1); layerG.fillRect(x-o,y-o,1,h+2*o); layerG.fillRect(x+w+o-1,y-o,1,h+2*o); };
     const tk=S.teaseKey, rp=RAMPS[TIERS[S.tease].ramp]; ring(1,tk); if (S.glow>.35) ring(2,rp[4]); if (S.glow>.7 && Math.floor(S.rt*16)%2) ring(3,rp[3]); }
+  // a sealed pack: two more cards peek out under the top one
+  if (S.pack && S.pack.i<0 && !showFront && (S.phase!=='entering'||S.summon>.55)){ const [edge,hi]=V.theme.keys.edge, x=S.cx-(CWd>>1)+ox+jx, y=S.cy-(CHd>>1)+oy+jy;
+    for (let k=2;k>=1;k--){ const dx=x+k*2, dy=y+k*3; layerG.fillStyle=PAL.k; layerG.fillRect(dx-1,dy-1,CWd+2,CHd+2); layerG.fillStyle=PAL[edge]; layerG.fillRect(dx,dy,CWd,CHd); layerG.fillStyle=PAL[hi]; layerG.fillRect(dx+1,dy+CHd-1,CWd-2,1); } }
   const face=showFront?B.frontC:(S.phase==='entering'?dissolve(V,B.backC,clamp((S.summon-.15)/.75,0,1.08)):B.backC);
   drawCard3D(V, layerG, face, null, S.cx+ox+jx, S.cy+oy+jy+Math.round((1-sqy)*CHd*.5), ry, rx, sc*(sqx+sqy)/2, shine);
 }

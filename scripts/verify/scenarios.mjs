@@ -62,15 +62,48 @@ const fullset = tiers => ({
   },
 });
 
+/** A 10-pull: sealed pack, charge, burst, the lower cards dealt, the best card's full reveal, the results screen. */
+const pack = {
+  name: 'pack',
+  async run({ ev, snap }) {
+    const settle = `new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))`;
+    await ev(`APP.forceFake = false; document.querySelector('[aria-label="Cards per draw"] button:last-of-type').click(); ${settle}`, true);
+    await ev('__h.frames(80)'); await snap('sealed', true);
+    await ev('APP.beginHold(); __h.frames(70)'); await snap('charge-70');
+    await ev(`__h.until('hitstop', 300); __h.until('entering', 120); __h.frames(6)`); await snap('burst');
+    await ev(`__h.until('revealed', 200); __h.frames(24)`); await snap('card-1', true);
+    await ev(`__h.until('collecting', 300); __h.frames(14)`); await snap('card-1-flight');
+    await ev(`(() => { const P = APP.S.pack; for (let i = 0; i < 6000 && P.i < P.cards.length - 1; i++) __h.frames(1); return P.i; })()`);
+    await ev(`__h.until('revealed', 300); __h.frames(150)`); await snap('best-2.5', true);
+    await ev(`APP.leave(); __h.until('collecting', 5); __h.frames(60); ${settle}`, true);
+    await new Promise(r => setTimeout(r, 1600)); // the results deal in on CSS time
+    await snap('results', true);
+    await ev(`document.querySelector('.pull-again').click(); ${settle}`, true);
+    await ev(`__h.frames(100)`); await snap('next-pack-charging', true);
+  },
+};
+
+/** Skip to best: the lower cards go straight into the bag after the first one. */
+const packSkip = {
+  name: 'pack-skip',
+  async run({ ev, snap }) {
+    await ev(`APP.forceFake = false; APP.pack(true); __h.frames(80); APP.beginHold(); __h.until('hitstop', 300); __h.until('revealed', 300); __h.frames(10); true`);
+    await ev(`document.getElementById('again').click(); __h.frames(40)`); await snap('skipped', true);
+    await ev(`__h.until('revealed', 300); __h.frames(60)`); await snap('best-1.0', true);
+  },
+};
+
 export const SCENARIOS = {
   classic: [
     ...['COMMON', 'RARE', 'EPIC', 'LEGENDARY'].map(reveal),
     fake('SUN CROWN'),
     fullset(['']),
+    pack, packSkip,
   ],
   'cl-team': [
     ...['COMMON', 'UNCOMMON', 'RARE', 'EPIC', 'LEGENDARY'].map(reveal),
     fake('albert-legendary-1'),
     fullset(['COMMON', 'UNCOMMON', 'RARE', 'EPIC', 'LEGENDARY']),
+    pack, packSkip,
   ],
 };

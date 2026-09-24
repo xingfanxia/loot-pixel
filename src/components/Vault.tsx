@@ -4,7 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { deckIdFrom, DEFAULT_DECK, forceOptions, resolveDeck, type Deck, type DeckSources } from "@/lib/vault/decks";
 import { THEME_KEY, THEMES, themeById } from "@/lib/vault/themes";
 import Collection from "./Collection";
+import PackResults from "./PackResults";
 import type { VaultController } from "@/lib/vault/engine";
+import type { PackResult } from "@/lib/vault/context";
 
 /**
  * DOM shell for the canvas engine. React owns the HUD controls; the engine owns the
@@ -12,6 +14,7 @@ import type { VaultController } from "@/lib/vault/engine";
  * The deck comes from `?deck=<id>` (default cl-team); `sources` is its server-read card data.
  * The theme comes from `?theme=<id>`, else the viewer's last choice (THEME_KEY), else the default;
  * switching it rebuilds the engine (the bag is saved per deck, so nothing is lost).
+ * "Draw x1 / x10" picks single cards or 10-pull packs (src/lib/vault/pack.ts).
  */
 export default function Vault({ sources }: { sources: DeckSources }) {
   const stage = useRef<HTMLDivElement>(null);
@@ -33,8 +36,12 @@ export default function Vault({ sources }: { sources: DeckSources }) {
   // the deck depends on the theme (a theme can bring its own card pack), so both change together
   const [run, setRun] = useState<{ deck: Deck; theme: string } | null>(null);
   const [album, setAlbum] = useState<Record<string, number> | null>(null);
-  // read by a rebuilt engine (theme switch) so the rarity pick and sound setting carry over
-  const prefs = useRef({ force: -1, sound: true });
+  const [packMode, setPackMode] = useState(false);
+  // the pack being dealt (card on the altar of total) and the finished pack's results
+  const [packAt, setPackAt] = useState<{ at: number; total: number } | null>(null);
+  const [pull, setPull] = useState<PackResult[] | null>(null);
+  // read by a rebuilt engine (theme switch) so the rarity pick, sound setting and draw mode carry over
+  const prefs = useRef({ force: -1, sound: true, pack: false });
 
   const start = (theme: string) => {
     const deck = resolveDeck(deckIdFrom(location.search), sources, theme), opts = forceOptions(deck);
@@ -70,8 +77,9 @@ export default function Vault({ sources }: { sources: DeckSources }) {
           },
           deck,
           themeById(theme),
-          { onBagComplete: setBagComplete, onError: setError },
+          { onBagComplete: setBagComplete, onError: setError, onPack: setPackAt, onPackDone: setPull },
         );
+        if (prefs.current.pack) v.setPack(true);
         if (prefs.current.force >= 0) v.setForce(prefs.current.force);
         if (!prefs.current.sound) v.setSound(false);
       })
@@ -80,6 +88,8 @@ export default function Vault({ sources }: { sources: DeckSources }) {
       cancelled = true;
       vault.current?.destroy();
       vault.current = null;
+      setPackAt(null);
+      setPull(null);
     };
   }, [run]);
 
@@ -100,7 +110,9 @@ export default function Vault({ sources }: { sources: DeckSources }) {
       </div>
       <div id="crt" ref={crt} />
       <button id="hit" ref={hit} aria-label="Loot card. Press and hold to open." />
-      <button id="again" ref={again} className="px" type="button">Draw another</button>
+      <button id="again" ref={again} className={packAt && packAt.at < packAt.total ? "px skip" : "px"} type="button">
+        {!packAt ? "Draw another" : packAt.at < packAt.total ? "Skip to best" : `See all ${packAt.total}`}
+      </button>
       <div id="top">
         <div className="row" role="group" aria-label="Theme">
           {THEMES.map((t) => (
@@ -120,6 +132,15 @@ export default function Vault({ sources }: { sources: DeckSources }) {
         </button>
       </div>
       <div id="hud" ref={hud}>
+        <div className="row" role="group" aria-label="Cards per draw">
+          <span className="lbl">Draw:</span>
+          {[false, true].map((on) => (
+            <button key={String(on)} className="px pill" type="button" aria-pressed={packMode === on}
+              onClick={() => { setPackMode(on); prefs.current.pack = on; vault.current?.setPack(on); }}>
+              {on ? "x10" : "x1"}
+            </button>
+          ))}
+        </div>
         <div className="row" role="group" aria-label="Next card rarity">
           <span className="lbl">Next:</span>
           {options.map((o) => (
@@ -140,6 +161,7 @@ export default function Vault({ sources }: { sources: DeckSources }) {
       </div>
       <button id="bag" ref={bag} type="button" aria-label="Open the collection"
         onClick={() => setAlbum(vault.current?.owned() ?? {})} />
+      <PackResults cards={pull} onClose={(again) => { setPull(null); vault.current?.closePack(again); }} />
       {deck && <Collection deck={deck} owned={album ?? {}} open={album !== null} onClose={() => setAlbum(null)} />}
       <div id="live" ref={live} className="sr" aria-live="polite" />
       <div id="err" style={error ? { display: "block" } : undefined}>{error && `Something broke: ${error}`}</div>

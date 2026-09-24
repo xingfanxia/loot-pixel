@@ -22,8 +22,23 @@ export function drawHud(V: Vault, ox: number, oy: number){
   // variant caption under the altar, typed in once the title has landed
   if (S.caption){ const e=S.rt-S.caption.t0-.9; if (e>0){ const str=S.caption.text.slice(0,Math.ceil(e*40)); drawText(g,str,Math.round(CX-textW(S.caption.text,1)/2)+ox,L.CAPY+oy,1,S.caption.key,'k'); } }
   // hint
-  if (S.phase==='idle' && S.charge<.05 && Math.floor(S.rt*2)%2===0){ const str=S.auto?V.theme.hud.auto:V.theme.hud.hold; drawText(g,str,Math.round(CX-textW(str,1)/2),PBASE+8,1,'c','k'); }
+  if (S.phase==='idle' && S.charge<.05 && Math.floor(S.rt*2)%2===0){ const str=S.auto?V.theme.hud.auto:V.theme.hud.hold+(S.pack?' x10':''); drawText(g,str,Math.round(CX-textW(str,1)/2),PBASE+8,1,'c','k'); }
+  if (S.pack) drawPack(V, ox, oy);
   drawBag(V);
+}
+
+/**
+ * A pack's HUD: an "x10" badge on the sealed pack, and a strip of ten pips under the altar that fill
+ * with each dealt card's tier colour (the card on the altar blinks, cards still to come stay dark).
+ */
+function drawPack(V: Vault, ox: number, oy: number){
+  const { S, L, geo: G, theme } = V, g=V.B.g, P=S.pack!, n=P.cards.length||10, [, fill, shade]=theme.keys.coin;
+  if (P.i<0 && (S.phase==='idle'||(S.phase==='entering'&&S.summon>.55))){ const s=L.W>=300?2:1, str='x10', tw=textW(str,s), bx=Math.round(S.cx+G.w/2-tw/2-4)+ox, by=Math.round(S.cy-G.h/2-6)+oy;
+    g.fillStyle=PAL.k; g.fillRect(bx-4,by-4,tw+8,5*s+8); g.fillStyle=PAL[fill]; g.fillRect(bx-3,by-3,tw+6,5*s+6); g.fillStyle=PAL.w; g.fillRect(bx-3,by-3,tw+6,1); g.fillStyle=PAL[shade]; g.fillRect(bx-3,by+5*s+2,tw+6,1); drawText(g,str,bx,by,s,'k'); }
+  if (P.i>=n) return;
+  const pw=4, gap=1, w=n*(pw+gap)-gap, x0=Math.round(L.CX-w/2), y0=L.PBASE+2; g.fillStyle=PAL.k; g.fillRect(x0-1,y0-1,w+2,5);
+  for (let k=0;k<n;k++){ const x=x0+k*(pw+gap), done=k<P.i||(k===P.i&&S.phase!=='entering'&&S.phase!=='hitstop'), now=k===P.i;
+    const T=done?TIERS[now?S.vr:P.cards[k].r]:null; g.fillStyle=PAL[T?T.l:now&&Math.floor(S.rt*6)%2?'w':2]; g.fillRect(x,y0,pw,3); if (T){ g.fillStyle=PAL[T.d]; g.fillRect(x,y0+2,pw,1); } }
 }
 
 /** One square per slot: the best collected card's icon on its tier colours (or an empty socket), with a collected/total bar under it. */

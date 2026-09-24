@@ -4,6 +4,12 @@ A pixel-art loot-card opener. Hold the card on the altar to crack its chains; th
 rarity (Common → Uncommon → Rare → Epic → Legendary) escalates light, sound, particles
 and a wall breakdown. Collect one card of every slot to fill the bag.
 
+**Draw x10** turns the card on the altar into a sealed pack of ten. Its charge teases up to the best
+card's tier, then the cards are dealt lowest tier first, each flying to the bag on its own, and the
+best card comes last with the full reveal. "Skip to best" files the rest straight into the bag. A
+results screen shows all ten faces. Every pack has at least one Rare or better unless a rarity is
+forced. The rules are at the top of `src/lib/vault/pack.ts`.
+
 Next.js (App Router) port of a single-file canvas toy. Every in-canvas pixel comes
 from a fixed palette with Bayer-dithered lighting; audio is synthesized chip voices via Web Audio.
 
@@ -20,7 +26,8 @@ plays in any theme; the contract and how to add one are in [`docs/themes.md`](do
 
 | Path | Role |
 |---|---|
-| `src/components/Vault.tsx` | Client component: DOM shell + HUD (theme switch, sound, rarity picker per deck, empty bag) |
+| `src/components/Vault.tsx` | Client component: DOM shell + HUD (theme switch, sound, x1/x10 draw mode, rarity picker per deck, empty bag) |
+| `src/components/PackResults.tsx` | 10-pull results dialog: the ten card faces the engine rendered, best first, NEW / copy counts |
 | `src/components/Collection.tsx` | Collection dialog opened from the bag row: every card by slot and tier, found ones in full, missing ones as silhouettes |
 | `src/app/page.tsx` | Reads deck sources at build time (`decks/sources.server.ts`) and renders the vault |
 | `src/lib/vault/engine.ts` | `createVault(els, deck, theme, hooks)`: builds the `Vault` context, preloads art, boots; returns a controller with `destroy()` |
@@ -33,6 +40,7 @@ plays in any theme; the contract and how to add one are in [`docs/themes.md`](do
 | `src/lib/vault/{layout,scene,lighting}.ts` | Viewport layout, lit brick/flagstone units, lighting pass |
 | `src/lib/vault/{card-back,chains,cracks,card-front,card3d}.ts` | Card back + emblem, chains/padlock, cracks, card face, pseudo-3D projector |
 | `src/lib/vault/{flow,sim,wall,particles}.ts` | Draw state machine, per-frame simulation, wall breakdown, particles |
+| `src/lib/vault/pack.ts` | The 10-pull: roll with a Rare floor, sealed-pack burst, dealing, skip, results faces |
 | `src/lib/vault/{render,world,hud,postfx}.ts` | Frame composition, background layer, in-canvas HUD, reflection/impact/post effects |
 | `src/lib/vault/{input,loop,art,bag}.ts` | Input bindings, rAF loop, deck art preload + placeholders, per-deck bag |
 | `src/lib/vault/{palette,font,sprites,audio,util}.ts` | Palette + ramps, 3x5 bitmap font, EPX sprites, chip audio, helpers |
@@ -44,7 +52,7 @@ plays in any theme; the contract and how to add one are in [`docs/themes.md`](do
 
 The engine is imported dynamically inside `useEffect`, so it never runs during SSR.
 `window.APP` exposes debug handles (`force(tierId)`, `beginHold()`, `endHold()`, `leave()`,
-`step(dt)`, `paused`, `forceCard` (card id), `forceFake`, `S`, `FX`, `L`, `geo`, `deck`, `theme`).
+`pack(on)`, `closePack(again)`, `step(dt)`, `paused`, `forceCard` (card id), `forceFake`, `S`, `FX`, `L`, `geo`, `deck`, `theme`).
 
 ## Develop
 
@@ -63,8 +71,8 @@ scripts/art/contact-sheet.py --out scratch/media/review  # per-person strips at 
 
 `scripts/verify/characterise.mjs` drives the real page in headless Chrome (DevTools
 protocol, no npm deps) with a seeded `Math.random`, virtual timers and the loop paused,
-steps the engine frame by frame through every tier, a fake upgrade, a full set and an
-empty bag, and records the logical canvas + layout metrics at fixed frames (default viewports
+steps the engine frame by frame through every tier, a fake upgrade, a full set, an
+empty bag and a 10-pull (with and without skip), and records the logical canvas + layout metrics at fixed frames (default viewports
 1280x800 and 390x844; `wide` is 1280x900).
 
 ```bash
