@@ -11,15 +11,17 @@ import type { DeckSources } from './index';
  * back to placeholder titles so the deck stays playable while the art track is in progress.
  */
 export function loadDeckSources(root = process.cwd()): DeckSources {
-  return { 'cl-team': loadClTeam(join(root, 'art', 'cl-team')) };
+  return { 'cl-team': loadClTeam(join(root, 'art', 'cl-team')), 'cl-team-cyber': loadClTeam(join(root, 'art', 'cl-team-cyber')) };
 }
 
-interface CharactersFile { tiers?: Record<string, { count?: number }>; slots: { id: string; short: string; fullName: string; role?: string }[] }
+/** A pack's characters.json; `base` names the art dir whose characters.json lists the people (a theme pack of the same team). */
+interface CharactersFile { base?: string; tiers?: Record<string, { count?: number }>; slots?: { id: string; short: string; fullName: string; role?: string }[] }
 
 function loadClTeam(dir: string): ClTeamSource {
   const chars = JSON.parse(readFileSync(join(dir, 'characters.json'), 'utf8')) as CharactersFile;
+  const people = chars.base ? (JSON.parse(readFileSync(join(dir, '..', chars.base, 'characters.json'), 'utf8')) as CharactersFile).slots! : chars.slots!;
   const counts = TIERS.map(t => chars.tiers?.[t.key]?.count ?? 0);
-  return { slots: chars.slots.map(s => ({ id: s.id, short: s.short, fullName: s.fullName, role: s.role, cards: readSlot(dir, s.id) ?? placeholderCards(counts) })) };
+  return { slots: people.map(s => ({ id: s.id, short: s.short, fullName: s.fullName, role: s.role, cards: readSlot(dir, s.id) ?? placeholderCards(counts) })) };
 }
 
 function readSlot(dir: string, id: string): ClTeamCardSpec[] | null {

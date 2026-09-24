@@ -1,0 +1,110 @@
+{
+  "id": "nikolay",
+  "cards": [
+    {
+      "tier": "common",
+      "n": 1,
+      "title": "BACK-ALLEY FIXER",
+      "concept": "street fixer in a worn grey bomber jacket over a grey checked flannel shirt, a cheap earpiece with one tiny cyan LED, a scuffed burner phone held up at his chest with a knowing half-smile.",
+      "hook": "Chief Business Officer and partnerships lead: in any district, the connection everyone needs runs through his earpiece."
+    },
+    {
+      "tier": "common",
+      "n": 2,
+      "title": "RACK HAULER",
+      "concept": "data-hall rack hauler in a grey utility jacket with padded shoulders and fingerless work gloves, a bare GPU server blade hugged flat against his chest.",
+      "hook": "Operations is in his bio, and in the compute world operations starts with getting the GPUs into the racks."
+    },
+    {
+      "tier": "common",
+      "n": 3,
+      "title": "LAUNCH COURIER",
+      "concept": "street courier in a padded grey jacket with a diagonal sling strap, a sealed hard-shell data case cuffed to his wrist and held at his chest.",
+      "hook": "He led product launches at Xsolla: the courier who gets the package to market on launch day."
+    },
+    {
+      "tier": "common",
+      "n": 4,
+      "title": "ARCADE BOUNCER",
+      "concept": "arcade door bouncer in a grey hoodie under a padded black vest, arms crossed, a lanyard with a round arcade-token badge hanging at his chest.",
+      "hook": "His tough-but-warm arms-crossed stance guarding the door of the games business he knows from Xsolla, a video-game commerce company."
+    },
+    {
+      "tier": "common",
+      "n": 5,
+      "title": "SCRAP APPRAISER",
+      "concept": "salvage-market appraiser in a grey work apron over a checked flannel shirt, sleeves rolled, turning a salvaged GPU chip between his fingers at chest height.",
+      "hook": "M&A is valuation work: before any acquisition, he knows exactly what the hardware is worth."
+    },
+    {
+      "tier": "uncommon",
+      "n": 1,
+      "title": "DILIGENCE RUNNER",
+      "concept": "netrunner in charcoal techwear with green terminal-code stripes, a small green-lit implant on his temple, a compact cyberdeck held at his chest with a data cable looping up to the implant.",
+      "hook": "He led acquisitions at Xsolla: before any deal closes, he dives deep into the target's data."
+    },
+    {
+      "tier": "uncommon",
+      "n": 2,
+      "title": "PIPELINE HACKER",
+      "concept": "sales-ops techie in a grey hoodie with green piping, arms crossed, a wrist display on his forearm projecting a small rising green bar chart.",
+      "hook": "Sales is in his bio: he hacks the pipeline until every number turns terminal green."
+    },
+    {
+      "tier": "uncommon",
+      "n": 3,
+      "title": "DRONE FOREMAN",
+      "concept": "data-centre ops foreman in a green-trimmed utility vest and a headset mic, a small maintenance drone with one cyan lens hovering beside his shoulder.",
+      "hook": "An operations leader: he directs the swarm that keeps the whole data hall humming."
+    },
+    {
+      "tier": "uncommon",
+      "n": 4,
+      "title": "TEAM ARCHITECT",
+      "concept": "techie builder in a green-striped tech jacket with a tiny implant on the back of his hand, snapping two glowing green circuit modules together at his chest.",
+      "hook": "At Xsolla he stood up new departments from scratch, snapping teams together like modules."
+    },
+    {
+      "tier": "rare",
+      "n": 1,
+      "title": "THE CLOSER",
+      "concept": "street samurai in a sleek black armoured jacket with glowing teal seams, a cyan holo-katana held upright in front of one shoulder, calm confident half-smile.",
+      "hook": "Chief Business Officer and sales leader: the closer who cuts cleanly through any negotiation."
+    },
+    {
+      "tier": "rare",
+      "n": 2,
+      "title": "HYPERSCALER",
+      "concept": "overclocker in a teal-seamed armoured jacket, one forearm sheathed in a chunky GPU gauntlet with cooling fins raised at his chest, its fans glowing faint cyan.",
+      "hook": "He scales high-growth companies: a hyperscaler in the most literal sense, with GPU power strapped to his arm."
+    },
+    {
+      "tier": "rare",
+      "n": 3,
+      "title": "ACQUISITION AGENT",
+      "concept": "corporate acquisitions operative in a long charcoal coat with teal-lit seams and a high collar, a slim earpiece, holding a glowing cyan data spike, the signed deal, at his chest.",
+      "hook": "M&A is his trade, from the acquisitions he led at Xsolla to every deal since."
+    },
+    {
+      "tier": "epic",
+      "n": 1,
+      "title": "CHROME EXECUTIVE",
+      "concept": "chrome-augmented corpo exec in a sharp dark suit with polished chrome shoulder plates and chrome hands, arms crossed, a violet holographic skyline of simple glowing towers rising behind his shoulders with hot-pink neon edging the suit.",
+      "hook": "He builds new departments and scales high-growth companies: every tower in the skyline behind him is one he raised."
+    },
+    {
+      "tier": "epic",
+      "n": 2,
+      "title": "TOKEN TYCOON",
+      "concept": "on-chain magnate in a chrome-plated violet armoured coat, holding a glowing magenta hexagonal token at his chest, a large violet holographic GPU chip floating behind his shoulders shedding a few bold magenta tokens.",
+      "hook": "Compute Labs turns GPUs into on-chain tokens, and as Chief Business Officer he is the one who brings them to market."
+    },
+    {
+      "tier": "legendary",
+      "n": 1,
+      "title": "SOVEREIGN OF SCALE",
+      "concept": "ascended compute sovereign in gold-and-white chrome regalia with a high circuit-etched collar, arms crossed in his signature stance, a halo ring of glowing golden GPU cores high behind his head, faint cyan circuit lines through the gold and a radiant golden aura around his silhouette.",
+      "hook": "His ultimate form as the builder and scaler of high-growth companies: every partnership, acquisition and launch fused into one golden compute empire."
+    }
+  ]
+}

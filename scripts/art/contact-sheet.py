@@ -104,6 +104,8 @@ def main() -> None:
     a.out.mkdir(parents=True, exist_ok=True)
     art = ROOT / "art" / a.deck
     chars = json.loads((art / "characters.json").read_text())
+    if "base" in chars:  # a theme pack of the same team: people come from the base pack
+        chars["slots"] = json.loads((ROOT / "art" / chars["base"] / "characters.json").read_text())["slots"]
     order = {t: i for i, t in enumerate(TIERS)}
     slots = []
     for s in chars["slots"]:

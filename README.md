@@ -38,6 +38,7 @@ plays in any theme; the contract and how to add one are in [`docs/themes.md`](do
 | `src/lib/vault/{palette,font,sprites,audio,util}.ts` | Palette + ramps, 3x5 bitmap font, EPX sprites, chip audio, helpers |
 | `art/cl-team/` | Art track: `characters.json` (people, tiers), `slots/<slot>.json` (card lists), `style.md` (locked style + pipeline), `source/` (generator copies) |
 | `public/decks/cl-team/` | Quantized card art (64x72) and bag icons (24x24) |
+| `art/cl-team-cyber/`, `public/decks/cl-team-cyber/` | The cyber theme's card pack of the same people (people from `art/cl-team/`, art may use the neon colours) |
 | `scripts/art/` | `draft.py`, `prompt.py`, `quantize.py` (card pipeline), `contact-sheet.py` (review strips) |
 | `scripts/verify/` | `check-deck-art.mjs` (art contract), `characterise.mjs` + `scenarios.mjs` (headless engine runs), `cl-mark-mask.mjs` |
 

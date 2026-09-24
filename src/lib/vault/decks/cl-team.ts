@@ -23,26 +23,32 @@ export const CL_TEAM_TIERS: DeckTier[] = [
   { tier: 0, odds: .42 }, { tier: 1, odds: .28 }, { tier: 2, odds: .17 }, { tier: 3, odds: .09 }, { tier: 4, odds: .04 },
 ];
 
-export function buildClTeam(src: ClTeamSource): Deck {
+/** A card pack of the team: its own cards, art directory (public/decks/<id>/, art/<id>/) and bag. */
+export interface ClTeamPack { id: string; title: string; bagKey: string }
+export const CL_TEAM: ClTeamPack = { id: 'cl-team', title: 'Compute Labs', bagKey: 'loot-pixel-bag-cl-team-v1' };
+/** The cyber theme's pack: the same people as cyberpunk characters (art/cl-team-cyber/). */
+export const CL_TEAM_CYBER: ClTeamPack = { id: 'cl-team-cyber', title: 'Compute Labs: Cyber', bagKey: 'loot-pixel-bag-cl-team-cyber-v1' };
+
+export function buildClTeam(src: ClTeamSource, pack: ClTeamPack = CL_TEAM): Deck {
   const cards: DeckCard[] = [];
   src.slots.forEach((s, slot) => {
     for (const c of s.cards) {
       const t = tierByKey(c.tier); if (!t) continue;
-      const id = `${s.id}-${t.key}-${c.n}`, base = `/decks/cl-team/${id}`;
+      const id = `${s.id}-${t.key}-${c.n}`, base = `/decks/${pack.id}/${id}`;
       cards.push({ id, slot, tier: t.id, n: c.n, name: s.short, title: c.title, label: `${s.fullName}, ${c.title}`, note: c.hook,
         art: { kind: 'image', src: `${base}.png`, icon: `${base}-icon.png` } });
     }
   });
   cards.sort((a, b) => a.slot - b.slot || a.tier - b.tier || a.n - b.n);
   return {
-    id: 'cl-team',
-    title: 'Compute Labs',
+    id: pack.id,
+    title: pack.title,
     // a tier nobody has a card for yet cannot be drawn
     tiers: CL_TEAM_TIERS.filter(t => cards.some(c => c.tier === t.tier)),
     slots: src.slots.map(({ id, short, fullName, role }) => ({ id, short, fullName, role })),
     cards,
     layout: CL_TEAM_LAYOUT,
-    bagKey: 'loot-pixel-bag-cl-team-v1',
+    bagKey: pack.bagKey,
     emblem: CL_MARK,
   };
 }

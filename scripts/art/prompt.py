@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
-"""Print the GPT Image prompt for one cl-team card (stdlib only).
+"""Print the GPT Image prompt for one card of a team pack (stdlib only).
 
-  scripts/art/prompt.py <slot> <tier> <n>
+  scripts/art/prompt.py <slot> <tier> <n> [--pack cl-team-cyber]
 
-Joins the locked style paragraph from art/cl-team/style.md, the person's
-likeness line from art/cl-team/source/style-likeness.json, the tier look from
-art/cl-team/characters.json and the card from art/cl-team/slots/<slot>.json.
-Image 1 of the call is the draft from draft.py, image 2 the reference photo.
+Joins the pack's style paragraph (art/<pack>/style.md), the person's likeness
+line (art/cl-team/source/style-likeness.json), the pack's tier look and accent
+(art/<pack>/characters.json; cl-team's accents are ACCENTS below) and the card
+(art/<pack>/slots/<slot>.json). A pack with "base" takes its people from that
+pack's characters.json. Image 1 of the call is the draft from draft.py, image 2
+the reference photo.
 """
 
 from __future__ import annotations
@@ -17,7 +19,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-DECK = ROOT / "art/cl-team"
+BASE = ROOT / "art/cl-team"
 
 ACCENTS = {
     "common": "Accent colours: silver-greys #c4ccd9 #8791a6 #4b5268 and plain browns #8a5a3c #4f2f22; no glow.",
@@ -28,32 +30,41 @@ ACCENTS = {
 }
 
 
-def style_paragraph() -> str:
-    text = (DECK / "style.md").read_text()
+def style_paragraph(pack: Path) -> str:
+    text = (pack / "style.md").read_text()
     m = re.search(r"<!-- STYLE:BEGIN -->\s*(.*?)\s*<!-- STYLE:END -->", text, re.S)
     if not m:
-        sys.exit("locked style paragraph markers not found in art/cl-team/style.md")
+        sys.exit(f"style paragraph markers not found in {pack / 'style.md'}")
     return " ".join(m.group(1).split())
 
 
-def build(slot: str, tier: str, n: int) -> str:
-    chars = json.loads((DECK / "characters.json").read_text())
-    person = next(s for s in chars["slots"] if s["id"] == slot)
-    like = json.loads((DECK / "source/style-likeness.json").read_text())["slots"][slot]
-    card = next(c for c in json.loads((DECK / f"slots/{slot}.json").read_text())["cards"]
+def build(slot: str, tier: str, n: int, pack_id: str = "cl-team") -> str:
+    pack = ROOT / "art" / pack_id
+    chars = json.loads((pack / "characters.json").read_text())
+    people = json.loads((ROOT / "art" / chars["base"] / "characters.json").read_text())["slots"] if "base" in chars else chars["slots"]
+    person = next(s for s in people if s["id"] == slot)
+    like = json.loads((BASE / "source/style-likeness.json").read_text())["slots"][slot]
+    card = next(c for c in json.loads((pack / f"slots/{slot}.json").read_text())["cards"]
                 if c["tier"] == tier and c["n"] == n)
     look = chars["tiers"][tier]["look"]
+    accent = chars["tiers"][tier].get("accent", ACCENTS[tier])
     return (
-        f"{style_paragraph()} "
+        f"{style_paragraph(pack)} "
         f"Subject: {person['short'].title()}, {like['likeness']}, exactly as in image 2. "
         f"Skin: {like['skin']}. "
         f"Tier {tier.upper()}: {look}. "
         f"Card: {card['title']}, {card['concept'].rstrip('.')}. "
-        f"{ACCENTS[tier]}"
+        f"{accent}"
     )
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
+    argv = sys.argv[1:]
+    pack = "cl-team"
+    if "--pack" in argv:
+        i = argv.index("--pack")
+        pack = argv[i + 1]
+        del argv[i:i + 2]
+    if len(argv) != 3:
         sys.exit(__doc__)
-    print(build(sys.argv[1], sys.argv[2], int(sys.argv[3])))
+    print(build(argv[0], argv[1], int(argv[2]), pack))

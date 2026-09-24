@@ -48,12 +48,19 @@ TIER_ZOOM = {"rare": 1.1, "epic": 1.1, "legendary": 1.1}
 
 # ---------------------------------------------------------------- palette ---
 
-def load_palette(path: Path = PALETTE_TS) -> tuple[list[str], np.ndarray]:
+def load_palette(path: Path = PALETTE_TS, neon: bool = False) -> tuple[list[str], np.ndarray]:
+    """The art palette (the PAL literal); with neon, also the theme colours added by Object.assign(PAL, ...)."""
     text = path.read_text()
     block = re.search(r"export const PAL[^{]*\{(.*?)\};", text, re.S)
     if not block:
         sys.exit(f"PAL not found in {path}")
-    pairs = re.findall(r"['\"]?(\w)['\"]?\s*:\s*'#([0-9a-fA-F]{6})'", block.group(1))
+    body = block.group(1)
+    if neon:
+        extra = re.search(r"Object\.assign\(PAL,\s*\{(.*?)\}\)", text, re.S)
+        if not extra:
+            sys.exit(f"neon colours (Object.assign(PAL, ...)) not found in {path}")
+        body += "," + extra.group(1)
+    pairs = re.findall(r"['\"]?(\w)['\"]?\s*:\s*'#([0-9a-fA-F]{6})'", body)
     keys = [k for k, _ in pairs]
     rgb = np.array([[int(h[i:i + 2], 16) for i in (0, 2, 4)] for _, h in pairs], np.uint8)
     for need in ("k", "g", "G", "l"):
@@ -528,9 +535,10 @@ def main():
     ap.add_argument("--preview", help="write an 8x nearest-neighbour preview PNG here")
     ap.add_argument("--ref", help="reference photo shown in the preview")
     ap.add_argument("--preview-bg", default="#2b2461")
+    ap.add_argument("--neon", action="store_true", help="also allow the theme neon colours (packs with \"palette\": \"art+neon\", e.g. cl-team-cyber)")
     args = ap.parse_args()
 
-    keys, pal_rgb = load_palette()
+    keys, pal_rgb = load_palette(neon=args.neon)
     if args.skin_keys:
         SKIN["keys"] = np.array([k in args.skin_keys for k in keys])
         SKIN["l_weight"] = args.l_weight

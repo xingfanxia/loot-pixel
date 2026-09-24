@@ -1,0 +1,39 @@
+{
+  "deck": "cl-team-cyber",
+  "title": "Compute Labs: Cyber",
+  "base": "cl-team",
+  "palette": "art+neon",
+  "sources": "The cyber theme's pack of the same people (slots, bios, refs and likeness in art/cl-team/). Cyberpunk compute-world characters; the company tokenises GPUs as real-world assets, so compute, GPUs, data centres and on-chain finance are fair game.",
+  "tiers": {
+    "common": {
+      "count": 5,
+      "colour": "silver/grey",
+      "look": "street-level cyberpunk worker tied to the person's traits: worn techwear, hoodie or utility jacket in muted greys, a cheap earpiece or wrist display, at most one tiny cyan LED, no glow or effects",
+      "accent": "Accent colours: greys #c4ccd9 #8791a6 #4b5268 and navy darks; one tiny neon cyan #2ee6ff LED at most; no glow."
+    },
+    "uncommon": {
+      "count": 4,
+      "colour": "green",
+      "look": "skilled operator: practical techwear with green terminal-code accents, a small drone, cyberdeck or data cable, a first subtle implant on the temple or hand, no big effects",
+      "accent": "Accent colours: terminal greens #6fd46a #2b7a3d #b6f28a over greys and navy, a little neon cyan #2ee6ff on gadgets only."
+    },
+    "rare": {
+      "count": 3,
+      "colour": "teal",
+      "look": "elite specialist: sleek armoured jacket or long coat with glowing teal/cyan seams, one signature piece of tech (holo-blade, data spike, GPU gauntlet), a faint cyan glow on that item",
+      "accent": "Accent colours: teals #47d6c1 #1f8f8a, neon cyan #2ee6ff, deep cyan #12689e, pale cyan #bff7f0; faint cyan glow on the signature item only."
+    },
+    "epic": {
+      "count": 2,
+      "colour": "violet/magenta",
+      "look": "chrome-augmented legend: ornate cybernetic armour or chrome shoulder plates, holographic interface panels or neon sigils floating behind, violet and hot-pink neon light on the costume and background (never on the face)",
+      "accent": "Accent colours: violet #b86bff, deep violet #6a2fbf, magenta #ff6bd6, hot pink #ff3d8b, deep magenta #8e1f63; neon light behind and beside the figure."
+    },
+    "legendary": {
+      "count": 1,
+      "colour": "gold/white",
+      "look": "the single ascended form of this person in the compute world: gold and white chrome regalia, a crown or halo of glowing circuit rings or GPU cores, radiant golden data aura; the most awe-inspiring card of this person",
+      "accent": "Accent colours: gold #ffcf4a, amber #e0781f, pale gold #fff3b0, white chrome, a few neon cyan #2ee6ff circuit lines; a radiant golden rim aura around the silhouette."
+    }
+  }
+}

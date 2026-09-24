@@ -30,28 +30,33 @@ export default function Vault({ sources }: { sources: DeckSources }) {
   const [sound, setSound] = useState(true);
   const [bagComplete, setBagComplete] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [deck, setDeck] = useState<Deck | null>(null);
-  const [theme, setTheme] = useState<string | null>(null);
+  // the deck depends on the theme (a theme can bring its own card pack), so both change together
+  const [run, setRun] = useState<{ deck: Deck; theme: string } | null>(null);
   const [album, setAlbum] = useState<Record<string, number> | null>(null);
   // read by a rebuilt engine (theme switch) so the rarity pick and sound setting carry over
   const prefs = useRef({ force: -1, sound: true });
 
+  const start = (theme: string) => {
+    const deck = resolveDeck(deckIdFrom(location.search), sources, theme), opts = forceOptions(deck);
+    setOptions(opts);
+    if (!opts.some((o) => o.value === prefs.current.force)) { prefs.current.force = -1; setForce(-1); }
+    setRun({ deck, theme });
+  };
+
   useEffect(() => {
     const onError = (e: ErrorEvent) => setError(e.message);
     window.addEventListener("error", onError);
-    const deck = resolveDeck(deckIdFrom(location.search), sources);
-    setOptions(forceOptions(deck));
-    setDeck(deck);
     setForce(-1);
     prefs.current.force = -1;
     let stored: string | null = null;
     try { stored = localStorage.getItem(THEME_KEY); } catch {}
-    setTheme(themeById(new URLSearchParams(location.search).get("theme") ?? stored).id);
+    start(themeById(new URLSearchParams(location.search).get("theme") ?? stored).id);
     return () => window.removeEventListener("error", onError);
   }, [sources]);
 
   useEffect(() => {
-    if (!deck || !theme) return;
+    if (!run) return;
+    const { deck, theme } = run;
     let cancelled = false;
     document.documentElement.dataset.vaultTheme = theme;
     // The engine touches canvas/DOM APIs, so load it only in the browser.
@@ -76,11 +81,12 @@ export default function Vault({ sources }: { sources: DeckSources }) {
       vault.current?.destroy();
       vault.current = null;
     };
-  }, [deck, theme]);
+  }, [run]);
 
+  const theme = run?.theme ?? null, deck = run?.deck ?? null;
   const pickTheme = (id: string) => {
     if (id === theme) return;
-    setTheme(id);
+    start(id);
     try { localStorage.setItem(THEME_KEY, id); } catch {}
     const url = new URL(location.href);
     if (url.searchParams.has("theme")) { url.searchParams.set("theme", id); history.replaceState(null, "", url); }

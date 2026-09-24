@@ -10,6 +10,16 @@ what is on the cards (`docs/decks.md`), so every deck plays in every theme.
 | `vault` (default) | The original single-file build: a torch-lit stone vault, a portal behind the wall, gold-trimmed cards. Pixel-identical to the pre-theme engine. |
 | `cyber` | A compute hall: server-rack wall with blinking LEDs, a perspective neon grid floor, a two-fan graphics card for the altar (the fans spin up as you charge), a cyan tube on the left and a pink one on the right, a rainy night city with a striped sun behind the wall, circuit-board card backs with gold edge fingers, chamfered HUD frames, portraits rim-lit cyan/pink, segmented power bars, rank LEDs, a VT323 terminal font in the DOM. |
 
+## Theme card packs
+
+A deck can have a separate **card pack** for a theme: same slots, its own cards, art and bag, so
+each theme has its own collection. `cl-team` has one for `cyber`: `cl-team-cyber`, the same ten
+people drawn as cyberpunk characters of the compute world. Its art is in `art/cl-team-cyber/`
+(`style.md`, `characters.json` with `"base": "cl-team"`, `slots/`) and `public/decks/cl-team-cyber/`.
+Packs are registered per deck in `DECKS[...].themes` (`src/lib/vault/decks/index.ts`).
+`resolveDeck(id, sources, theme)` returns the pack when there is one, otherwise the deck itself.
+`classic` has no packs, so its cards and bag are the same in every theme.
+
 ## Selecting a theme
 
 - The switch in the top-right corner (`#top` in `src/components/Vault.tsx`) lists `THEMES`.
@@ -17,9 +27,9 @@ what is on the cards (`docs/decks.md`), so every deck plays in every theme.
   otherwise `DEFAULT_THEME`. All three live in `src/lib/vault/themes/index.ts`.
 - An inline script in `src/app/layout.tsx` sets `data-vault-theme` on `<html>` before first
   paint, so DOM styles don't flash the default theme.
-- Switching destroys the engine and creates a new one in the new theme. The bag is stored per deck,
-  so nothing is lost. The rarity pick and the sound setting carry over. A card mid-reveal restarts
-  as a fresh draw.
+- Switching destroys the engine and creates a new one in the new theme, with the theme's card pack
+  if the deck has one. Bags are stored per deck and pack, so nothing is lost. The rarity pick and
+  the sound setting carry over. A card mid-reveal restarts as a fresh draw.
 
 ## The contract (`src/lib/vault/themes/types.ts`)
 

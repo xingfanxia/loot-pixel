@@ -5,7 +5,8 @@
  *   the characters.json tier counts, with unique n = 1..count per tier and a title;
  * - every card has public/decks/<deck>/<id>.png at the layout art size and <id>-icon.png at the
  *   icon size, plus art/<deck>/source/<id>.webp;
- * - every opaque pixel is exactly one PAL colour (parsed from src/lib/vault/palette.ts) and
+ * - every opaque pixel is exactly one PAL colour (parsed from src/lib/vault/palette.ts; plus the
+ *   neon colours for a pack with "palette": "art+neon") and
  *   alpha is only 0 or 255;
  * - no PNG in public/decks/<deck>/ is left over from a card the slot files no longer list.
  *
@@ -35,8 +36,12 @@ const def = args.art && args.icon ? null : deckSize();
 const [ART_W, ART_H] = args.art ? String(args.art).split('x').map(Number) : [def.w, def.h];
 const ICON = args.icon ? Number(args.icon) : def.icon;
 
-const PAL = new Set([...readFileSync(join(ROOT, 'src/lib/vault/palette.ts'), 'utf8')
-  .match(/export const PAL[^;]+;/)[0].matchAll(/#([0-9a-f]{6})/gi)].map(m => parseInt(m[1], 16)));
+/** The art palette (the PAL literal); packs with "palette": "art+neon" also get the theme neon colours (Object.assign(PAL, ...)). */
+function palette(neon) {
+  const ts = readFileSync(join(ROOT, 'src/lib/vault/palette.ts'), 'utf8');
+  const text = ts.match(/export const PAL[^;]+;/)[0] + (neon ? ts.match(/Object\.assign\(PAL,[^;]+;/)[0] : '');
+  return new Set([...text.matchAll(/#([0-9a-f]{6})/gi)].map(m => parseInt(m[1], 16)));
+}
 
 /** Decodes an 8-bit non-interlaced RGBA PNG (what scripts/art/quantize.py writes). */
 function readPng(path) {
@@ -87,6 +92,9 @@ function checkImage(path, w, h, problems) {
 
 const artDir = join(ROOT, 'art', DECK), pubDir = join(ROOT, 'public', 'decks', DECK);
 const chars = JSON.parse(readFileSync(join(artDir, 'characters.json'), 'utf8'));
+// a theme pack of the same team lists its people in the base pack
+if (chars.base) chars.slots = JSON.parse(readFileSync(join(ROOT, 'art', chars.base, 'characters.json'), 'utf8')).slots;
+const PAL = palette(chars.palette === 'art+neon');
 const want = TIERS.map(t => chars.tiers?.[t]?.count ?? 0);
 const problems = [], ids = new Set();
 for (const s of chars.slots) {
