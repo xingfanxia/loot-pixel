@@ -24,6 +24,8 @@ export interface VaultHooks {
   onPack?: (p: { at: number; total: number } | null) => void;
   /** the last card of a 10-pull landed: every card of the pull, best first. Call closePack() to go on. */
   onPackDone?: (cards: PackResult[], record: DrawRecord) => void;
+  /** the draw record changed: at start, at each single draw's reveal, when a 10-pull's last card lands, on an emptied bag */
+  onRecord?: (record: DrawRecord) => void;
 }
 
 /**

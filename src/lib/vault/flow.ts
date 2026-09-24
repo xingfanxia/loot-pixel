@@ -99,7 +99,7 @@ export function release(V: Vault){
 }
 
 /** Records the card in the bag and stamps NEW! / xN on the card corner. */
-function commit(V: Vault, gen: number, quick=false){ const { S, env, bag, geo: G } = V, id=S.spec!.id, owned=bag.bag.owned, isNew=!owned[id]; owned[id]=(owned[id]||0)+1; if (S.rolled!==null){ countDraws(V,[S.rolled]); S.rolled=null; } saveBag(bag.key, bag.bag); const cnt=owned[id]; S.pending={i:S.spec!.idx, isNew};
+function commit(V: Vault, gen: number, quick=false){ const { S, env, bag, geo: G } = V, id=S.spec!.id, owned=bag.bag.owned, isNew=!owned[id]; owned[id]=(owned[id]||0)+1; if (S.rolled!==null){ countDraws(V,[S.rolled]); S.rolled=null; env.hooks.onRecord?.(drawRecord(V)); } saveBag(bag.key, bag.bag); const cnt=owned[id]; S.pending={i:S.spec!.idx, isNew};
   if (S.pack) S.pack.results[S.pack.i]={ id, tier: S.r as TierId, title: S.spec!.title ?? S.spec!.name, isNew, count: cnt };
   env.later(quick?420:1900, ()=>{ if (S.phase!=='revealed'||S.seed!==gen) return; S.stamp={text:isNew?'NEW!':'x'+cnt, key:isNew?'y':'4', t0:S.rt}; V.A.stamp(isNew); S.trauma=Math.min(1,S.trauma+.25); S.pulse=.08*env.MOTION; env.buzz(25); sparks(V, 26, isNew?'o':'4', 30, 130, .5, S.cx+G.hw-2, S.cy-G.hh+1, true); }); }
 

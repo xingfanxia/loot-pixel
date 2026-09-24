@@ -90,7 +90,9 @@ export function packDone(V: Vault) {
     S.spec = pc.spec; S.face = pc.spec; S.r = S.vr = pc.r; S.glitch = 0; S.popT0 = -9; paint(V, pc.r); S.bars = S.barTarget.slice();
     drawFront(V, S.rt); return { ...P.results[k], face: B.frontC.toDataURL(), w: V.geo.w, h: V.geo.h }; });
   env.els.live.textContent = `Pack opened: ${cards.filter(c => c.isNew).length} new cards.`;
-  if (env.hooks.onPackDone) env.hooks.onPackDone(cards, drawRecord(V)); else closePack(V, false);
+  // the record (and its luck) updates only now, so it cannot give away the best card before it is dealt
+  const record = drawRecord(V); env.hooks.onRecord?.(record);
+  if (env.hooks.onPackDone) env.hooks.onPackDone(cards, record); else closePack(V, false);
 }
 
 /** Leaves the results: the next card or pack comes up (auto-charged when `again`), after the full-set celebration if the pack completed the bag. */

@@ -5,6 +5,7 @@ import { deckIdFrom, DEFAULT_DECK, forceOptions, resolveDeck, type Deck, type De
 import { THEME_KEY, THEMES, themeById } from "@/lib/vault/themes";
 import Collection from "./Collection";
 import PackResults from "./PackResults";
+import { LuckPill } from "./DrawRecord";
 import type { VaultController } from "@/lib/vault/engine";
 import type { DrawRecord, PackResult } from "@/lib/vault/context";
 
@@ -43,6 +44,7 @@ export default function Vault({ sources }: { sources: DeckSources }) {
   // the pack being dealt (card on the altar of total) and the finished pack's results
   const [packAt, setPackAt] = useState<{ at: number; total: number } | null>(null);
   const [pull, setPull] = useState<{ cards: PackResult[]; record: DrawRecord } | null>(null);
+  const [record, setRecord] = useState<DrawRecord | null>(null);
   // read by a rebuilt engine (theme switch) so the rarity pick, sound setting and draw mode carry over
   const prefs = useRef({ force: -1, sound: true, pack: false });
 
@@ -80,7 +82,7 @@ export default function Vault({ sources }: { sources: DeckSources }) {
           },
           deck,
           themeById(theme),
-          { onBagComplete: setBagComplete, onError: setError, onPack: setPackAt, onPackDone: (cards, record) => setPull({ cards, record }) },
+          { onBagComplete: setBagComplete, onError: setError, onPack: setPackAt, onPackDone: (cards, record) => setPull({ cards, record }), onRecord: setRecord },
         );
         if (prefs.current.pack) v.setPack(true);
         if (prefs.current.force >= 0) v.setForce(prefs.current.force);
@@ -93,10 +95,12 @@ export default function Vault({ sources }: { sources: DeckSources }) {
       vault.current = null;
       setPackAt(null);
       setPull(null);
+      setRecord(null);
     };
   }, [run]);
 
   const theme = run?.theme ?? null, deck = run?.deck ?? null;
+  const openAlbum = () => { const v = vault.current; if (v) setAlbum({ owned: v.owned(), record: v.record() }); };
   const pickTheme = (id: string) => {
     if (id === theme) return;
     start(id);
@@ -158,12 +162,13 @@ export default function Vault({ sources }: { sources: DeckSources }) {
             </button>
           ))}
         </div>}
+        {record && record.luck !== null && <LuckPill record={record} onOpen={openAlbum} />}
         <button id="reset" className="px pill" type="button" hidden={!bagComplete} onClick={() => vault.current?.resetBag()}>
           Empty bag
         </button>
       </div>
       <button id="bag" ref={bag} type="button" aria-label="Open the collection"
-        onClick={() => { const v = vault.current; if (v) setAlbum({ owned: v.owned(), record: v.record() }); }} />
+        onClick={openAlbum} />
       <PackResults cards={pull?.cards ?? null} record={pull?.record ?? null} onClose={(again) => { setPull(null); vault.current?.closePack(again); }} />
       {deck && <Collection deck={deck} owned={album?.owned ?? {}} record={album?.record ?? null} open={album !== null} onClose={() => setAlbum(null)} />}
       <div id="live" ref={live} className="sr" aria-live="polite" />

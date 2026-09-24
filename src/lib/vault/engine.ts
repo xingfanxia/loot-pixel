@@ -51,7 +51,7 @@ export function createVault(els: VaultElements, deck: Deck, theme: Theme, hooks:
   const V: Vault = { env, L: initialLayout(), S: createState(geo.bars.length), FX: createFx(), U: emptyUnits(), B: buffers(els, geo.w, geo.h, geo.art.w, geo.art.h, geo.t1w, geo.t1h),
     K: { backBase: null, backCracks: genCracks(1,geo.backCx,geo.backCy,w,h), frontCracks: genCracks(2,geo.artCx,geo.artCy,w,h), chainLinks: chainLinks(geo) },
     A, spr: buildSprites(theme.lock), deck, geo, theme, ladder: deck.tiers.map(t=>t.tier), art: new Map(), bag: openBag(deck) };
-  hooks.onBagComplete?.(V.bag.bag.complete);
+  hooks.onBagComplete?.(V.bag.bag.complete); hooks.onRecord?.(drawRecord(V));
   let stopLoop=()=>{}, started=false;
 
   loadDeckArt(deck, V.spr, geo).then(art=>{
@@ -74,7 +74,7 @@ export function createVault(els: VaultElements, deck: Deck, theme: Theme, hooks:
       const waiting=(S.phase==='idle'&&S.charge===0&&!S.holding&&!S.auto)||S.phase==='entering';
       if (waiting && (!S.pack || S.pack.i<0)) startEnter(V); },
     closePack(again: boolean){ A.init(); closePack(V, again); },
-    resetBag(){ A.init(); emptyBag(V.bag); hooks.onBagComplete?.(false); A.blip(); },
+    resetBag(){ A.init(); emptyBag(V.bag); hooks.onBagComplete?.(false); hooks.onRecord?.(drawRecord(V)); A.blip(); },
     owned(){ return { ...V.bag.bag.owned }; },
     record(){ return drawRecord(V); },
     destroy(){ abort.abort(); stopLoop(); timers.forEach(clearTimeout); timers.clear(); A.close(); els.stage.style.transform='';

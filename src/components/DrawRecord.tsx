@@ -5,7 +5,7 @@ import { verdict } from "@/lib/vault/odds";
 const SEGMENTS = 20;
 const pct = (x: number) => Math.round(x * 100);
 /** "Luckier than 72%" above average, "Unluckier than 96%" below it. */
-const share = (x: number) => x >= .5 ? `Luckier than ${Math.min(99, pct(x))}%` : `Unluckier than ${Math.min(99, pct(1 - x))}%`;
+const share = (x: number) => pct(x) >= 50 ? `Luckier than ${Math.min(99, pct(x))}%` : `Unluckier than ${Math.min(99, pct(1 - x))}%`;
 
 /** The luck verdict, a 20-segment meter and the share of players it beats. Theme CSS styles the meter (`.luck`). */
 function Luck({ record, compact }: { record: Record; compact?: boolean }) {
@@ -46,4 +46,19 @@ export default function DrawRecord({ record }: { record: Record }) {
   );
 }
 
-export { Luck };
+/** HUD pill: the verdict and a 10-segment bar; opens the draw record. "Luck:" shows where the HUD has room for labels. */
+function LuckPill({ record, onOpen }: { record: Record; onOpen: () => void }) {
+  const x = record.luck!, word = verdict(x), lit = Math.max(1, Math.round(x * 10));
+  return (
+    <div className="row" role="group" aria-label="Luck">
+      <span className="lbl">Luck:</span>
+      <button type="button" className="px pill luck-pill luck" data-verdict={word.toLowerCase()} onClick={onOpen}
+        aria-label={`Luck: ${word}, ${share(x).toLowerCase()} of players after ${record.draws} ${record.draws === 1 ? "draw" : "draws"}. Open the draw record.`}>
+        <span className="word">{word}</span>
+        <span className="mini" aria-hidden="true">{Array.from({ length: 10 }, (_, i) => <i key={i} className={i < lit ? "on" : undefined} style={{ "--i": i * 2 } as CSSProperties} />)}</span>
+      </button>
+    </div>
+  );
+}
+
+export { Luck, LuckPill };

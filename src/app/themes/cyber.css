@@ -56,6 +56,11 @@
 :root[data-vault-theme="cyber"] .luck.compact .meter i{height:11px}
 :root[data-vault-theme="cyber"] .luck.compact .luck-note{font-size:16px}
 
+:root[data-vault-theme="cyber"] .luck-pill{color:var(--vc); text-shadow:0 0 8px var(--vc)}
+:root[data-vault-theme="cyber"] .luck-pill .mini{gap:2px; padding:2px 3px; background:#04030b; box-shadow:0 0 0 1px var(--neon-dim)}
+:root[data-vault-theme="cyber"] .luck-pill .mini i{width:4px; height:10px; background:#140d34; box-shadow:none; transform:skewX(-12deg)}
+:root[data-vault-theme="cyber"] .luck-pill .mini i.on{background:color-mix(in srgb, var(--vc) calc(var(--i) * 5%), var(--neon)); box-shadow:0 0 4px var(--vc)}
+
 /* collection */
 :root[data-vault-theme="cyber"] #album{font-family:var(--font-term),"Courier New",monospace; background:linear-gradient(180deg, #0c0720, #07041a);
   box-shadow:0 -3px 0 0 var(--neon), 0 3px 0 0 var(--neon), -3px 0 0 0 var(--neon), 3px 0 0 0 var(--neon), 0 0 0 6px var(--ink), 0 0 40px rgba(46,230,255,.25)}

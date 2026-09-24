@@ -17,8 +17,9 @@ live in the bag, count single draws and packs alike, and reset with "Empty bag".
 The collection opens on a **draw record** (`src/components/DrawRecord.tsx`): draws, Legendary and
 Epic counts, draws since the last Legendary, the draws each Legendary took, and a luck rating
 (Blessed / Lucky / Average / Unlucky / Cursed) from the exact share of players who would have got fewer
-Legendaries in as many draws (`luck()` in `odds.ts`). The 10-pull results show the rating too. Both
-take their look from the theme CSS.
+Legendaries in as many draws (`luck()` in `odds.ts`). The rating also sits in the bottom HUD as a pill
+(verdict and a 10-segment bar, from the first draw on; tapping it opens the record) and on the
+10-pull results. All of it takes its look from the theme CSS.
 
 Next.js (App Router) port of a single-file canvas toy. Every in-canvas pixel comes
 from a fixed palette with Bayer-dithered lighting; audio is synthesized chip voices via Web Audio.
@@ -37,7 +38,7 @@ plays in any theme; the contract and how to add one are in [`docs/themes.md`](do
 | Path | Role |
 |---|---|
 | `src/components/Vault.tsx` | Client component: DOM shell + HUD (theme switch, sound, x1/x10 draw mode, empty bag; the per-deck rarity picker is hidden behind `RARITY_PICKER`) |
-| `src/components/DrawRecord.tsx` | Draw record and luck meter (collection top; the meter also on the 10-pull results) |
+| `src/components/DrawRecord.tsx` | Draw record and luck meter (collection top), the HUD luck pill, the meter on the 10-pull results |
 | `src/components/PackResults.tsx` | 10-pull results dialog: the ten card faces the engine rendered, best first, NEW / copy counts |
 | `src/components/Collection.tsx` | Collection dialog opened from the bag row: every card by slot and tier, found ones in full, missing ones as silhouettes |
 | `src/app/page.tsx` | Reads deck sources at build time (`decks/sources.server.ts`) and renders the vault |
