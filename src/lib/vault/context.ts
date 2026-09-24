@@ -8,6 +8,7 @@ import type { FxStore } from './particles';
 import type { SceneUnits } from './scene';
 import type { SpriteSheet } from './sprites';
 import type { Theme } from './themes/types';
+import type { Pity } from './odds';
 import type { TierId } from './tiers';
 import type { Ctx2D } from './util';
 
@@ -23,7 +24,7 @@ export interface VaultHooks {
   /** a 10-pull is dealing: the card on the altar (1-based) of `total`, or null when no pack is open */
   onPack?: (p: { at: number; total: number } | null) => void;
   /** the last card of a 10-pull landed: every card of the pull, best first. Call closePack() to go on. */
-  onPackDone?: (cards: PackResult[]) => void;
+  onPackDone?: (cards: PackResult[], info: { legendIn: number | null }) => void;
 }
 
 /** One card of a 10-pull as the results screen shows it: `face` is the rendered card front (PNG data URL). */
@@ -34,7 +35,7 @@ export interface PackCard { spec: Spec; face: DeckCard; r: number; vr: number; f
  * An open 10-pull. `i` is the card on the altar (-1 while the sealed pack is charged); cards are
  * dealt low tier first, so the best one comes last and gets the full reveal.
  */
-export interface Pack { cards: PackCard[]; i: number; skip: boolean; results: Omit<PackResult, 'face' | 'w' | 'h'>[] }
+export interface Pack { cards: PackCard[]; i: number; skip: boolean; results: Omit<PackResult, 'face' | 'w' | 'h'>[]; pity?: Pity }
 
 /** Debug / test handles, exposed as window.APP like the original single-file build. */
 export interface DebugHandles { paused?: boolean; noR?: boolean; forceCard?: string; forceFake?: boolean; [k: string]: unknown }
@@ -76,7 +77,9 @@ export function createState(nBars: number) {
     zapAcc: 0, suckAcc: 0, sparkAcc: 0, flameAcc: 0, ca: 0, chains: [true, true, true, true], lockOn: true, wall: { active: false, rebuild: false, t: 0, rt: 0, r: 0 },
     summon: 0, summonChime: false,
     /** 10-pull mode (the next card summoned is a sealed pack) and the open pack */
-    packMode: false, pack: null as Pack | null, autoNext: false, popT0: -9, crk: 0, artStars: [] as [number, number, number][], colSpin: 0, cx: 0, cy: 0, colScale: 1 };
+    packMode: false, pack: null as Pack | null, autoNext: false,
+    /** pity counters after the card on the altar, written to the bag when it is revealed */
+    pityNext: null as Pity | null, popT0: -9, crk: 0, artStars: [] as [number, number, number][], colSpin: 0, cx: 0, cy: 0, colScale: 1 };
 }
 export type GameState = ReturnType<typeof createState>;
 

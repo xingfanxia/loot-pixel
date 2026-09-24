@@ -7,9 +7,12 @@ import { TIERS } from "@/lib/vault/tiers";
 
 /**
  * The 10-pull results: every card of the pack as the engine drew its face, best first, with
- * NEW or the copy count. "Open another pack" charges the next pack; "Done" leaves it waiting.
+ * NEW or the copy count, and how soon pity (odds.ts) guarantees a Legendary. "Open another pack"
+ * charges the next pack; "Done" leaves it waiting.
  */
-export default function PackResults({ cards, onClose }: { cards: PackResult[] | null; onClose: (again: boolean) => void }) {
+export default function PackResults({ cards, legendIn, onClose }: {
+  cards: PackResult[] | null; legendIn: number | null; onClose: (again: boolean) => void;
+}) {
   const dialog = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -26,6 +29,7 @@ export default function PackResults({ cards, onClose }: { cards: PackResult[] | 
         <header className="pull-head">
           <h2 id="pull-title">Pack opened</h2>
           <p>{fresh ? `${fresh} new ${fresh === 1 ? "card" : "cards"} for your collection` : "No new cards this time"}</p>
+          {legendIn !== null && <p className="pity">Legendary guaranteed within {legendIn} {legendIn === 1 ? "draw" : "draws"}</p>}
         </header>
         <ol className="pull-grid">
           {cards.map((c, k) => (

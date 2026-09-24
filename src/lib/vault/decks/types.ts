@@ -56,6 +56,9 @@ export interface Emblem { rows: string[] }
 
 export interface DeckTier { tier: TierId; odds: number }
 
+/** Genshin-style pity (odds.ts): LEGENDARY chance +`step` per pull from pull `soft`, certain at pull `hard`; EPIC or better at least every `epic` pulls. */
+export interface PityRule { soft: number; step: number; hard: number; epic: number }
+
 export interface Deck {
   id: string;
   title: string;
@@ -68,4 +71,6 @@ export interface Deck {
   bagKey: string;
   /** replaces the "?" diamond on the card back */
   emblem?: Emblem;
+  /** pity counters kept in the bag; without it every draw comes straight from the odds */
+  pity?: PityRule;
 }

@@ -42,7 +42,7 @@ export default function Vault({ sources }: { sources: DeckSources }) {
   const [packMode, setPackMode] = useState(false);
   // the pack being dealt (card on the altar of total) and the finished pack's results
   const [packAt, setPackAt] = useState<{ at: number; total: number } | null>(null);
-  const [pull, setPull] = useState<PackResult[] | null>(null);
+  const [pull, setPull] = useState<{ cards: PackResult[]; legendIn: number | null } | null>(null);
   // read by a rebuilt engine (theme switch) so the rarity pick, sound setting and draw mode carry over
   const prefs = useRef({ force: -1, sound: true, pack: false });
 
@@ -80,7 +80,7 @@ export default function Vault({ sources }: { sources: DeckSources }) {
           },
           deck,
           themeById(theme),
-          { onBagComplete: setBagComplete, onError: setError, onPack: setPackAt, onPackDone: setPull },
+          { onBagComplete: setBagComplete, onError: setError, onPack: setPackAt, onPackDone: (cards, { legendIn }) => setPull({ cards, legendIn }) },
         );
         if (prefs.current.pack) v.setPack(true);
         if (prefs.current.force >= 0) v.setForce(prefs.current.force);
@@ -164,7 +164,7 @@ export default function Vault({ sources }: { sources: DeckSources }) {
       </div>
       <button id="bag" ref={bag} type="button" aria-label="Open the collection"
         onClick={() => setAlbum(vault.current?.owned() ?? {})} />
-      <PackResults cards={pull} onClose={(again) => { setPull(null); vault.current?.closePack(again); }} />
+      <PackResults cards={pull?.cards ?? null} legendIn={pull?.legendIn ?? null} onClose={(again) => { setPull(null); vault.current?.closePack(again); }} />
       {deck && <Collection deck={deck} owned={album ?? {}} open={album !== null} onClose={() => setAlbum(null)} />}
       <div id="live" ref={live} className="sr" aria-live="polite" />
       <div id="err" style={error ? { display: "block" } : undefined}>{error && `Something broke: ${error}`}</div>

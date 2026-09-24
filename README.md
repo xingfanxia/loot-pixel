@@ -7,8 +7,12 @@ and a wall breakdown. Collect one card of every slot to fill the bag.
 **Draw x10** turns the card on the altar into a sealed pack of ten. Its charge teases up to the best
 card's tier, then the cards are dealt lowest tier first, each flying to the bag on its own, and the
 best card comes last with the full reveal. "Skip to best" files the rest straight into the bag. A
-results screen shows all ten faces. Every pack has at least one Rare or better unless a rarity is
-forced. The rules are at the top of `src/lib/vault/pack.ts`.
+results screen shows all ten faces. The rules are at the top of `src/lib/vault/pack.ts`.
+
+`cl-team` draws at Genshin's standard-banner rates with pity (`src/lib/vault/odds.ts`): Legendary
+0.6% base, rising 6% a draw from draw 74, certain by draw 90 (about 1.6% overall, one per 62
+draws on average); Epic or better at least every 10 draws, so every 10-pull has one. The counters
+live in the bag, count single draws and packs alike, and reset with "Empty bag".
 
 Next.js (App Router) port of a single-file canvas toy. Every in-canvas pixel comes
 from a fixed palette with Bayer-dithered lighting; audio is synthesized chip voices via Web Audio.

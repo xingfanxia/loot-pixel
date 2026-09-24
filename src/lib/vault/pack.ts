@@ -1,7 +1,8 @@
 import { saveBag, showCard } from './bag';
 import { drawFront } from './card-front';
 import type { Pack, PackCard, PackResult, Vault } from './context';
-import { afterCollect, leave, paint, pickRarity, resetCard, rollCard, setCard, withFake } from './flow';
+import { afterCollect, bagPity, leave, paint, pickRarity, resetCard, rollCard, setCard, withFake } from './flow';
+import { advance } from './odds';
 import { ring, shatter, sparks } from './particles';
 import { TIERS } from './tiers';
 
@@ -30,10 +31,16 @@ function pickAtLeast(V: Vault, min: number) {
   for (const t of ts) { u -= t.odds; if (u <= 0) return t.tier; } return ts[ts.length - 1].tier;
 }
 
-/** Rolls the ten cards (at least one RARE or better unless a tier is forced), lowest first; only the best may be a fake. */
+/**
+ * Rolls the ten cards in order, lowest first; only the best may be a fake. A deck with pity (odds.ts) rolls
+ * them through its counters, which already put an EPIC or better in every ten; one without gets at least
+ * one RARE or better unless a tier is forced.
+ */
 export function rollPack(V: Vault) {
-  const { S, env: { APP } } = V, P = S.pack!, rolls = Array.from({ length: PACK_SIZE }, () => rollCard(V, pickRarity(V)));
-  if (S.force < 0 && !APP.forceCard && V.ladder.some(t => t >= FLOOR) && rolls.every(x => x.r < FLOOR)) rolls[PACK_SIZE - 1] = rollCard(V, pickAtLeast(V, FLOOR));
+  const { S, env: { APP } } = V, P = S.pack!; let pity = bagPity(V);
+  const rolls = Array.from({ length: PACK_SIZE }, () => { const x = rollCard(V, pickRarity(V, pity)); if (pity) pity = advance(pity, x.r); return x; });
+  P.pity = pity;
+  if (!pity && S.force < 0 && !APP.forceCard && V.ladder.some(t => t >= FLOOR) && rolls.every(x => x.r < FLOOR)) rolls[PACK_SIZE - 1] = rollCard(V, pickAtLeast(V, FLOOR));
   rolls.sort((a, b) => a.r - b.r);
   P.cards = rolls.map((x, k) => withFake(V, x.spec, x.r, k === PACK_SIZE - 1));
   setCard(V, P.cards[PACK_SIZE - 1]);
@@ -41,7 +48,9 @@ export function rollPack(V: Vault) {
 
 /** The charged pack bursts (instead of a card's reveal): its back shatters in the best card's colour and the first card is dealt. */
 export function openPack(V: Vault) {
-  const { S, B, A, env } = V, R = TIERS[S.vr];
+  const { S, B, A, bag, env } = V, R = TIERS[S.vr];
+  // the pack's pulls count toward pity once it is open (its cards are all filed from here on)
+  if (S.pack!.pity) { bag.bag.pity = S.pack!.pity; saveBag(bag.key, bag.bag); }
   S.backOn = false; S.auto = false; shatter(V, B.backC);
   S.flash = .7; S.flashKey = 'w'; S.trauma = Math.min(1, S.trauma + .5); S.zoom.v = -1.1 * env.MOTION; S.torchBoost = 1;
   sparks(V, 110, R.l, 60, 260, 1.1); sparks(V, 50, 'w', 90, 320, .5); ring(V, R.l, 340, 3, 0); ring(V, 'w', 250, 1, .06); A.roar();
@@ -82,7 +91,8 @@ export function packDone(V: Vault) {
     S.spec = pc.spec; S.face = pc.spec; S.r = S.vr = pc.r; S.glitch = 0; S.popT0 = -9; paint(V, pc.r); S.bars = S.barTarget.slice();
     drawFront(V, S.rt); return { ...P.results[k], face: B.frontC.toDataURL(), w: V.geo.w, h: V.geo.h }; });
   env.els.live.textContent = `Pack opened: ${cards.filter(c => c.isNew).length} new cards.`;
-  if (env.hooks.onPackDone) env.hooks.onPackDone(cards); else closePack(V, false);
+  const pity = bagPity(V), legendIn = pity ? V.deck.pity!.hard - pity.legend : null;
+  if (env.hooks.onPackDone) env.hooks.onPackDone(cards, { legendIn }); else closePack(V, false);
 }
 
 /** Leaves the results: the next card or pack comes up (auto-charged when `again`), after the full-set celebration if the pack completed the bag. */

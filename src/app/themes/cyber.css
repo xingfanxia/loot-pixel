@@ -26,6 +26,7 @@
 :root[data-vault-theme="cyber"] #pull::backdrop{background:rgba(4,3,11,.84)}
 :root[data-vault-theme="cyber"] .pull-head h2{font-size:34px; font-weight:400; color:#fff; text-shadow:-2px 0 0 var(--neon), 2px 0 0 var(--hot)}
 :root[data-vault-theme="cyber"] .pull-head p{font-size:19px; color:var(--neon)}
+:root[data-vault-theme="cyber"] .pull-head .pity{font-size:16px; color:var(--hot)}
 :root[data-vault-theme="cyber"] .pull-grid .tag{font-size:16px; padding:2px 6px}
 :root[data-vault-theme="cyber"] .pull-grid .tag.new{background:var(--hot); color:var(--ink)}
 :root[data-vault-theme="cyber"] .pull-again{background:var(--hot); color:var(--ink); font-size:21px;

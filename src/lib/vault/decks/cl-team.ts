@@ -1,7 +1,7 @@
 import { fitLayout } from '../geometry';
 import { TIERS, tierByKey, type TierName } from '../tiers';
 import { CL_MARK } from './cl-mark';
-import type { CardLayout, Deck, DeckCard, DeckTier } from './types';
+import type { CardLayout, Deck, DeckCard, DeckTier, PityRule } from './types';
 
 /** One card spec from art/cl-team/slots/<slot>.json (concept stays in the art track; hook becomes the card's note). */
 export interface ClTeamCardSpec { tier: TierName; n: number; title: string; hook?: string }
@@ -18,10 +18,15 @@ export const CL_TEAM_SIZE = { art: { w: 64, h: 72 }, icon: 24 };
 // style.md: 24px is the smallest face crop that stays recognisable, so phones wrap the bag rather than shrink it
 export const CL_TEAM_LAYOUT: CardLayout = { ...fitLayout('portrait', CL_TEAM_SIZE.art, CL_TEAM_SIZE.icon, ['PWR'], 2), minIcon: CL_TEAM_SIZE.icon };
 
-/** Draw odds, COMMON to LEGENDARY. */
+/**
+ * Draw odds, COMMON to LEGENDARY, on Genshin's standard banner: LEGENDARY is the 5-star (0.6% base),
+ * EPIC the 4-star (5.1%), and the 3-star 94.3% is split over COMMON / UNCOMMON / RARE as before (42:28:17).
+ */
 export const CL_TEAM_TIERS: DeckTier[] = [
-  { tier: 0, odds: .42 }, { tier: 1, odds: .28 }, { tier: 2, odds: .17 }, { tier: 3, odds: .09 }, { tier: 4, odds: .04 },
+  { tier: 0, odds: .455 }, { tier: 1, odds: .304 }, { tier: 2, odds: .184 }, { tier: 3, odds: .051 }, { tier: 4, odds: .006 },
 ];
+/** Genshin's pity: soft from pull 74 (+6% a pull), LEGENDARY by pull 90, EPIC or better every 10 pulls (about 1.6% LEGENDARY overall). */
+export const CL_TEAM_PITY: PityRule = { soft: 74, step: .06, hard: 90, epic: 10 };
 
 /** A card pack of the team: its own cards, art directory (public/decks/<id>/, art/<id>/) and bag. */
 export interface ClTeamPack { id: string; title: string; bagKey: string }
@@ -50,6 +55,7 @@ export function buildClTeam(src: ClTeamSource, pack: ClTeamPack = CL_TEAM): Deck
     layout: CL_TEAM_LAYOUT,
     bagKey: pack.bagKey,
     emblem: CL_MARK,
+    pity: CL_TEAM_PITY,
   };
 }
 

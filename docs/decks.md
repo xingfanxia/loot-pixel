@@ -15,7 +15,14 @@ plays in every theme.
   kept so `classic` stays pixel-identical.
 - A deck declares which tiers it uses and their draw odds. `classic` uses
   COMMON/RARE/EPIC/LEGENDARY with the original odds (.50/.28/.15/.07), so it plays
-  exactly like the single-file build; `cl-team` uses all five (.42/.28/.17/.09/.04).
+  exactly like the single-file build; `cl-team` uses all five at Genshin's standard-banner rates
+  (.455/.304/.184/.051/.006: LEGENDARY is the 5-star, EPIC the 4-star) plus its pity.
+- A deck may declare `pity` (`PityRule` in `decks/types.ts`, applied by `src/lib/vault/odds.ts`):
+  from pull `soft` the LEGENDARY chance rises by `step` per pull, pull `hard` is LEGENDARY, and
+  EPIC or better comes at least every `epic` pulls. The bag stores the two counters (pulls since
+  the last LEGENDARY, since the last EPIC or better); a single draw writes them at its reveal, a
+  10-pull when it opens. `cl-team` uses `{ soft: 74, step: .06, hard: 90, epic: 10 }`; `classic`
+  has no pity.
 - Effect strengths live in one tier table, `src/lib/vault/tiers.ts` (colours, sparks,
   rays, spins, bolts, rings, confetti, coins, slow-mo, beam, aftershock, wall reach,
   letterbox, jingle/bass/twinkle, tease note, fake chance). Things counted along the
@@ -28,8 +35,9 @@ plays in every theme.
   shows one square per slot.
 - Each slot has any number of **cards per tier**. A draw picks a tier by odds, then
   a random card of that tier. A 10-pull (`src/lib/vault/pack.ts`) rolls ten draws the same
-  way; when none is RARE or better (and no rarity is forced), the last is re-rolled among the
-  deck's RARE-and-up tiers by their odds. Only the pack's best card can be a fake. `cl-team` gives every person 5/4/3/2/1 cards from
+  way (through the pity counters, which already put an EPIC or better in every ten). A deck without
+  pity gets a RARE-or-better floor instead: when none is rolled (and no rarity is forced), the last
+  is re-rolled among the deck's RARE-and-up tiers by their odds. Only the pack's best card can be a fake. `cl-team` gives every person 5/4/3/2/1 cards from
   COMMON to LEGENDARY (15 per person, 150 total).
 - The bag records ownership per **card id** (`<slot>-<tier>-<n>`). A slot counts
   as collected once any of its cards is owned; the slot shows the icon of its best

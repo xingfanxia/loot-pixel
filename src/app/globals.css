@@ -111,6 +111,7 @@ button.thumb:focus-visible{outline:3px dashed var(--cream); outline-offset:6px}
 .pull-head{padding:18px 22px 12px; text-align:center}
 .pull-head h2{margin:0; font-size:22px; font-weight:700; line-height:1.1; color:var(--gold)}
 .pull-head p{margin:8px 0 0; font-size:12px; color:var(--lav)}
+.pull-head .pity{margin-top:6px; font-size:10px; color:var(--gold)}
 .pull-grid{display:grid; grid-template-columns:repeat(5, max-content); justify-content:center; gap:18px 16px; margin:0; padding:10px 22px 18px; list-style:none; overflow-y:auto; overscroll-behavior:contain}
 .pull-grid li{position:relative; animation:deal .32s steps(4) both; animation-delay:calc(var(--k) * 90ms)}
 .pull-grid img{display:block; width:calc(var(--w) * var(--s) * 1px); height:calc(var(--h) * var(--s) * 1px); image-rendering:pixelated; image-rendering:crisp-edges}
