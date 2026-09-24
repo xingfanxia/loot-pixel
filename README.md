@@ -26,7 +26,7 @@ plays in any theme; the contract and how to add one are in [`docs/themes.md`](do
 
 | Path | Role |
 |---|---|
-| `src/components/Vault.tsx` | Client component: DOM shell + HUD (theme switch, sound, x1/x10 draw mode, rarity picker per deck, empty bag) |
+| `src/components/Vault.tsx` | Client component: DOM shell + HUD (theme switch, sound, x1/x10 draw mode, empty bag; the per-deck rarity picker is hidden behind `RARITY_PICKER`) |
 | `src/components/PackResults.tsx` | 10-pull results dialog: the ten card faces the engine rendered, best first, NEW / copy counts |
 | `src/components/Collection.tsx` | Collection dialog opened from the bag row: every card by slot and tier, found ones in full, missing ones as silhouettes |
 | `src/app/page.tsx` | Reads deck sources at build time (`decks/sources.server.ts`) and renders the vault |

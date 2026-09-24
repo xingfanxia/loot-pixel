@@ -16,6 +16,9 @@ import type { PackResult } from "@/lib/vault/context";
  * switching it rebuilds the engine (the bag is saved per deck, so nothing is lost).
  * "Draw x1 / x10" picks single cards or 10-pull packs (src/lib/vault/pack.ts).
  */
+/** The "Next: Random / Common / …" rarity picker, hidden since the 10-pull (every draw is random); window.APP.force still forces a tier. */
+const RARITY_PICKER = false;
+
 export default function Vault({ sources }: { sources: DeckSources }) {
   const stage = useRef<HTMLDivElement>(null);
   const screen = useRef<HTMLCanvasElement>(null);
@@ -141,7 +144,7 @@ export default function Vault({ sources }: { sources: DeckSources }) {
             </button>
           ))}
         </div>
-        <div className="row" role="group" aria-label="Next card rarity">
+        {RARITY_PICKER && <div className="row" role="group" aria-label="Next card rarity">
           <span className="lbl">Next:</span>
           {options.map((o) => (
             <button
@@ -154,10 +157,10 @@ export default function Vault({ sources }: { sources: DeckSources }) {
               {o.label}
             </button>
           ))}
-          <button id="reset" className="px pill" type="button" hidden={!bagComplete} onClick={() => vault.current?.resetBag()}>
-            Empty bag
-          </button>
-        </div>
+        </div>}
+        <button id="reset" className="px pill" type="button" hidden={!bagComplete} onClick={() => vault.current?.resetBag()}>
+          Empty bag
+        </button>
       </div>
       <button id="bag" ref={bag} type="button" aria-label="Open the collection"
         onClick={() => setAlbum(vault.current?.owned() ?? {})} />

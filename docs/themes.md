@@ -28,8 +28,8 @@ Packs are registered per deck in `DECKS[...].themes` (`src/lib/vault/decks/index
 - An inline script in `src/app/layout.tsx` sets `data-vault-theme` on `<html>` before first
   paint, so DOM styles don't flash the default theme.
 - Switching destroys the engine and creates a new one in the new theme, with the theme's card pack
-  if the deck has one. Bags are stored per deck and pack, so nothing is lost. The rarity pick and
-  the sound setting carry over. A card mid-reveal restarts as a fresh draw.
+  if the deck has one. Bags are stored per deck and pack, so nothing is lost. The draw mode (x1/x10),
+  the sound setting and the rarity pick carry over. A card mid-reveal restarts as a fresh draw.
 
 ## The contract (`src/lib/vault/themes/types.ts`)
 

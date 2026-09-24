@@ -133,7 +133,7 @@ The files to touch, in order. Nothing under `src/lib/vault/` outside `decks/` ch
    source type added to `DeckSources` in `decks/index.ts`.
 3. Register it in `DECKS` in `decks/index.ts` (`build` + `tiers`, plus `themes` for theme card packs, see
    `docs/themes.md`). `?deck=<id>` then selects it
-   and the rarity picker shows its tiers; change `DEFAULT_DECK` only to make it the default.
+   and the rarity picker (hidden for now, `RARITY_PICKER` in `Vault.tsx`) shows its tiers; change `DEFAULT_DECK` only to make it the default.
 4. Image deck: put the art in `public/decks/<id>/`, and add its scenario list to
    `scripts/verify/scenarios.mjs` (copy the `cl-team` entry; the fake scenario needs one of
    the deck's top-tier card ids).
