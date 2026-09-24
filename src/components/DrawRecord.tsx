@@ -4,6 +4,10 @@ import { verdict } from "@/lib/vault/odds";
 
 const SEGMENTS = 20;
 const pct = (x: number) => Math.round(x * 100);
+/** What the rating is based on: the average draws per Legendary, or the dry run before the first one. */
+const basis = (r: Record) => r.gaps.length
+  ? `${Math.round(r.gaps.reduce((a, b) => a + b, 0) / r.gaps.length)} draws per Legendary`
+  : `No Legendary in ${r.streak} ${r.streak === 1 ? "draw" : "draws"}`;
 /** "Luckier than 72%" above average, "Unluckier than 96%" below it. */
 const share = (x: number) => pct(x) >= 50 ? `Luckier than ${Math.min(99, pct(x))}%` : `Unluckier than ${Math.min(99, pct(1 - x))}%`;
 
@@ -14,10 +18,10 @@ function Luck({ record, compact }: { record: Record; compact?: boolean }) {
   return (
     <div className={compact ? "luck compact" : "luck"} data-verdict={word.toLowerCase()}>
       <p className="verdict">{word}</p>
-      <div className="meter" role="meter" aria-label="Luck" aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct(x)} aria-valuetext={`${word}, ${share(x).toLowerCase()} of players`}>
+      <div className="meter" role="meter" aria-label="Luck" aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct(x)} aria-valuetext={`${word}: ${basis(record)}, ${share(x).toLowerCase()} of players`}>
         {Array.from({ length: SEGMENTS }, (_, i) => <i key={i} className={i < lit ? "on" : undefined} style={{ "--i": i } as CSSProperties} />)}
       </div>
-      <p className="luck-note">{share(x)} of players after {record.draws} {record.draws === 1 ? "draw" : "draws"}</p>
+      <p className="luck-note">{basis(record)}, {share(x).toLowerCase()} of players</p>
     </div>
   );
 }
@@ -53,7 +57,7 @@ function LuckPill({ record, onOpen }: { record: Record; onOpen: () => void }) {
     <div className="row" role="group" aria-label="Luck">
       <span className="lbl">Luck:</span>
       <button type="button" className="px pill luck-pill luck" data-verdict={word.toLowerCase()} onClick={onOpen}
-        aria-label={`Luck: ${word}, ${share(x).toLowerCase()} of players after ${record.draws} ${record.draws === 1 ? "draw" : "draws"}. Open the draw record.`}>
+        aria-label={`Luck: ${word}. ${basis(record)}, ${share(x).toLowerCase()} of players. Open the draw record.`}>
         <span className="word">{word}</span>
         <span className="mini" aria-hidden="true">{Array.from({ length: 10 }, (_, i) => <i key={i} className={i < lit ? "on" : undefined} style={{ "--i": i * 2 } as CSSProperties} />)}</span>
       </button>
