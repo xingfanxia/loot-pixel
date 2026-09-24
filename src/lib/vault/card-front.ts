@@ -31,6 +31,7 @@ export function drawFront(V: Vault, t: number){
   if (R.sparkle>0){ for(let i=0;i<R.sparkle+1;i++){ const cyc=Math.floor(t*1.4+i*.37), ph=(t*1.4+i*.37)%1, px=a.x+2+((i*37+cyc*13)%(a.w-6)), py=a.y+2+((i*23+cyc*7)%(a.h-11)); const big=ph>.3&&ph<.7;
       x.fillStyle=PAL.w; x.fillRect(px,py,1,1); if (big){ x.fillStyle=PAL[R.l]; x.fillRect(px-1,py,1,1); x.fillRect(px+1,py,1,1); x.fillRect(px,py-1,1,1); x.fillRect(px,py+1,1,1); if (ph>.45&&ph<.55){ x.fillRect(px-2,py,1,1); x.fillRect(px+2,py,1,1); x.fillRect(px,py-2,1,1); x.fillRect(px,py+2,1,1); } } } }
   x.fillStyle=PAL[R.l]; x.fillRect(a.x-1,a.y+a.h+1,a.w+2,1);
+  drawTitleBar(V, R.l);
   // nameplate
   const py=G.plateY; x.fillStyle=PAL[1]; x.fillRect(a.x,py,a.w,10); x.fillStyle=PAL[2]; x.fillRect(a.x,py,a.w,1); x.fillStyle=PAL.k; x.fillRect(a.x,py+9,a.w,1);
   const nm=S.spec!.name; drawText(x,nm,Math.round(G.hw-textW(nm,1)/2),py+2,1,'c','k');
@@ -43,6 +44,22 @@ export function drawFront(V: Vault, t: number){
   if (S.glitch>0){ const { tmpC, tmpG, frontC } = B; tmpG.clearRect(0,0,CWd,CHd); tmpG.drawImage(frontC,0,0); x.clearRect(0,0,CWd,CHd);
     for(let yy=0;yy<CHd;yy++){ const dx=Math.random()<S.glitch*.45?ri(-5,5):0; x.drawImage(tmpC,0,yy,CWd,1,dx,yy,CWd,1); }
     for(let k=0;k<Math.floor(S.glitch*8);k++){ x.fillStyle=PAL[['m','t','y','v','w'][ri(0,4)]]; x.fillRect(ri(0,CWd-14),ri(0,CHd-1),ri(4,24),1); } }
+}
+
+/** Greedy word wrap into at most `rows` lines of `max` chars (a lone over-long word is kept whole). */
+export function wrapTitle(text: string, max: number, rows: number): string[] {
+  const lines: string[] = [];
+  for (const w of text.split(' ')) { const cur = lines[lines.length - 1];
+    if (cur !== undefined && cur.length + 1 + w.length <= max) lines[lines.length - 1] = cur + ' ' + w; else lines.push(w); }
+  return lines.length <= rows ? lines : [...lines.slice(0, rows - 1), lines.slice(rows - 1).join(' ')];
+}
+
+/** Title bar above the art (layouts with titleRows): the visible card's variant title, 1-2 centred lines. */
+function drawTitleBar(V: Vault, col: string){
+  const { S, geo: G } = V, x=V.B.frontG, a=G.art, card=S.face ?? S.spec!; if (!G.titleH || !card.title) return;
+  const y0=G.titleY; x.fillStyle=PAL[1]; x.fillRect(a.x,y0,a.w,G.titleH); x.fillStyle=PAL[2]; x.fillRect(a.x,y0,a.w,1); x.fillStyle=PAL.k; x.fillRect(a.x,y0+G.titleH-1,a.w,1);
+  const lines=wrapTitle(card.title, G.titleChars, G.titleRows), top=y0+2+Math.floor((G.titleRows-lines.length)*3);
+  lines.forEach((ln,i)=>drawText(x,ln,Math.round(G.hw-textW(ln,1)/2),top+i*6,1,col,'k'));
 }
 
 /** Art window: backdrop + twinkling stars, a halo, then the sprite (bobbing) or the portrait, popping in on reveal. */

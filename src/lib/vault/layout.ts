@@ -7,6 +7,8 @@ export const initialLayout = (): Layout => ({ SC: 3, W: 400, H: 260, TS: 4, NARR
   GMIN: 190, GMAX: 250, TOP: 0, HUDTOP: 250, SLOT: 18, BAGY: 4, BAGCOLS: 9, BAGH: 18, TORCH: [], CAPY: 189, STALE: false });
 
 const GAP=2;
+/** Height of the collection bar under each bag slot: decks with several cards per slot show x/n there. */
+export const barH=(V: Vault)=>V.deck.cards.length>V.deck.slots.length?3:0;
 /**
  * Bag grid for the viewport: one row of icon-sized slots on wide screens. On narrow ones the row
  * shrinks to fit (icons halve until they fit a slot, as drawBag does); when that would draw them
@@ -32,7 +34,7 @@ export function applyLayout(V: Vault){
   B.g.imageSmoothingEnabled=false;
   [B.layerC,B.layerG]=mk(W,H); [B.silC,B.silG]=mk(W,H);
   L.TS=W>=300?4:3; L.NARROW=W<300; const grid=bagGrid(V, W, L.NARROW), rows=Math.ceil(V.deck.slots.length/grid.COLS);
-  L.SLOT=grid.SLOT; L.BAGCOLS=grid.COLS; L.BAGH=rows*(grid.SLOT+GAP)-GAP; L.STALE=false;
+  L.SLOT=grid.SLOT; L.BAGCOLS=grid.COLS; L.BAGH=rows*(grid.SLOT+GAP+barH(V))-GAP; L.STALE=false;
   const NARROW=L.NARROW, SLOT=L.SLOT, BAGH=L.BAGH;
   L.TOP=Math.ceil((parseFloat(getComputedStyle(document.documentElement).paddingTop)||0)/SC);
   L.HUDTOP=Math.floor(els.hud.getBoundingClientRect().top/SC);
@@ -43,9 +45,12 @@ export function applyLayout(V: Vault){
   buildScene(V); seedDust(V);
   const { hit, again } = els, CX=L.CX, CY=L.CY;
   hit.style.left=(CX-CW/2)*SC+'px'; hit.style.top=(CY-CH/2)*SC+'px'; hit.style.width=CW*SC+'px'; hit.style.height=CH*SC+'px';
-  const caption=V.deck.cards.some(c=>c.title)?4:0; // room for the variant title under the altar
+  const caption=V.deck.cards.some(c=>c.title)&&!V.geo.titleH?4:0; // room for the variant title under the altar (decks without a title bar)
   const againTop=Math.min((L.PBASE+8+caption)*SC, (NARROW?L.BAGY-4:L.HUDTOP-14)*SC-44); L.CAPY=Math.min(L.PBASE+3, Math.floor(againTop/SC)-8);
   again.style.left=CX*SC+'px'; again.style.top=againTop+'px';
+  // the bag row (plus the counter beside it on wide screens) is one button that opens the collection
+  if (els.bag){ const rs=V.deck.slots.map((_,i)=>slotRect(V,i)), x0=Math.min(...rs.map(r=>r.x))-2, x1=Math.max(...rs.map(r=>r.x+r.w))+(NARROW?2:30);
+    els.bag.style.left=x0*SC+'px'; els.bag.style.top=(L.BAGY-2)*SC+'px'; els.bag.style.width=(x1-x0)*SC+'px'; els.bag.style.height=(L.BAGH+4)*SC+'px'; }
   els.crt.style.backgroundImage=`repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0 ${SC-1}px, rgba(0,0,0,.16) ${SC-1}px ${SC}px), radial-gradient(ellipse 75% 70% at 50% 50%, transparent 60%, rgba(0,0,0,.5) 100%)`;
   els.stage.style.transformOrigin=`${CX*SC}px ${CY*SC}px`;
 }
@@ -53,7 +58,7 @@ export function applyLayout(V: Vault){
 /** Screen rect of bag slot i (rows of BAGCOLS, each row centred on narrow screens). */
 export function slotRect(V: Vault, i: number){ const { SLOT, NARROW, W, BAGY, BAGCOLS } = V.L, n=V.deck.slots.length, row=Math.floor(i/BAGCOLS), inRow=Math.min(BAGCOLS, n-row*BAGCOLS),
     total=inRow*(SLOT+GAP)-GAP, x0=NARROW?Math.round((W-total)/2):4;
-  return {x:x0+(i-row*BAGCOLS)*(SLOT+GAP), y:BAGY+row*(SLOT+GAP), w:SLOT, h:SLOT}; }
+  return {x:x0+(i-row*BAGCOLS)*(SLOT+GAP), y:BAGY+row*(SLOT+GAP+barH(V)), w:SLOT, h:SLOT}; }
 
 /** Re-fits the scene to a moved HUD: at once while the scene is calm, else flagged for flushLayout(). */
 export function refitToHud(V: Vault){ if (Math.floor(V.env.els.hud.getBoundingClientRect().top/V.L.SC)===V.L.HUDTOP) return false;

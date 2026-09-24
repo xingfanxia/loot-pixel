@@ -17,15 +17,17 @@ export interface DeckCard {
   n: number;
   /** nameplate text (3x5 font, must fit the art width) */
   name: string;
-  /** variant title drawn under the altar after the reveal; omitted for decks without variants */
+  /** variant title: in the card's title bar when the layout has one, else under the altar after the reveal */
   title?: string;
+  /** why this card fits its slot (shown in the collection); optional */
+  note?: string;
   /** spoken after the tier name in the live region, e.g. "Albert Zhang, Sun Emperor" */
   label: string;
   art: CardArt;
 }
 
 /** One collectible identity (a person, an item); the bag has one square per slot. */
-export interface DeckSlot { id: string; short: string; fullName: string }
+export interface DeckSlot { id: string; short: string; fullName: string; role?: string }
 
 export interface Rect { x: number; y: number; w: number; h: number }
 
@@ -45,6 +47,8 @@ export interface CardLayout {
   minIcon?: number;
   /** stat bar labels under the nameplate, one bar each */
   bars: string[];
+  /** text rows of the title bar above the art (0 or absent: no title bar; the variant title goes under the altar) */
+  titleRows?: number;
 }
 
 /** A 1-bit mask ('#' = on) drawn on the card back with the gold ramp and a bevel. */

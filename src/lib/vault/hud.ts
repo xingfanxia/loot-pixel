@@ -1,7 +1,7 @@
 import { CYCLE } from './card-front';
 import type { Vault } from './context';
 import { drawRampText, drawText, textW } from './font';
-import { slotRect } from './layout';
+import { barH, slotRect } from './layout';
 import { PAL } from './palette';
 import { TIERS } from './tiers';
 import { ri } from './util';
@@ -25,13 +25,16 @@ export function drawHud(V: Vault, ox: number, oy: number){
   drawBag(V);
 }
 
-/** One square per slot: the best collected card's icon on its tier colours, or an empty socket. */
+/** One square per slot: the best collected card's icon on its tier colours (or an empty socket), with a collected/total bar under it. */
 function drawBag(V: Vault){
-  const { deck, bag, L, geo: G } = V, g=V.B.g, n=deck.slots.length;
+  const { deck, bag, L, geo: G } = V, g=V.B.g, n=deck.slots.length, bh=barH(V), have=deck.slots.map(()=>0), total=deck.slots.map(()=>0);
+  deck.cards.forEach((c,i)=>{ total[c.slot]++; if (bag.shown.has(i)) have[c.slot]++; });
   for(let i=0;i<n;i++){ const r=slotRect(V,i), fl=bag.flash[i]>0&&(Math.floor(bag.flash[i]*20)&1), best=bag.best[i], R=best>=0?TIERS[deck.cards[best].tier]:null;
     g.fillStyle=PAL.k; g.fillRect(r.x-1,r.y-1,r.w+2,r.h+2); g.fillStyle=PAL[R?R.d:1]; g.fillRect(r.x,r.y,r.w,r.h); g.fillStyle=PAL[R?R.l:2]; g.fillRect(r.x,r.y,r.w,1); g.fillRect(r.x,r.y,1,r.h);
     if (fl){ g.fillStyle=PAL.w; g.fillRect(r.x,r.y,r.w,r.h); }
     else if (R){ const icon=V.art.get(deck.cards[best].id)!.icon; let s=G.icon; while (s>r.w && s>1) s>>=1; const o=Math.floor((r.w-s)/2); g.drawImage(icon,0,0,icon.width,icon.height,r.x+o,r.y+o,s,s); }
-    else { g.fillStyle=PAL[0]; g.fillRect(r.x+Math.floor(r.w/2)-1,r.y+Math.floor(r.h/2)-1,2,2); } }
+    else { g.fillStyle=PAL[0]; g.fillRect(r.x+Math.floor(r.w/2)-1,r.y+Math.floor(r.h/2)-1,2,2); }
+    if (bh){ const f=Math.round(r.w*have[i]/total[i]), by=r.y+r.h+1; g.fillStyle=PAL.k; g.fillRect(r.x-1,by,r.w+2,bh); g.fillStyle=PAL[1]; g.fillRect(r.x,by+1,r.w,bh-2);
+      if (f>0){ g.fillStyle=PAL[R?R.l:'4']; g.fillRect(r.x,by+1,f,bh-2); } } }
   if (!L.NARROW){ const last=slotRect(V,n-1); drawText(g,`${bag.shown.size}/${deck.cards.length}`,last.x+last.w+4,last.y+Math.floor(last.h/2)-2,1,'4','k'); }
 }

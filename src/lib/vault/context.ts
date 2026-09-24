@@ -13,6 +13,8 @@ import type { Ctx2D } from './util';
 export interface VaultElements {
   stage: HTMLDivElement; screen: HTMLCanvasElement; bloom: HTMLCanvasElement; crt: HTMLDivElement;
   hit: HTMLButtonElement; again: HTMLButtonElement; hud: HTMLDivElement; live: HTMLDivElement;
+  /** optional transparent button laid over the bag row (opens the collection) */
+  bag?: HTMLButtonElement;
 }
 export interface VaultHooks {
   onBagComplete?: (complete: boolean) => void;

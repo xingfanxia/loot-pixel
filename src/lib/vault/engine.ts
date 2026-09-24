@@ -24,6 +24,8 @@ export interface VaultController {
   setForce(r: number): void;
   setSound(on: boolean): void;
   resetBag(): void;
+  /** copies owned per card id (recorded at each reveal) */
+  owned(): Record<string, number>;
   destroy(): void;
 }
 
@@ -61,6 +63,7 @@ export function createVault(els: VaultElements, deck: Deck, hooks: VaultHooks = 
     setForce(r: number){ A.init(); V.S.force=r<0||(V.ladder as number[]).includes(r)?r:-1; A.blip(); if (V.S.phase==='idle' && V.S.charge===0 && !V.S.holding) V.S.r=-1; },
     setSound(v: boolean){ A.init(); A.setOn(v); },
     resetBag(){ A.init(); emptyBag(V.bag); hooks.onBagComplete?.(false); A.blip(); },
+    owned(){ return { ...V.bag.bag.owned }; },
     destroy(){ abort.abort(); stopLoop(); timers.forEach(clearTimeout); timers.clear(); A.close(); els.stage.style.transform='';
       if (window.APP===APP){ delete window.APP; delete window.__ready; } },
   };

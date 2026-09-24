@@ -62,10 +62,10 @@ stat bars sit under the nameplate. Everything card-relative in the engine (frame
 chains, padlock, cracks, glow, shatter, stamp, lift-off, scene sizing) derives
 from it, so a deck can use a bigger card when its art needs more pixels.
 
-| Layout | Card | Art window | Below the art |
-|---|---|---|---|
-| `item` (classic) | 64x90 | 52x45 at (6,6), 32x32 sprite centred | nameplate + ATK/DEF/MAG bars |
-| `portrait` (cl-team) | 76x105 | 64x72 at (6,6), image fills the window | nameplate (short name) + one PWR bar |
+| Layout | Card | Above the art | Art window | Below the art |
+|---|---|---|---|---|
+| `item` (classic) | 64x90 | nothing | 52x45 at (6,6), 32x32 sprite centred | nameplate + ATK/DEF/MAG bars |
+| `portrait` (cl-team) | 76x122 | 2-line title bar (`titleRows: 2`) | 64x72 at (6,23), image fills the window | nameplate (short name) + one PWR bar |
 
 `fitLayout()` in `src/lib/vault/geometry.ts` sizes a card to its art window plus nameplate,
 bars and gems; `cardGeo()` derives every card-relative constant from the layout. The
@@ -75,8 +75,16 @@ Bag slots are the icon size on wide screens and shrink to fit one row on phones;
 `minIcon` (default half the icon) is the smallest an icon may be drawn, and below it the bag
 wraps onto two icon-sized rows instead (cl-team sets it to 24, so its ten icons stay 24px).
 
-The variant title (e.g. `SUN EMPEROR`) is drawn under the altar after a reveal;
-the live region announces `RARITY: Full Name, Variant title`.
+A layout with `titleRows` (passed to `fitLayout`) gets a title bar above the art that shows the
+visible card's variant title (e.g. `SUN EMPEROR`), word-wrapped into at most that many lines of
+16 characters (every cl-team title fits two). Without one, the variant title is drawn under the
+altar after a reveal. The live region announces `RARITY: Full Name, Variant title`.
+
+When a deck has more cards than slots, each bag slot gets a collected/total bar under it.
+The bag row is also a button (`#bag`, positioned by the engine) that opens the collection
+(`src/components/Collection.tsx`): every card grouped by slot and tier, found cards in full with
+their `note` (the slot file's `hook`) and copy count, missing ones as the art's silhouette. Slot
+`role` comes from `characters.json`.
 
 ## Card back
 

@@ -18,6 +18,7 @@ original nine items). The deck contract, how to add a deck and how to verify one
 | Path | Role |
 |---|---|
 | `src/components/Vault.tsx` | Client component: DOM shell + HUD (rarity picker per deck, sound, empty bag) |
+| `src/components/Collection.tsx` | Collection dialog opened from the bag row: every card by slot and tier, found ones in full, missing ones as silhouettes |
 | `src/app/page.tsx` | Reads deck sources at build time (`decks/sources.server.ts`) and renders the vault |
 | `src/lib/vault/engine.ts` | `createVault(els, deck, hooks)`: builds the `Vault` context, preloads art, boots; returns a controller with `destroy()` |
 | `src/lib/vault/context.ts` | Typed state shared by every module: `Layout`, `GameState`, `Buffers`, `CardState`, `Env`, `Vault` |

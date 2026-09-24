@@ -66,7 +66,7 @@ export function release(V: Vault){
   const card=S.face ?? S.spec!;
   els.live.textContent=`${R.name}: ${card.label}`; els.hit.setAttribute('aria-label', `${R.name} ${card.label}. Tap to spin it.`);
   S.upgrading=false;
-  if (final){ S.fake=false; commit(V,gen); if (S.spec!.title) S.caption={text:S.spec!.title, key:R.l, t0:S.rt};
+  if (final){ S.fake=false; commit(V,gen); if (S.spec!.title && !V.geo.titleH) S.caption={text:S.spec!.title, key:R.l, t0:S.rt};
     later(1150, ()=>{ if (S.phase==='revealed' && S.seed===gen) startWallBreak(V,S.vr); }); later(1000, ()=>{ if (S.phase==='revealed' && S.seed===gen) els.again.classList.add('show'); }); }
   else later(2200, ()=>{ if (S.phase==='revealed' && S.seed===gen) startUpgrade(V); });
 }

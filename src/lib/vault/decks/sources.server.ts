@@ -14,12 +14,12 @@ export function loadDeckSources(root = process.cwd()): DeckSources {
   return { 'cl-team': loadClTeam(join(root, 'art', 'cl-team')) };
 }
 
-interface CharactersFile { tiers?: Record<string, { count?: number }>; slots: { id: string; short: string; fullName: string }[] }
+interface CharactersFile { tiers?: Record<string, { count?: number }>; slots: { id: string; short: string; fullName: string; role?: string }[] }
 
 function loadClTeam(dir: string): ClTeamSource {
   const chars = JSON.parse(readFileSync(join(dir, 'characters.json'), 'utf8')) as CharactersFile;
   const counts = TIERS.map(t => chars.tiers?.[t.key]?.count ?? 0);
-  return { slots: chars.slots.map(s => ({ id: s.id, short: s.short, fullName: s.fullName, cards: readSlot(dir, s.id) ?? placeholderCards(counts) })) };
+  return { slots: chars.slots.map(s => ({ id: s.id, short: s.short, fullName: s.fullName, role: s.role, cards: readSlot(dir, s.id) ?? placeholderCards(counts) })) };
 }
 
 function readSlot(dir: string, id: string): ClTeamCardSpec[] | null {
@@ -28,10 +28,10 @@ function readSlot(dir: string, id: string): ClTeamCardSpec[] | null {
   const cards = (raw as { cards?: unknown }).cards;
   if (!Array.isArray(cards)) return null;
   const out: ClTeamCardSpec[] = [];
-  for (const c of cards as { tier?: unknown; n?: unknown; title?: unknown }[]) {
+  for (const c of cards as { tier?: unknown; n?: unknown; title?: unknown; hook?: unknown }[]) {
     const t = typeof c.tier === 'string' ? tierByKey(c.tier) : undefined;
     if (!t || !Number.isInteger(c.n) || typeof c.title !== 'string') { console.warn(`[decks] ${id}.json: skipping malformed card`, c); continue; }
-    out.push({ tier: t.key, n: c.n as number, title: c.title.toUpperCase() });
+    out.push({ tier: t.key, n: c.n as number, title: c.title.toUpperCase(), ...(typeof c.hook === 'string' ? { hook: c.hook } : {}) });
   }
   return out.length ? out : null;
 }

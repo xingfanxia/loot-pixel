@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { deckIdFrom, DEFAULT_DECK, forceOptions, resolveDeck, type DeckSources } from "@/lib/vault/decks";
+import { deckIdFrom, DEFAULT_DECK, forceOptions, resolveDeck, type Deck, type DeckSources } from "@/lib/vault/decks";
+import Collection from "./Collection";
 import type { VaultController } from "@/lib/vault/engine";
 
 /**
@@ -18,6 +19,7 @@ export default function Vault({ sources }: { sources: DeckSources }) {
   const again = useRef<HTMLButtonElement>(null);
   const hud = useRef<HTMLDivElement>(null);
   const live = useRef<HTMLDivElement>(null);
+  const bag = useRef<HTMLButtonElement>(null);
   const vault = useRef<VaultController | null>(null);
 
   const [options, setOptions] = useState(() => forceOptions(DEFAULT_DECK));
@@ -25,6 +27,8 @@ export default function Vault({ sources }: { sources: DeckSources }) {
   const [sound, setSound] = useState(true);
   const [bagComplete, setBagComplete] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [deck, setDeck] = useState<Deck | null>(null);
+  const [album, setAlbum] = useState<Record<string, number> | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -32,6 +36,7 @@ export default function Vault({ sources }: { sources: DeckSources }) {
     window.addEventListener("error", onError);
     const deck = resolveDeck(deckIdFrom(location.search), sources);
     setOptions(forceOptions(deck));
+    setDeck(deck);
     setForce(-1);
     // The engine touches canvas/DOM APIs, so load it only in the browser.
     import("@/lib/vault/engine")
@@ -40,7 +45,7 @@ export default function Vault({ sources }: { sources: DeckSources }) {
         vault.current = createVault(
           {
             stage: stage.current!, screen: screen.current!, bloom: bloom.current!, crt: crt.current!,
-            hit: hit.current!, again: again.current!, hud: hud.current!, live: live.current!,
+            hit: hit.current!, again: again.current!, hud: hud.current!, live: live.current!, bag: bag.current!,
           },
           deck,
           { onBagComplete: setBagComplete, onError: setError },
@@ -92,6 +97,9 @@ export default function Vault({ sources }: { sources: DeckSources }) {
           </button>
         </div>
       </div>
+      <button id="bag" ref={bag} type="button" aria-label="Open the collection"
+        onClick={() => setAlbum(vault.current?.owned() ?? {})} />
+      {deck && <Collection deck={deck} owned={album ?? {}} open={album !== null} onClose={() => setAlbum(null)} />}
       <div id="live" ref={live} className="sr" aria-live="polite" />
       <div id="err" style={error ? { display: "block" } : undefined}>{error && `Something broke: ${error}`}</div>
     </>

@@ -15,6 +15,8 @@ export interface CardGeo {
   spriteSz: number; spriteCy: number; shadowY: number;
   /** art background: radial centre row + radius (24, 22), floor strip row (40), star rows (34) */
   bgCy: number; bgRy: number; floorY: number; starsH: number;
+  /** title bar above the art: top row, height and chars per line (0 height when the layout has none) */
+  titleY: number; titleH: number; titleChars: number; titleRows: number;
   /** nameplate top (54), first bar row (66), bar x + width (21, 36), gem row (83) */
   plateY: number; barY0: number; barX: number; barW: number; gemY: number; bars: string[];
   /** back: emblem centre (32, 44), diamond radius (19), twinkle points */
@@ -39,6 +41,7 @@ export function cardGeo(l: CardLayout, emblem?: Emblem): CardGeo {
     artCx: a.x + a.w / 2, artCy: a.y + Math.floor(a.h / 2),
     spriteSz, spriteCy: a.y + floorY - 4 - spriteSz / 2, shadowY: a.y + floorY - 1,
     bgCy: Math.round(a.h * 24 / 45), bgRy: Math.floor(a.h / 2), floorY, starsH: a.h - 11,
+    titleY: 6, titleH: titleBarH(l.titleRows), titleChars: Math.floor((a.w + 1) / 4), titleRows: l.titleRows ?? 0,
     plateY, barY0: plateY + 12, barX, barW: a.x + a.w - barX - 1, gemY: h - 7, bars: l.bars,
     backCx, backCy, emblemR,
     glints: [[backCx, backCy - (emblemR + 11)], [backCx, backCy + (emblemR + 11)], [backCx - side, backCy], [backCx + side, backCy]],
@@ -49,9 +52,15 @@ export function cardGeo(l: CardLayout, emblem?: Emblem): CardGeo {
   };
 }
 
-/** A card sized to fit its art window plus nameplate, stat bars and gems (64x90 for 52x45 + 3 bars). */
-export function fitLayout(name: string, art: { w: number; h: number }, icon: number, bars: string[]): CardLayout {
-  const x = 6, y = 6;
-  return { name, art: { x, y, w: art.w, h: art.h }, icon, bars,
+/** Title bar height for `rows` lines of the 3x5 font: 2px padding, 6px per line, 1px border. */
+const titleBarH = (rows = 0) => rows > 0 ? rows * 6 + 3 : 0;
+
+/**
+ * A card sized to fit its art window plus nameplate, stat bars and gems (64x90 for 52x45 + 3 bars),
+ * with an optional title bar of `titleRows` lines above the art.
+ */
+export function fitLayout(name: string, art: { w: number; h: number }, icon: number, bars: string[], titleRows = 0): CardLayout {
+  const x = 6, tb = titleBarH(titleRows), y = 6 + (tb ? tb + 2 : 0);
+  return { name, art: { x, y, w: art.w, h: art.h }, icon, bars, titleRows,
     card: { w: art.w + 2 * x, h: y + art.h + 3 + 12 + 6 * bars.length + 6 } };
 }
