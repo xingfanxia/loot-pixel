@@ -10,7 +10,7 @@ export function chainLinks(G: CardGeo): [number,number,number][][]{
   return G.chains.map(([[x0,y0],[x1,y1]])=>{ const L=Math.hypot(x1-x0,y1-y0), n=Math.floor(L/3.3), out: [number,number,number][]=[]; for(let j=0;j<=n;j++){ const u=j/n, px=x0+(x1-x0)*u, py=y0+(y1-y0)*u; if (Math.hypot(px-G.hw,py-G.hh)<8) continue; out.push([Math.round(px),Math.round(py),j%2]); } return out; });
 }
 
-function chainCols(V: Vault, c: number): [string,string,string]{ const rp=RAMPS[TIERS[V.S.tease].ramp]; return c>.25 ? [rp[4], c>.62?'w':rp[5], rp[3]] : ['S','s','D']; }
+function chainCols(V: Vault, c: number): [string,string,string]{ const rp=RAMPS[TIERS[V.S.tease].ramp]; return c>.25 ? [rp[4], c>.62?'w':rp[5], rp[3]] : V.theme.keys.chain; }
 
 /** Chains and padlock over the card back; links rattle and heat to the teased tier as the charge rises. */
 export function drawChains(V: Vault, x: Ctx2D){

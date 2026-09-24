@@ -1,5 +1,5 @@
 import { saveBag, showCard, shownSlots } from './bag';
-import { buildArtBg, drawFront } from './card-front';
+import { drawFront } from './card-front';
 import { rankOf, type Vault } from './context';
 import { genCracks } from './cracks';
 import { slotRect } from './layout';
@@ -26,7 +26,7 @@ export function assignCard(V: Vault){
   if (S.fake){ const alt=cards.filter(k=>k.slot===c.slot && k.tier===S.vr); if (alt.length) S.face=alt[ri(0,alt.length-1)]; }
   paint(V, S.vr);
 }
-function paint(V: Vault, vr: number){ const S=V.S; buildArtBg(V, vr); const [a,b]=TIERS[vr].bars; S.barTarget=V.geo.bars.map(()=>rnd(a,b)); S.bars=S.bars.map(()=>0); S.barFlash=S.barFlash.map(()=>0); }
+function paint(V: Vault, vr: number){ const S=V.S; V.theme.face.artBg(V, vr); const [a,b]=TIERS[vr].bars; S.barTarget=V.geo.bars.map(()=>rnd(a,b)); S.bars=S.bars.map(()=>0); S.barFlash=S.barFlash.map(()=>0); }
 
 /** The charge reached the next ladder step: the back heats to that tier's colour. */
 export function teaseUp(V: Vault, l: number){ const { S, env } = V, T=TIERS[l];
@@ -54,7 +54,7 @@ export function release(V: Vault){
   S.cardI=2.6; S.cardIT=R.glow; S.torchBoost=1.2; S.beam=R.beam; A.roar();
   S.slowmo=reduce?0:R.slowmo; if (S.slowmo) A.muffle(S.slowmo+.3); S.after=R.after>0?.32:-1;
   sparks(V, R.spark*(up?1.4:1), R.l, 60, 260, 1.3); sparks(V, R.spark*.4, 'w', 110, 340, .5);
-  for (const t of L.TORCH) for(let i=0;i<Q(V,26);i++) FX.flames.push({x:t.x+rnd(-2,2), y:t.y-2, vx:(t.x-S.cx)*rnd(.6,1.6)+rnd(-30,30), vy:-rnd(40,140), age:0, life:rnd(.3,.8), big:true});
+  if (V.theme.flames) for (const t of L.TORCH) for(let i=0;i<Q(V,26);i++) FX.flames.push({x:t.x+rnd(-2,2), y:t.y-2, vx:(t.x-S.cx)*rnd(.6,1.6)+rnd(-30,30), vy:-rnd(40,140), age:0, life:rnd(.3,.8), big:true});
   ring(V, R.l, 360, 3, 0); ring(V, 'w', 270, 1, .05); if (R.rings>=1) ring(V, R.d, 220, 2, .14); if (R.rings>=2){ ring(V, 'Y', 170, 3, .26); ring(V, 'o', 120, 1, .4); }
   for(let i=0;i<R.bolts;i++) bolt(V, R.l);
   if (R.confetti) confetti(V, R.confetti.n, R.confetti.keys, false);

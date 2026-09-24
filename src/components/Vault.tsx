@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { deckIdFrom, DEFAULT_DECK, forceOptions, resolveDeck, type Deck, type DeckSources } from "@/lib/vault/decks";
+import { THEME_KEY, THEMES, themeById } from "@/lib/vault/themes";
 import Collection from "./Collection";
 import type { VaultController } from "@/lib/vault/engine";
 
@@ -9,6 +10,8 @@ import type { VaultController } from "@/lib/vault/engine";
  * DOM shell for the canvas engine. React owns the HUD controls; the engine owns the
  * canvases, the card hit area, the "draw another" button and the live region.
  * The deck comes from `?deck=<id>` (default cl-team); `sources` is its server-read card data.
+ * The theme comes from `?theme=<id>`, else the viewer's last choice (THEME_KEY), else the default;
+ * switching it rebuilds the engine (the bag is saved per deck, so nothing is lost).
  */
 export default function Vault({ sources }: { sources: DeckSources }) {
   const stage = useRef<HTMLDivElement>(null);
@@ -28,37 +31,60 @@ export default function Vault({ sources }: { sources: DeckSources }) {
   const [bagComplete, setBagComplete] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [deck, setDeck] = useState<Deck | null>(null);
+  const [theme, setTheme] = useState<string | null>(null);
   const [album, setAlbum] = useState<Record<string, number> | null>(null);
+  // read by a rebuilt engine (theme switch) so the rarity pick and sound setting carry over
+  const prefs = useRef({ force: -1, sound: true });
 
   useEffect(() => {
-    let cancelled = false;
     const onError = (e: ErrorEvent) => setError(e.message);
     window.addEventListener("error", onError);
     const deck = resolveDeck(deckIdFrom(location.search), sources);
     setOptions(forceOptions(deck));
     setDeck(deck);
     setForce(-1);
+    prefs.current.force = -1;
+    let stored: string | null = null;
+    try { stored = localStorage.getItem(THEME_KEY); } catch {}
+    setTheme(themeById(new URLSearchParams(location.search).get("theme") ?? stored).id);
+    return () => window.removeEventListener("error", onError);
+  }, [sources]);
+
+  useEffect(() => {
+    if (!deck || !theme) return;
+    let cancelled = false;
+    document.documentElement.dataset.vaultTheme = theme;
     // The engine touches canvas/DOM APIs, so load it only in the browser.
     import("@/lib/vault/engine")
       .then(({ createVault }) => {
         if (cancelled) return;
-        vault.current = createVault(
+        const v = vault.current = createVault(
           {
             stage: stage.current!, screen: screen.current!, bloom: bloom.current!, crt: crt.current!,
             hit: hit.current!, again: again.current!, hud: hud.current!, live: live.current!, bag: bag.current!,
           },
           deck,
+          themeById(theme),
           { onBagComplete: setBagComplete, onError: setError },
         );
+        if (prefs.current.force >= 0) v.setForce(prefs.current.force);
+        if (!prefs.current.sound) v.setSound(false);
       })
       .catch((e: unknown) => setError(e instanceof Error ? e.message : String(e)));
     return () => {
       cancelled = true;
-      window.removeEventListener("error", onError);
       vault.current?.destroy();
       vault.current = null;
     };
-  }, [sources]);
+  }, [deck, theme]);
+
+  const pickTheme = (id: string) => {
+    if (id === theme) return;
+    setTheme(id);
+    try { localStorage.setItem(THEME_KEY, id); } catch {}
+    const url = new URL(location.href);
+    if (url.searchParams.has("theme")) { url.searchParams.set("theme", id); history.replaceState(null, "", url); }
+  };
 
   return (
     <>
@@ -69,15 +95,24 @@ export default function Vault({ sources }: { sources: DeckSources }) {
       <div id="crt" ref={crt} />
       <button id="hit" ref={hit} aria-label="Loot card. Press and hold to open." />
       <button id="again" ref={again} className="px" type="button">Draw another</button>
-      <button
-        id="mute"
-        className="px"
-        type="button"
-        aria-pressed={!sound}
-        onClick={() => { const on = !sound; setSound(on); vault.current?.setSound(on); }}
-      >
-        {sound ? "Sound on" : "Sound off"}
-      </button>
+      <div id="top">
+        <div className="row" role="group" aria-label="Theme">
+          {THEMES.map((t) => (
+            <button key={t.id} className="px pill" type="button" aria-pressed={theme === t.id} onClick={() => pickTheme(t.id)}>
+              {t.label}
+            </button>
+          ))}
+        </div>
+        <button
+          id="mute"
+          className="px pill"
+          type="button"
+          aria-pressed={!sound}
+          onClick={() => { const on = !sound; setSound(on); prefs.current.sound = on; vault.current?.setSound(on); }}
+        >
+          {sound ? "Sound on" : "Sound off"}
+        </button>
+      </div>
       <div id="hud" ref={hud}>
         <div className="row" role="group" aria-label="Next card rarity">
           <span className="lbl">Next:</span>
@@ -87,7 +122,7 @@ export default function Vault({ sources }: { sources: DeckSources }) {
               className="px pill"
               type="button"
               aria-pressed={force === o.value}
-              onClick={() => { setForce(o.value); vault.current?.setForce(o.value); }}
+              onClick={() => { setForce(o.value); prefs.current.force = o.value; vault.current?.setForce(o.value); }}
             >
               {o.label}
             </button>

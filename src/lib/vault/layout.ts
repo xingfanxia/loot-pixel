@@ -1,6 +1,5 @@
 import type { Layout, Vault } from './context';
 import { seedDust } from './particles';
-import { buildScene } from './scene';
 import { clamp, mk } from './util';
 
 export const initialLayout = (): Layout => ({ SC: 3, W: 400, H: 260, TS: 4, NARROW: false, CX: 200, CY: 110, HY: 180, PTOP: 160, PBASE: 186,
@@ -42,7 +41,7 @@ export function applyLayout(V: Vault){
   L.CX=Math.round(W/2); L.CY=Math.round(CY0+extra*.42);
   L.PTOP=L.CY+hh+8; L.PBASE=L.PTOP+26; L.HY=L.PTOP+13; L.GMIN=L.HY+4; L.BAGY=NARROW?L.HUDTOP-BAGH-6:L.TOP+4; L.GMAX=Math.max(L.GMIN+6,(NARROW?L.BAGY-3:L.HUDTOP-4));
   const tdx=Math.round(clamp(W*.36,46,150)); L.TORCH=[{x:L.CX-tdx,y:L.CY-6},{x:L.CX+tdx,y:L.CY-6}];
-  buildScene(V); seedDust(V);
+  V.theme.buildScene(V); seedDust(V);
   const { hit, again } = els, CX=L.CX, CY=L.CY;
   hit.style.left=(CX-CW/2)*SC+'px'; hit.style.top=(CY-CH/2)*SC+'px'; hit.style.width=CW*SC+'px'; hit.style.height=CH*SC+'px';
   const caption=V.deck.cards.some(c=>c.title)&&!V.geo.titleH?4:0; // room for the variant title under the altar (decks without a title bar)

@@ -61,9 +61,9 @@ export function step(V: Vault, dt: number, rdt: number){
   S.cardI=lerp(S.cardI,S.cardIT,1-Math.exp(-(S.cardI>S.cardIT?3.4:8)*dt)); S.beam*=Math.exp(-.9*dt); S.torchBoost*=Math.exp(-2*dt); S.ca*=Math.exp(-4*rdt);
   for (let i=0;i<S.barFlash.length;i++){ if (S.barFlash[i]>0) S.barFlash[i]-=rdt; }
   // torches
-  S.flameAcc+=dt*(26+40*S.torchBoost)*(reduce?.5:1);
+  if (V.theme.flames){ S.flameAcc+=dt*(26+40*S.torchBoost)*(reduce?.5:1);
   while(S.flameAcc>1){ S.flameAcc--; for (const t of L.TORCH){ const lean=(S.cx-t.x)*.9*c; FX.flames.push({x:t.x+rnd(-1.5,1.5), y:t.y-1, vx:lean*rnd(.6,1.2)+rnd(-5,5), vy:-rnd(18,40)*(1+S.torchBoost), age:0, life:rnd(.3,.6)*(1+S.torchBoost*.4)}); } }
-  for (const t of L.TORCH){ if (Math.random()<dt*2.5) FX.flames.push({x:t.x, y:t.y-4, vx:rnd(-8,8)+(S.cx-t.x)*.6*c, vy:-rnd(30,60), age:0, life:rnd(1,2), ember:true}); }
+  for (const t of L.TORCH){ if (Math.random()<dt*2.5) FX.flames.push({x:t.x, y:t.y-4, vx:rnd(-8,8)+(S.cx-t.x)*.6*c, vy:-rnd(30,60), age:0, life:rnd(1,2), ember:true}); } }
   stepParticles(V, dt, c);
 }
 

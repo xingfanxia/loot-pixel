@@ -9,7 +9,10 @@ import { clamp, mk, mulberry, type Ctx2D } from './util';
 export interface SceneUnits {
   UNIT: Int32Array; OFF: Int8Array; PIXA: Float32Array; NU: number;
   UX: Float32Array; UY: Float32Array; UALB: Float32Array; UHASH: Float32Array; ULVL: Int8Array; URAMP: Uint8Array;
-  UB0X: Int16Array; UB0Y: Int16Array; UST: Uint8Array; UDEL: Float32Array; URST: Float32Array; WALLU: number[];
+  /** wall units' top-left and size (the piece cut from the scene when it falls) */
+  UB0X: Int16Array; UB0Y: Int16Array; UBW: Uint8Array; UBH: Uint8Array; UST: Uint8Array; UDEL: Float32Array; URST: Float32Array; WALLU: number[];
+  /** lamp whose light dominates each unit this frame (picks that lamp's ramp) */
+  ULAMP: Uint8Array;
   VOID32: Uint32Array; VOIDSTARS: [number, number, number][];
   snapC: HTMLCanvasElement; snapG: Ctx2D; sceneC: HTMLCanvasElement; sceneG: Ctx2D; sceneImg: ImageData; scene32: Uint32Array;
 }
@@ -17,14 +20,32 @@ export interface SceneUnits {
 export function emptyUnits(): SceneUnits {
   const [snapC, snapG] = mk(1, 1), [sceneC, sceneG] = mk(1, 1), sceneImg = sceneG.createImageData(1, 1);
   return { UNIT: new Int32Array(0), OFF: new Int8Array(0), PIXA: new Float32Array(0), NU: 0, UX: new Float32Array(0), UY: new Float32Array(0), UALB: new Float32Array(0),
-    UHASH: new Float32Array(0), ULVL: new Int8Array(0), URAMP: new Uint8Array(0), UB0X: new Int16Array(0), UB0Y: new Int16Array(0), UST: new Uint8Array(0),
+    UHASH: new Float32Array(0), ULVL: new Int8Array(0), URAMP: new Uint8Array(0), UB0X: new Int16Array(0), UB0Y: new Int16Array(0), UBW: new Uint8Array(0), UBH: new Uint8Array(0), UST: new Uint8Array(0), ULAMP: new Uint8Array(0),
     UDEL: new Float32Array(0), URST: new Float32Array(0), WALLU: [], VOID32: new Uint32Array(0), VOIDSTARS: [], snapC, snapG, sceneC, sceneG, sceneImg, scene32: new Uint32Array(sceneImg.data.buffer) };
 }
 
-export function buildScene(V: Vault) {
+/**
+ * Scene under construction: UNIT / OFF / PIXA for every pixel, and add() registers a unit
+ * (centre, albedo; wall units also their top-left and size). finish() publishes it as V.U.
+ * Each unit draws its hash from `rng` right after its arguments are evaluated.
+ */
+export function sceneBuilder(V: Vault, rng: () => number) {
+  const { W, H } = V.L, N=W*H, UNIT=new Int32Array(N).fill(-1), OFF=new Int8Array(N), PIXA=new Float32Array(N).fill(-1);
+  const ux: number[]=[], uy: number[]=[], ua: number[]=[], uh: number[]=[], uw: number[]=[], bx0: number[]=[], by0: number[]=[], bw: number[]=[], bh: number[]=[];
+  const add=(cx: number,cy: number,a: number,wall?: number,x0?: number,y0?: number,w=14,h=7)=>{ ux.push(cx); uy.push(cy); ua.push(a); uh.push(rng()); uw.push(wall?1:0); bx0.push(x0||0); by0.push(y0||0); bw.push(w); bh.push(h); return ux.length-1; };
+  const finish=()=>{ const NU=ux.length, WALLU: number[]=[]; for(let u=0;u<NU;u++) if (uw[u]) WALLU.push(u);
+    const [snapC,snapG]=mk(W,H), [sceneC,sceneG]=mk(W,H), sceneImg=sceneG.createImageData(W,H);
+    V.U={ UNIT, OFF, PIXA, NU, UX:Float32Array.from(ux), UY:Float32Array.from(uy), UALB:Float32Array.from(ua), UHASH:Float32Array.from(uh), ULVL:new Int8Array(NU), URAMP:new Uint8Array(NU),
+      UB0X:Int16Array.from(bx0), UB0Y:Int16Array.from(by0), UBW:Uint8Array.from(bw), UBH:Uint8Array.from(bh), UST:new Uint8Array(NU), UDEL:new Float32Array(NU).fill(Infinity), URST:new Float32Array(NU), WALLU, ULAMP:new Uint8Array(NU),
+      VOID32:new Uint32Array(W*H), VOIDSTARS:[], snapC, snapG, sceneC, sceneG, sceneImg, scene32:new Uint32Array(sceneImg.data.buffer) };
+    V.S.wall.active=false; V.S.wall.rebuild=false; };
+  return { UNIT, OFF, PIXA, add, finish };
+}
+
+/** The vault theme's room: brick wall, staggered flagstones, stone altar, two sconces. */
+export function buildVaultScene(V: Vault) {
   const { W, H, HY, CX, PTOP, PBASE, TORCH } = V.L;
-  const N=W*H, rng=mulberry(77), UNIT=new Int32Array(N).fill(-1), OFF=new Int8Array(N), PIXA=new Float32Array(N).fill(-1);
-  const ux: number[]=[], uy: number[]=[], ua: number[]=[], uh: number[]=[], uw: number[]=[], bx0: number[]=[], by0: number[]=[]; const add=(cx: number,cy: number,a: number,wall?: number,x0?: number,y0?: number)=>{ ux.push(cx); uy.push(cy); ua.push(a); uh.push(rng()); uw.push(wall?1:0); bx0.push(x0||0); by0.push(y0||0); return ux.length-1; };
+  const rng=mulberry(77), { UNIT, OFF, PIXA, add, finish } = sceneBuilder(V, rng);
   // wall bricks
   const BW=14, BH=7, bmap=new Map<number,number>();
   for(let y=0;y<HY;y++){ const row=Math.floor(y/BH), off=(row%2)*7, ly=y%BH;
@@ -51,12 +72,7 @@ export function buildScene(V: Vault) {
   for (const t of TORCH){ for(let y=t.y;y<t.y+11;y++) for(let x=t.x-3;x<=t.x+3;x++){ if (x<0||x>=W||y<0||y>=H) continue; const dx=Math.abs(x-t.x), dy=y-t.y; let b=-1;
       if (dy<3){ b= dy===0?.95:dx===3?.3:.7; } else if (dy<6 && dx<=1) b=dx===1?.4:.6; else if (dy<9 && dx<=2-(dy-6>1?1:0)) b=.45; else if (dy>=9 && dx===0) b=.35;
       if (b>=0){ const i=y*W+x; UNIT[i]=-1; PIXA[i]=b; } } }
-  const NU=ux.length, WALLU: number[]=[]; for(let u=0;u<NU;u++) if (uw[u]) WALLU.push(u);
-  const [snapC,snapG]=mk(W,H), [sceneC,sceneG]=mk(W,H), sceneImg=sceneG.createImageData(W,H);
-  V.U={ UNIT, OFF, PIXA, NU, UX:Float32Array.from(ux), UY:Float32Array.from(uy), UALB:Float32Array.from(ua), UHASH:Float32Array.from(uh), ULVL:new Int8Array(NU), URAMP:new Uint8Array(NU),
-    UB0X:Int16Array.from(bx0), UB0Y:Int16Array.from(by0), UST:new Uint8Array(NU), UDEL:new Float32Array(NU).fill(Infinity), URST:new Float32Array(NU), WALLU,
-    VOID32:new Uint32Array(W*H), VOIDSTARS:[], snapC, snapG, sceneC, sceneG, sceneImg, scene32:new Uint32Array(sceneImg.data.buffer) };
-  V.S.wall.active=false; V.S.wall.rebuild=false;
+  finish();
 }
 
 export const tone=(v: number)=>{ const l=Math.floor(6.35*(1-Math.exp(-1.3*v))); return l<0?0:l>6?6:l; };

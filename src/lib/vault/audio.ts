@@ -1,3 +1,4 @@
+import type { Theme } from './themes/types';
 import type { TierAudio } from './tiers';
 import { rnd } from './util';
 
@@ -6,9 +7,11 @@ type Wave = OscillatorType | 'p25';
 
 /**
  * Chip voices only (pulse 25%, square, triangle, noise) through a short dungeon echo.
- * The AudioContext is created lazily on the first user gesture via init().
+ * The AudioContext is created lazily on the first user gesture via init(). The theme picks
+ * the ambient bed and the lamp ticks; every other sound is shared.
  */
 export class ChipAudio {
+  constructor(private flavour: Theme['audio'] = { ambient: 'drone', crackle: 'fire' }) {}
   ctx: AudioContext | null = null;
   on = true;
   charging = false;
@@ -84,12 +87,18 @@ export class ChipAudio {
   fidget(){ if(!this.ctx) return; this.seq(this.now(),[79,83,86,91,95],.035,'square',.07); this.nz(this.now(),.25,.15,false,1200,6000); }
   fanfare(){ if(!this.ctx) return; const t=this.now(); const mel=[72,72,76,79,null,76,79,84,null,null,84,86,88,null,91,null,96];
     this.seq(t,mel,.1,'p25',.12,.12); this.seq(t,mel.map(m=>m==null?null:m-5),.1,'square',.05,.12); this.seq(t,[48,null,55,null,60,null,55,null,53,null,60,null,65,null,67,null,72],.1,'triangle',.26,.18); this.nz(t,.7,.45,true,5000,250); }
-  ambStart(){ if(this.amb||!this.ctx) return; const c=this.ctx, g=c.createGain(), f=c.createBiquadFilter(); g.gain.value=.045; f.type='lowpass'; f.frequency.value=240;
-    [55,55.7,82.4].forEach(fr=>{ const o=c.createOscillator(); o.type='triangle'; o.frequency.value=fr; o.connect(f); o.start(); });
+  ambStart(){ if(this.amb||!this.ctx) return; const c=this.ctx, g=c.createGain(), f=c.createBiquadFilter(), hum=this.flavour.ambient==='hum'; g.gain.value=hum?.03:.045; f.type='lowpass'; f.frequency.value=hum?520:240;
+    // drone: low triangle chord; hum: 60Hz mains buzz under a detuned minor pad
+    (hum ? [[60,'square'],[120,'triangle'],[110,'sawtooth'],[110.6,'sawtooth'],[164.8,'sawtooth']] as [number,OscillatorType][] : [[55,'triangle'],[55.7,'triangle'],[82.4,'triangle']] as [number,OscillatorType][])
+      .forEach(([fr,type])=>{ const o=c.createOscillator(); o.type=type; o.frequency.value=fr; o.connect(f); o.start(); });
     const lfo=c.createOscillator(), lg=c.createGain(); lfo.frequency.value=.11; lg.gain.value=.02; lfo.connect(lg); lg.connect(g.gain); lfo.start(); f.connect(g); g.connect(this.out); this.amb=g; }
-  crackle(pan: number){ if(!this.ctx) return; const c=this.ctx, t=this.now(), s2=c.createBufferSource(), f=c.createBiquadFilter(), g=c.createGain(); s2.buffer=this.noise; f.type='highpass'; f.frequency.value=rnd(1800,5200);
+  crackle(pan: number){ if(!this.ctx) return; if (this.flavour.crackle==='data'){ this.chirp(pan); return; } const c=this.ctx, t=this.now(), s2=c.createBufferSource(), f=c.createBiquadFilter(), g=c.createGain(); s2.buffer=this.noise; f.type='highpass'; f.frequency.value=rnd(1800,5200);
     g.gain.setValueAtTime(rnd(.015,.05),t); g.gain.exponentialRampToValueAtTime(.001,t+rnd(.01,.04)); s2.connect(f); f.connect(g);
     if (c.createStereoPanner){ const pn=c.createStereoPanner(); pn.pan.value=pan; g.connect(pn); pn.connect(this.out); } else g.connect(this.out); s2.start(t, Math.random()*.8); s2.stop(t+.06); }
+  /** 'data' lamp tick: a faint high blip, sometimes a two-note chirp, panned to a lamp. */
+  private chirp(pan: number){ if (Math.random()<.55) return; const c=this.ctx!, t=this.now(), o=c.createOscillator(), g=c.createGain(); o.type='square'; o.frequency.setValueAtTime(rnd(1800,4200),t); if (Math.random()<.3) o.frequency.setValueAtTime(rnd(2400,5200),t+.018);
+    g.gain.setValueAtTime(rnd(.006,.018),t); g.gain.exponentialRampToValueAtTime(.0005,t+.04); o.connect(g);
+    if (c.createStereoPanner){ const pn=c.createStereoPanner(); pn.pan.value=pan; g.connect(pn); pn.connect(this.out); } else g.connect(this.out); o.start(t); o.stop(t+.05); }
   snap(){ if(!this.ctx) return; const t=this.now(); this.osc(t,'square',2300,.07,.08,700); this.nz(t,.1,.35,false,12000,3000); this.osc(t,'triangle',170,.14,.45,55); this.osc(t+.02,'square',3100,.04,.04); }
   clunk(){ if(!this.ctx) return; const t=this.now(); this.osc(t,'triangle',120,.16,.6,48); this.nz(t,.1,.3,true,2400,300); this.osc(t,'square',900,.03,.03); }
   rumble(d: number){ if(!this.ctx) return; const t=this.now(); this.nz(t,d,.55,true,420,90); this.osc(t,'triangle',48,d,.35,32); this.nz(t+.1,.5,.25,true,1600,200); }

@@ -32,7 +32,8 @@ function rimLight(grid: Grid): Grid { const n=grid.length, out=grid.map(r=>r.sli
 function gridCanvas(grid: Grid): HTMLCanvasElement { const h=grid.length, w=grid[0].length, c=document.createElement('canvas'); c.width=w; c.height=h; const x=c.getContext('2d')!;
   grid.forEach((row,y)=>row.forEach((ch,xx)=>{ if (ch!=='.'){ x.fillStyle=PAL[ch]; x.fillRect(xx,y,1,1); } })); return c; }
 
-const PADLOCK=["...kkkkk...","..ksSSSsk..",".ksk...ksk.",".ksk...ksk.",".ksk...ksk.","kkkkkkkkkkk","kyyoyyyyyYk","kyoyyyyyyYk","kyyyykyyyYk","kyyykkkyyYk","kyyyykyyyYk","kYyyyyyyYYk","kkkkkkkkkkk"];
+/** The vault theme's padlock (11x13). */
+export const PADLOCK=["...kkkkk...","..ksSSSsk..",".ksk...ksk.",".ksk...ksk.",".ksk...ksk.","kkkkkkkkkkk","kyyoyyyyyYk","kyoyyyyyyYk","kyyyykyyyYk","kyyykkkyyYk","kyyyykyyyYk","kYyyyyyyYYk","kkkkkkkkkkk"];
 
 export interface SpriteSheet {
   /** raw 16x16 sprites (bag slots) */
@@ -42,11 +43,11 @@ export interface SpriteSheet {
   lock: HTMLCanvasElement; lockMirror: HTMLCanvasElement; lockWhite: HTMLCanvasElement;
 }
 
-/** Builds every sprite canvas once; needs a DOM. */
-export function buildSprites(): SpriteSheet {
+/** Builds every sprite canvas once (the padlock from the theme's rows); needs a DOM. */
+export function buildSprites(lock: string[] = PADLOCK): SpriteSheet {
   const spr16: Record<string, HTMLCanvasElement> = {}, spr32: Record<string, HTMLCanvasElement> = {};
   for (const k in SPR){ spr16[k]=gridCanvas(toGrid(SPR[k])); spr32[k]=gridCanvas(rimLight(epx(toGrid(SPR[k])))); }
-  const lockGrid=toGrid(PADLOCK);
+  const lockGrid=toGrid(lock);
   return { spr16, spr32,
     lock: gridCanvas(lockGrid),
     lockMirror: gridCanvas(lockGrid.map(r=>r.slice().reverse())),

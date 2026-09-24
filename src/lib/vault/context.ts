@@ -7,6 +7,7 @@ import type { CardGeo } from './geometry';
 import type { FxStore } from './particles';
 import type { SceneUnits } from './scene';
 import type { SpriteSheet } from './sprites';
+import type { Theme } from './themes/types';
 import type { TierId } from './tiers';
 import type { Ctx2D } from './util';
 
@@ -89,6 +90,8 @@ export interface Vault {
   env: Env; L: Layout; S: GameState; FX: FxStore; U: SceneUnits; B: Buffers; K: CardState;
   A: ChipAudio; spr: SpriteSheet;
   deck: Deck; geo: CardGeo;
+  /** the look and sound: room, void, lamps, card back and face chrome (themes/) */
+  theme: Theme;
   /** the deck's tier ids, low to high */
   ladder: TierId[];
   art: Map<string, CardAssets>;

@@ -20,7 +20,7 @@ export function renderImpact(V: Vault, ox: number,oy: number){
   const { S, L, B, env, geo: G } = V, { g, layerC, silC, silG, cv } = B, { W, H, NARROW } = L;
   const e=1-S.hitstop/S.hitstopDur;
   if (e<.22){ g.drawImage(layerC,0,0); g.globalCompositeOperation='difference'; g.fillStyle='#fff'; g.fillRect(0,0,W,H); g.globalCompositeOperation='source-over'; }
-  else { const dark=e<.66, bgc=dark?PAL.k:PAL.w, fg=dark?PAL.w:PAL.k; g.fillStyle=bgc; g.fillRect(0,0,W,H);
+  else { const dark=e<.66, [kd,kl]=V.theme.keys.impact, bgc=dark?PAL[kd]:PAL[kl], fg=dark?PAL[kl]:PAL[kd]; g.fillStyle=bgc; g.fillRect(0,0,W,H);
     g.fillStyle=fg; const Rm=Math.hypot(W,H); for(let i=0;i<46;i++){ const a=Math.random()*TAU, r0=rnd(52*G.k,80*G.k), r1=Rm; line(g,S.cx+Math.cos(a)*r0,S.cy+Math.sin(a)*r0,S.cx+Math.cos(a)*r1,S.cy+Math.sin(a)*r1); if (i%3===0) line(g,S.cx+Math.cos(a)*r0+1,S.cy+Math.sin(a)*r0,S.cx+Math.cos(a)*r1+1,S.cy+Math.sin(a)*r1); }
     silG.clearRect(0,0,W,H); silG.drawImage(layerC,0,0); silG.globalCompositeOperation='source-in'; silG.fillStyle=fg; silG.fillRect(0,0,W,H); silG.globalCompositeOperation='source-over';
     g.drawImage(silC,0,0); g.fillStyle=fg; for(let i=0;i<3;i++){ const r=Math.round((60+e*80+i*14)*G.k); for(let a=0;a<TAU;a+=.05){ if (Math.random()<.5) g.fillRect(Math.round(S.cx+Math.cos(a)*r),Math.round(S.cy+Math.sin(a)*r),1,1); } }

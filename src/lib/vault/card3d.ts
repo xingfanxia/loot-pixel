@@ -9,7 +9,7 @@ export function pat(V: Vault, ctx: Ctx2D, col: string, level: number){ const B=V
 const FOC=240;
 
 /**
- * Pseudo-3D card: column strips give the Y rotation (with a gold edge when side-on), dithered
+ * Pseudo-3D card: column strips give the Y rotation (with the theme's edge colour when side-on), dithered
  * shade + foil band go on source-atop, then rows give the X tilt while blitting onto ctx.
  */
 export function drawCard3D(V: Vault, ctx: Ctx2D, face: HTMLCanvasElement, back: HTMLCanvasElement|null, cx: number, cy: number, ry: number, rx: number, sc: number, shine: number){
@@ -22,7 +22,7 @@ export function drawCard3D(V: Vault, ctx: Ctx2D, face: HTMLCanvasElement, back: 
     t1G.drawImage(src, mirror?CWd-1-u:u, 0, 1, CHd, ox+L, Math.round(oy-h/2), w, h); }
   // edge thickness
   if (Math.abs(sr)>.12){ const near = ze[0]>ze[CWd] ? 0 : CWd; const ex=Math.round(xe[near]), eh=Math.round(he[near]), ew=Math.max(1,Math.round(3*Math.abs(sr)*sc)); const dir = xe[near] < xe[near===0?CWd:0] ? -1 : 1;
-    const x0 = dir<0 ? ox+ex-ew : ox+ex; t1G.fillStyle=PAL.Y; t1G.fillRect(x0, Math.round(oy-eh/2)+1, ew, eh-2); t1G.fillStyle=PAL.y; t1G.fillRect(x0, Math.round(oy-eh/2)+1, ew, 1); t1G.fillStyle=PAL.k; t1G.fillRect(dir<0?x0:x0+ew-1, Math.round(oy-eh/2)+1, 1, eh-2); }
+    const [edge, edgeHi]=V.theme.keys.edge, x0 = dir<0 ? ox+ex-ew : ox+ex; t1G.fillStyle=PAL[edge]; t1G.fillRect(x0, Math.round(oy-eh/2)+1, ew, eh-2); t1G.fillStyle=PAL[edgeHi]; t1G.fillRect(x0, Math.round(oy-eh/2)+1, ew, 1); t1G.fillStyle=PAL.k; t1G.fillRect(dir<0?x0:x0+ew-1, Math.round(oy-eh/2)+1, 1, eh-2); }
   // shading + foil glint
   t1G.globalCompositeOperation='source-atop';
   const shade=(1-Math.abs(cr))*.6 + Math.abs(rx)*.25; if (shade>.09){ t1G.fillStyle=pat(V,t1G,'k',shade); t1G.fillRect(0,0,T1W,T1H); }

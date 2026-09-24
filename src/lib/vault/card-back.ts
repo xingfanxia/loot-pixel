@@ -6,8 +6,8 @@ import { drawText } from './font';
 import { bay, PAL } from './palette';
 import type { Ctx2D } from './util';
 
-/** Static card back: navy crosshatch, gold frames, corner studs, then the "?" diamond or the deck emblem. */
-export function buildBackBase(V: Vault){
+/** The vault theme's card back: navy crosshatch, gold frames, corner studs, then the "?" diamond or the deck emblem. */
+export function buildVaultBack(V: Vault){
   const x=V.B.backG, G=V.geo, CWd=G.w, CHd=G.h; x.clearRect(0,0,CWd,CHd);
   x.fillStyle=PAL[1]; x.fillRect(1,1,CWd-2,CHd-2);
   for(let yy=2;yy<CHd-2;yy++) for(let xx=2;xx<CWd-2;xx++){ const a=((xx+yy)%8===0)||((xx-yy+800)%8===0); if (a){ x.fillStyle=PAL[2]; x.fillRect(xx,yy,1,1); } else if (bay(xx,yy)< (yy/CHd)*.35){ x.fillStyle=PAL[0]; x.fillRect(xx,yy,1,1); } }
@@ -29,18 +29,19 @@ export function buildBackBase(V: Vault){
 }
 
 /**
- * A 1-bit mask in the gold ramp: a dark dithered disc behind it, a black outline, then each lit
- * pixel bevelled (edges facing up/left catch the light, edges facing down/right fall into shadow).
+ * A 1-bit mask in a light ramp (default gold): a dark dithered disc behind it, a black outline, then
+ * each lit pixel bevelled (edges facing up/left catch the light, edges facing down/right fall into shadow).
+ * `keys` = disc base, disc dither, highlight, body, shadow.
  */
-function drawEmblem(x: Ctx2D, e: Emblem, cx: number, cy: number){
+export function drawEmblem(x: Ctx2D, e: Emblem, cx: number, cy: number, keys: [string, string, string, string, string] = ['1','2','o','y','Y']){
   const n=e.rows.length, m=e.rows[0].length, x0=cx-(m>>1), y0=cy-(n>>1), R=Math.min(m,n)/2;
   const on=(i: number,j: number)=>j>=0&&j<n&&i>=0&&i<m&&e.rows[j][i]==='#';
   for(let j=0;j<n;j++) for(let i=0;i<m;i++){ const d=Math.hypot(i-(m-1)/2,j-(n-1)/2); if (d>R-1.5) continue;
-    x.fillStyle=PAL[bay(i,j)<(1-d/R)*.7?'2':'1']; x.fillRect(x0+i,y0+j,1,1); }
+    x.fillStyle=PAL[bay(i,j)<(1-d/R)*.7?keys[1]:keys[0]]; x.fillRect(x0+i,y0+j,1,1); }
   for(let j=-1;j<=n;j++) for(let i=-1;i<=m;i++){ if (on(i,j)) continue; let near=false; for(let b=-1;b<=1&&!near;b++) for(let a=-1;a<=1;a++) if (on(i+a,j+b)){ near=true; break; }
     if (near){ x.fillStyle=PAL.k; x.fillRect(x0+i,y0+j,1,1); } }
   for(let j=0;j<n;j++) for(let i=0;i<m;i++){ if (!on(i,j)) continue;
-    const col=!on(i,j-1)||!on(i-1,j) ? 'o' : !on(i,j+1)||!on(i+1,j) ? 'Y' : 'y'; x.fillStyle=PAL[col]; x.fillRect(x0+i,y0+j,1,1); }
+    const col=!on(i,j-1)||!on(i-1,j) ? keys[2] : !on(i,j+1)||!on(i+1,j) ? keys[4] : keys[3]; x.fillStyle=PAL[col]; x.fillRect(x0+i,y0+j,1,1); }
 }
 
 /** Animated back: base image, sweeping shine band, one twinkling glint, cracks, chains. */

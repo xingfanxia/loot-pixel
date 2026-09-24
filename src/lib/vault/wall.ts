@@ -4,8 +4,8 @@ import { dustAt } from './particles';
 import { TIERS } from './tiers';
 import { clamp, mulberry, rnd, TAU } from './util';
 
-/** The void behind the wall for tier r: a portal disc in the tier ramp, clouds, ridges, stars. */
-function genVoid(V: Vault, r: number){
+/** The vault theme's void behind the wall for tier r: a portal disc in the tier ramp, clouds, ridges, stars. */
+export function paintVaultVoid(V: Vault, r: number){
   const { L, S, U } = V, { W, HY, CX, CY } = L, T=TIERS[r], VOID32=U.VOID32;
   const rp=RAMPU[T.ramp], rng=mulberry(S.seed*13+5), ox=CX, oy=CY-6, R0=Math.round(clamp(Math.min(W,HY)*.2,18,40)), big=Math.max(W,HY);
   const stars: [number,number,number][]=[]; U.VOIDSTARS=stars; const gs=18, gw=Math.ceil(W/gs)+3, gh=Math.ceil(HY/gs)+3, grid=new Float32Array(gw*gh); for(let i=0;i<grid.length;i++) grid[i]=rng();
@@ -24,9 +24,9 @@ function genVoid(V: Vault, r: number){
     VOID32[y*W+x]=col; }
 }
 
-/** Starts the reveal's wall breakdown: bricks within the tier's reach glow, then fall from the centre out. */
+/** Starts the reveal's wall breakdown: wall units within the tier's reach glow, then fall from the centre out. */
 export function startWallBreak(V: Vault, r: number){
-  const { S, L, U, env } = V, B=S.wall; genVoid(V, r); B.active=true; B.rebuild=false; B.t=0; B.r=r; U.snapG.clearRect(0,0,L.W,L.H); U.snapG.drawImage(U.sceneC,0,0);
+  const { S, L, U, env } = V, B=S.wall; V.theme.paintVoid(V, r); B.active=true; B.rebuild=false; B.t=0; B.r=r; U.snapG.clearRect(0,0,L.W,L.H); U.snapG.drawImage(U.sceneC,0,0);
   const reach = TIERS[r].reach*Math.max(L.W,L.HY);
   for (const u of U.WALLU){ const prot=L.TORCH.some(t=>Math.hypot(U.UX[u]-t.x, U.UY[u]-(t.y+4))<11 || (Math.abs(U.UX[u]-t.x)<8 && U.UY[u]>t.y)); const d=Math.hypot(U.UX[u]-L.CX,(U.UY[u]-L.CY)*1.1);
     U.UDEL[u] = (!prot && d<=reach) ? .25 + d/(L.NARROW?150:230) + Math.random()*.18 : Infinity; }
@@ -37,7 +37,7 @@ function brickGround(V: Vault, x: number){ const { GMAX, HY, CX, PBASE } = V.L, 
 
 /** Turns wall unit u into a falling brick body cut from the scene snapshot. */
 function detach(V: Vault, u: number){
-  const { U, L, S, FX } = V, x0=U.UB0X[u], y0=U.UB0Y[u], sx=Math.max(0,x0), sy=Math.max(0,y0), sw=Math.min(x0+14,L.W)-sx, sh=Math.min(y0+7,L.HY)-sy; if (sw<=0||sh<=0) return;
+  const { U, L, S, FX } = V, x0=U.UB0X[u], y0=U.UB0Y[u], sx=Math.max(0,x0), sy=Math.max(0,y0), sw=Math.min(x0+U.UBW[u],L.W)-sx, sh=Math.min(y0+U.UBH[u],L.HY)-sy; if (sw<=0||sh<=0) return;
   const cx=sx+sw/2, cy=sy+sh/2, dx=cx-L.CX, dy=cy-S.cy, d=Math.hypot(dx,dy)||1;
   if (FX.bricks.length < (L.NARROW?220:400) && !(cy<L.HY*.3 && Math.random()<.45)) FX.bricks.push({sx,sy,w:sw,h:sh,x:cx,y:cy,vx:dx/d*rnd(15,70)+rnd(-20,20), vy:-rnd(0,60)*(dy<0?.4:1), rot:0, vr:rnd(-6,6), g:brickGround(V,cx), age:0, life:rnd(3.5,5.5), rest:false});
   if (Math.random()<.5) dustAt(V,cx,cy,2,false);
