@@ -46,7 +46,7 @@ export const bagPity=(V: Vault): Pity => V.bag.bag.pity ?? noPity();
 export function countDraws(V: Vault, rs: number[]){ const b=V.bag.bag, t=tally(bagPity(V), b.stats ?? noStats(), rs); b.pity=t.pity; b.stats=t.stats; }
 /** The draw record with its luck rating (see DrawRecord). */
 export function drawRecord(V: Vault): DrawRecord { const st=V.bag.bag.stats ?? noStats(), p=bagPity(V), rule=V.deck.pity;
-  return { draws: st.draws, gaps: st.gaps, epics: st.epics, streak: p.legend, legendIn: rule ? rule.hard-p.legend : null, mean: meanGap(V.deck), luck: st.draws ? luck(V.deck, st.draws, st.gaps.length) : null }; }
+  return { draws: st.draws, gaps: st.gaps, epics: st.epics, streak: p.legend, legendIn: rule ? rule.hard-p.legend : null, mean: meanGap(V.deck), luck: st.draws ? luck(V.deck, st.gaps, p.legend) : null }; }
 export function paint(V: Vault, vr: number){ const S=V.S; V.theme.face.artBg(V, vr); const [a,b]=TIERS[vr].bars; S.barTarget=V.geo.bars.map(()=>rnd(a,b)); S.bars=S.bars.map(()=>0); S.barFlash=S.barFlash.map(()=>0); }
 
 /** The charge reached the next ladder step: the back heats to that tier's colour. */

@@ -52,27 +52,38 @@ export function meanGap(deck: Deck) {
   return mean;
 }
 
+/** Chance that a LEGENDARY takes exactly g draws, g = 1.. (index 0 unused); the tail past 1e-12 is dropped. */
+export function gapPmf(deck: Deck) {
+  const p = [0]; let alive = 1;
+  for (let g = 1; alive > 1e-12 && g <= 5000; g++) { const c = legendChance(deck, { legend: g - 1, epic: 0 }); p.push(alive * c); alive *= 1 - c; }
+  return p;
+}
+
+function conv(a: number[], b: number[]) {
+  const out = new Array<number>(a.length + b.length - 1).fill(0);
+  for (let i = 0; i < a.length; i++) { if (!a[i]) continue; for (let j = 0; j < b.length; j++) out[i + j] += a[i] * b[j]; }
+  return out;
+}
+
 /**
- * How lucky `k` LEGENDARY in `draws` draws is: the share of players with as many draws who got fewer
- * (ties count half), computed exactly over the pity states. 0.5 is average.
+ * How lucky a draw history is: the share of players who spent more draws on the same number of
+ * LEGENDARY (ties count half). `gaps` are the draws each LEGENDARY took, `streak` the draws since the
+ * last one. The streak counts as an unfinished gap: a random player's next gap is capped at the same
+ * streak, so a short streak is neutral and a long dry one pulls the share down. 0.5 is average.
  */
-export function luck(deck: Deck, draws: number, k: number) {
-  const states = deck.pity ? deck.pity.hard : 1, top = k + 1; // counts 0..k, then "more than k"
-  const chance = Array.from({ length: states }, (_, s) => legendChance(deck, { legend: s, epic: 0 }));
-  let dp = new Float64Array(states * (top + 1)); dp[0] = 1;
-  for (let n = 0; n < draws; n++) { const nx = new Float64Array(dp.length);
-    for (let s = 0; s < states; s++) { const c = chance[s], up = Math.min(s + 1, states - 1);
-      for (let j = 0; j <= top; j++) { const v = dp[s * (top + 1) + j]; if (!v) continue;
-        nx[0 * (top + 1) + Math.min(top, j + 1)] += v * c; nx[up * (top + 1) + j] += v * (1 - c); } }
-    dp = nx; }
-  let fewer = 0, same = 0;
-  for (let s = 0; s < states; s++) for (let j = 0; j <= top; j++) { const v = dp[s * (top + 1) + j]; if (j < k) fewer += v; else if (j === k) same += v; }
-  return fewer + same / 2;
+export function luck(deck: Deck, gaps: number[], streak: number) {
+  const p = gapPmf(deck), target = gaps.reduce((a, b) => a + b, 0) + streak;
+  let dist = [1]; for (let i = 0; i < gaps.length; i++) dist = conv(dist, p);
+  // min(next gap, streak): gaps shorter than the streak as they are, the rest pile up at the streak
+  const cap = new Array<number>(streak + 1).fill(0); let tail = 1;
+  for (let g = 1; g < streak && g < p.length; g++) { cap[g] = p[g]; tail -= p[g]; }
+  cap[streak] += Math.max(0, tail);
+  const v = conv(dist, cap); let worse = 0; for (let t = target + 1; t < v.length; t++) worse += v[t];
+  return worse + (v[target] ?? 0) / 2;
 }
 
 /**
  * Seven words for a luck share (0..1), luckiest first: Blessed top 5%, Fortunate next 15%, Lucky next 20%,
- * Average the middle 20%, Unlucky, Jinxed and Cursed mirrored below. Without a LEGENDARY the share stays
- * at or under 0.5 (ties count half), so a dry run slides from Average down.
+ * Average the middle 20%, Unlucky, Jinxed and Cursed mirrored below.
  */
 export const verdict = (x: number) => x >= .95 ? 'Blessed' : x >= .8 ? 'Fortunate' : x >= .6 ? 'Lucky' : x >= .4 ? 'Average' : x >= .2 ? 'Unlucky' : x >= .05 ? 'Jinxed' : 'Cursed';

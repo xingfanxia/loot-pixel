@@ -16,8 +16,8 @@ live in the bag, count single draws and packs alike, and reset with "Empty bag".
 
 The collection opens on a **draw record** (`src/components/DrawRecord.tsx`): draws, Legendary and
 Epic counts, draws since the last Legendary, the draws each Legendary took, and a luck rating
-(seven levels, Blessed / Fortunate / Lucky / Average / Unlucky / Jinxed / Cursed) from the exact share of players who would have got fewer
-Legendaries in as many draws (`luck()` in `odds.ts`). The rating also sits in the bottom HUD as a pill
+(seven levels, Blessed / Fortunate / Lucky / Average / Unlucky / Jinxed / Cursed) from the exact share of players who spent more draws on as many
+Legendaries, the current dry streak counting as an unfinished one (`luck()` in `odds.ts`). The rating also sits in the bottom HUD as a pill
 (verdict and a 10-segment bar, from the first draw on; tapping it opens the record) and on the
 10-pull results. All of it takes its look from the theme CSS.
 
