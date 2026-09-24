@@ -31,7 +31,7 @@ export interface VaultHooks {
 /**
  * The bag's draw record for the UI: draws, LEGENDARY count and the draws each took, EPIC count,
  * draws since the last LEGENDARY, how soon pity guarantees one (null without pity), the average
- * draws per LEGENDARY the odds give, and the luck share (0..1, 0.5 average; null before any draw).
+ * draws per LEGENDARY the odds give, and the luck score (standard deviations from expected, luck() in odds.ts; null before any draw).
  */
 export interface DrawRecord { draws: number; gaps: number[]; epics: number; streak: number; legendIn: number | null; mean: number; luck: number | null }
 

@@ -1,27 +1,24 @@
 import type { CSSProperties } from "react";
 import type { DrawRecord as Record } from "@/lib/vault/context";
-import { verdict } from "@/lib/vault/odds";
+import { meterFill, verdict } from "@/lib/vault/odds";
 
 const SEGMENTS = 20;
-const pct = (x: number) => Math.round(x * 100);
-/** What the rating is based on: the average draws per Legendary, or the dry run before the first one. */
-const basis = (r: Record) => r.gaps.length
+/** What the rating is based on, against what the odds give: "74 draws per Legendary (the odds give 62)". */
+const basis = (r: Record) => (r.gaps.length
   ? `${Math.round(r.gaps.reduce((a, b) => a + b, 0) / r.gaps.length)} draws per Legendary`
-  : `No Legendary in ${r.streak} ${r.streak === 1 ? "draw" : "draws"}`;
-/** "Luckier than 72%" above average, "Unluckier than 96%" below it. */
-const share = (x: number) => pct(x) >= 50 ? `Luckier than ${Math.min(99, pct(x))}%` : `Unluckier than ${Math.min(99, pct(1 - x))}%`;
+  : `No Legendary in ${r.streak} ${r.streak === 1 ? "draw" : "draws"}`) + ` (the odds give ${Math.round(r.mean)})`;
 
-/** The luck verdict, a 20-segment meter and the share of players it beats. Theme CSS styles the meter (`.luck`). */
+/** The luck verdict, a 20-segment meter (lucky to the right) and what it is based on. Theme CSS styles the meter (`.luck`). */
 function Luck({ record, compact }: { record: Record; compact?: boolean }) {
   if (record.luck === null) return <p className="luck-none">No draws yet. Your luck shows up after the first one.</p>;
-  const x = record.luck, word = verdict(x), lit = Math.max(1, Math.round(x * SEGMENTS));
+  const z = record.luck, word = verdict(z), fill = meterFill(z), lit = Math.max(1, Math.round(fill * SEGMENTS));
   return (
     <div className={compact ? "luck compact" : "luck"} data-verdict={word.toLowerCase()}>
       <p className="verdict">{word}</p>
-      <div className="meter" role="meter" aria-label="Luck" aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct(x)} aria-valuetext={`${word}: ${basis(record)}, ${share(x).toLowerCase()} of players`}>
+      <div className="meter" role="meter" aria-label="Luck" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(fill * 100)} aria-valuetext={`${word}: ${basis(record)}`}>
         {Array.from({ length: SEGMENTS }, (_, i) => <i key={i} className={i < lit ? "on" : undefined} style={{ "--i": i } as CSSProperties} />)}
       </div>
-      <p className="luck-note">{basis(record)}, {share(x).toLowerCase()} of players</p>
+      <p className="luck-note">{basis(record)}</p>
     </div>
   );
 }
@@ -52,12 +49,12 @@ export default function DrawRecord({ record }: { record: Record }) {
 
 /** HUD pill: the verdict and a 10-segment bar; opens the draw record. "Luck:" shows where the HUD has room for labels. */
 function LuckPill({ record, onOpen }: { record: Record; onOpen: () => void }) {
-  const x = record.luck!, word = verdict(x), lit = Math.max(1, Math.round(x * 10));
+  const z = record.luck!, word = verdict(z), lit = Math.max(1, Math.round(meterFill(z) * 10));
   return (
     <div className="row" role="group" aria-label="Luck">
       <span className="lbl">Luck:</span>
       <button type="button" className="px pill luck-pill luck" data-verdict={word.toLowerCase()} onClick={onOpen}
-        aria-label={`Luck: ${word}. ${basis(record)}, ${share(x).toLowerCase()} of players. Open the draw record.`}>
+        aria-label={`Luck: ${word}. ${basis(record)}. Open the draw record.`}>
         <span className="word">{word}</span>
         <span className="mini" aria-hidden="true">{Array.from({ length: 10 }, (_, i) => <i key={i} className={i < lit ? "on" : undefined} style={{ "--i": i * 2 } as CSSProperties} />)}</span>
       </button>

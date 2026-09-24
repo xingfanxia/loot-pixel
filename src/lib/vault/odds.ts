@@ -59,31 +59,27 @@ export function gapPmf(deck: Deck) {
   return p;
 }
 
-function conv(a: number[], b: number[]) {
-  const out = new Array<number>(a.length + b.length - 1).fill(0);
-  for (let i = 0; i < a.length; i++) { if (!a[i]) continue; for (let j = 0; j < b.length; j++) out[i + j] += a[i] * b[j]; }
-  return out;
-}
-
 /**
- * How lucky a draw history is: the share of players who spent more draws on the same number of
- * LEGENDARY (ties count half). `gaps` are the draws each LEGENDARY took, `streak` the draws since the
- * last one. The streak counts as an unfinished gap: a random player's next gap is capped at the same
- * streak, so a short streak is neutral and a long dry one pulls the share down. 0.5 is average.
+ * How lucky a draw history is, in standard deviations from what the odds expect (positive = lucky,
+ * 0 = average). It compares the draws spent on your Legendaries, plus the current dry streak, with
+ * their expected total: the mean gap per Legendary, and for the unfinished streak the mean of a gap
+ * capped at that streak (so a short streak is neutral and a long dry one counts against you). Anchoring
+ * on the mean, not the median, makes a Legendary at soft pity read as unlucky, as players count it.
  */
 export function luck(deck: Deck, gaps: number[], streak: number) {
-  const p = gapPmf(deck), target = gaps.reduce((a, b) => a + b, 0) + streak;
-  let dist = [1]; for (let i = 0; i < gaps.length; i++) dist = conv(dist, p);
-  // min(next gap, streak): gaps shorter than the streak as they are, the rest pile up at the streak
-  const cap = new Array<number>(streak + 1).fill(0); let tail = 1;
-  for (let g = 1; g < streak && g < p.length; g++) { cap[g] = p[g]; tail -= p[g]; }
-  cap[streak] += Math.max(0, tail);
-  const v = conv(dist, cap); let worse = 0; for (let t = target + 1; t < v.length; t++) worse += v[t];
-  return worse + (v[target] ?? 0) / 2;
+  const p = gapPmf(deck); let m = 0, m2 = 0, cm = 0, cm2 = 0, tail = 1;
+  p.forEach((v, g) => { m += g * v; m2 += g * g * v; if (g >= 1 && g < streak) { cm += g * v; cm2 += g * g * v; tail -= v; } });
+  if (streak > 0) { cm += streak * tail; cm2 += streak * streak * tail; }
+  const k = gaps.length, spent = gaps.reduce((a, b) => a + b, 0) + streak;
+  const variance = k * (m2 - m * m) + Math.max(0, cm2 - cm * cm);
+  return variance > 0 ? (k * m + cm - spent) / Math.sqrt(variance) : 0;
 }
 
-/**
- * Seven words for a luck share (0..1), luckiest first: Blessed top 5%, Fortunate next 15%, Lucky next 20%,
- * Average the middle 20%, Unlucky, Jinxed and Cursed mirrored below.
- */
-export const verdict = (x: number) => x >= .95 ? 'Blessed' : x >= .8 ? 'Fortunate' : x >= .6 ? 'Lucky' : x >= .4 ? 'Average' : x >= .2 ? 'Unlucky' : x >= .05 ? 'Jinxed' : 'Cursed';
+/** Share of a normal distribution below z, for drawing a luck score on a 0..1 meter. */
+export function meterFill(z: number) {
+  const t = 1 / (1 + .3275911 * Math.abs(z) / Math.SQRT2), y = 1 - ((((1.061405429 * t - 1.453152027) * t + 1.421413741) * t - .284496736) * t + .254829592) * t * Math.exp(-z * z / 2);
+  return z >= 0 ? (1 + y) / 2 : (1 - y) / 2;
+}
+
+/** Seven words for a luck score (standard deviations from expected), luckiest first. */
+export const verdict = (z: number) => z >= 1.65 ? 'Blessed' : z >= .85 ? 'Fortunate' : z >= .3 ? 'Lucky' : z > -.3 ? 'Average' : z > -.85 ? 'Unlucky' : z > -1.65 ? 'Jinxed' : 'Cursed';
